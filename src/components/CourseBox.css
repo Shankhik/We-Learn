@@ -1,0 +1,91 @@
+.course-box{
+    padding-bottom: 0px;
+    width: 180px;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    overflow: hidden;
+    border-radius: 20px;
+    background-color: rgb(65, 109, 93);
+
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.39);
+    transition: all 0.3s ease-in-out;
+    h3{
+        padding: 5px;
+        margin-bottom: 5px;
+        color: rgb(255, 255, 255);
+        background-color: rgba(114, 114, 114, 0.514);
+        border-radius: 10px;
+        position: absolute;
+        transform: translate(-0%, -50%);
+        transition: all 0.3s ease-in-out;
+
+    }
+    img{
+        position: absolute;
+        width: 100%;
+        height: auto;
+        /*Positioning the image at the center*/
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+    }
+    &:hover,:active {
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.6);
+        scale: 1.03;
+        h3{ 
+            color: white;
+            background-color: rgba(0, 0, 0, 0);
+            transform: translate(00%, -300%);
+            transition: all 0.3s ease-in-out;
+        }
+        .skills{
+            transform: translateY(-20px);
+            opacity: 1;
+            transition: transform 0.3s ease-in-out, opacity 0.3s linear  0.2s;
+        }
+        .cover{
+            transition: all 0.1s ease-in-out;
+            background-color: rgba(40, 55, 97, 0.267);
+            backdrop-filter: blur(10px);
+        }
+    }
+    
+}
+.cover{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.0);
+    transition: all 0.1s ease-in-out;
+}
+.skills{
+    gap: 5px;
+    max-width: 90%;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    background-color: rgba(16, 85, 62, 0);
+
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.3s ease-in-out, opacity 0.1s linear;
+    
+    div{
+        font-size: 13px;
+        text-align: center;
+        color: white;
+        padding: 3px 6px 3px 6px;
+        border-radius: 20px;
+        border: 1px solid rgb(255, 255, 255);
+        background-color: rgba(255, 255, 255, 0.205);
+    }
+}

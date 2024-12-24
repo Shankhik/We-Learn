@@ -1,0 +1,121 @@
+#learn-page{
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 100px 1fr;
+    height: 100dvh;
+    background-color: #2d3a49;
+    color: rgba(0, 0, 0, 0.8);
+    transition: background-color 0.2s ease;
+}
+#learn-page-navbar{
+    grid-area: 1/1/2/-1;
+    display: flex;
+    align-items: center;
+}
+#learn-page-logo{
+    margin: 0px 0px 0px 30px;
+    width: 150px;
+    height: auto;
+    transition: all 0.3s ease;
+    @media (max-width:900px){
+        width: 100px;
+        margin: 0px;
+    }
+}
+.learn-page-sidebar{
+    grid-area: 2/1/3/2;
+    padding: 0px;
+    width: 250px;
+    height: 100%;
+    z-index: 1;
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    &.enabled{
+        @media(max-width:900px){
+            transform: translateX(0px);
+        }
+    }
+    &.disabled{
+        @media(max-width:900px){
+            transform: translateX(-250px);
+        }
+    }
+    transition: transform 0.3s ease-in-out;
+    @media(max-width:900px){
+        box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.1) ;
+    }
+    
+}
+#show-sidebar-icon{
+    margin: 15px;
+    display: none;
+    align-self: center;
+    @media (max-width:900px) {
+        display: flex;
+    }
+}
+
+.modules{
+    margin: 5px;
+    padding: 15px;
+    border-radius: 15px;
+    cursor: default;
+}
+#learn-page-content{
+    grid-area: 2/2/-1/-1;
+    overflow-y: auto;
+    padding: 0px 0px 0px 30px;
+    @media (max-width:900px) {
+        padding: 0px 20px 0px 20px;
+    }
+}
+#complete-btn{
+    margin: 0px 0px 40px 0px ;
+    border: none;
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    
+    transition: all 0.2s ease;
+    &:hover,&:active{
+        scale: 1.05;
+        box-shadow: 2px 1px 5px rgba(0, 0, 0, 0.5);
+    }
+}
+.jsx-styles{
+    font-size: 1.1rem;
+    
+    h2{
+        margin-bottom: 10px;
+    }
+    a{
+        color: rgb(80, 117, 148);
+        &:hover{
+        color: rgb(85, 150, 204);
+        }
+    }
+    p{
+        margin: 0px 0px 20px 0px;
+    }
+    li{
+        list-style: disc;
+        margin: 20px 0px 20px 10px;
+    }
+}
+@media (max-width: 900px){
+    #learn-page{
+        grid-template-columns: 1fr;
+    }
+    #learn-page-navbar{
+        grid-area: 1/1/2/2;
+        backdrop-filter: blur(10px);
+    }
+    #learn-page-sidebar{
+        grid-area: 2/1/3/2;
+    }
+    #learn-page-content{
+        grid-area: 2/1/3/2;
+    }
+}

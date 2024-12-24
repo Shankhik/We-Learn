@@ -1,0 +1,43 @@
+<svg
+    width="90"
+    height="60"
+    viewBox="0 0 90 60"
+    id="arrow"
+    xmlns="http://www.w3.org/2000/svg">
+
+    <g style="fill: #ffffff" class="arrow">
+         <!-- Horizontal Line -->
+        <rect id="arrow-tail"
+            x='20'
+            y='20'
+            rx = '5'
+            width='60'
+            height='10'
+            stroke-width = '0'
+        />
+        <!-- Arrow head -->
+        <!--transform= 'rotate(135 75 25)'-->
+        <g id="arrow-head"> 
+        <rect 
+            x='20'
+            y='20'
+            rx='5'
+            height='10'
+            width='30'
+            
+            transform= 'rotate(135 25 25)'
+            
+        />
+        <rect 
+            x='20'
+            y='20'
+            rx='5'
+            height='10'
+            width='30'
+            
+            transform= 'rotate(-135 25 25)'
+            
+        />
+        </g>
+    </g>
+</svg>

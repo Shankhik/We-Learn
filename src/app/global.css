@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+:root{
+    --Nunito: 'Nunito Sans'
+}
+*{
+    margin: 0px;
+    font-family: var(--Nunito)
+}
+ul{
+    list-style-type: none;
+}
+a{
+    text-decoration: none;
+    color: inherit;
+}
+.page{
+    max-width: 100%;
+    background-color: rgb(238, 238, 238);
+    min-height: 100dvh;
+}
+
+@media(prefers-color-scheme: dark){
+    .page{
+        background-color: rgb(43, 43, 43);
+    }
+}

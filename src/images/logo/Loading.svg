@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="200"
+   height="300"
+   viewBox="0 0 200 300"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <rect
+       x="35.590767"
+       y="96.699448"
+       width="135.07176"
+       height="39.707172"
+       id="rect3" />
+    <filter
+       style="color-interpolation-filters:sRGB"
+       id="filter5"
+       x="-0.053986136"
+       y="-0.038870018"
+       width="1.1079723"
+       height="1.07774">
+      <feGaussianBlur
+         stdDeviation="4.0489602"
+         id="feGaussianBlur5" />
+    </filter>
+  </defs>
+  <g
+     id="layer1"
+     style="fill:#ffffff;fill-opacity:1">
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:1.002;filter:url(#filter5)"
+       id="rect4"
+       width="180"
+       height="250"
+       x="10"
+       y="26.590992"
+       rx="20" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke-width:1.002"
+       id="rect5"
+       width="180"
+       height="250"
+       x="10"
+       y="26.590992"
+       rx="20" />
+  </g>
+  <g
+     id="layer2"
+     style="display:inline">
+    <text
+       xml:space="preserve"
+       id="text2"
+       style="font-size:24px;line-height:39.6px;font-family:Rockwell;-inkscape-font-specification:Rockwell;text-align:center;letter-spacing:0px;word-spacing:0px;baseline-shift:baseline;white-space:pre;shape-inside:url(#rect3);display:inline;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke-width:1.002"
+       x="40.161621"
+       y="0"
+       transform="translate(-2.7275391,132.92989)"><tspan
+         x="48.838867"
+         y="122.66242"
+         id="tspan3"><tspan
+           style="baseline-shift:baseline"
+           id="tspan2">LOADING</tspan></tspan></text>
+  </g>
+  <g
+     id="layer3"
+     style="display:inline"
+     transform="translate(0,30)">
+    <path
+       id="path1"
+       style="fill:#c9c9c9;fill-opacity:1;stroke-width:1.002"
+       d="m 100,40 a 60,60 0 0 0 -60,60 60,60 0 0 0 60,60 60,60 0 0 0 60,-60 60,60 0 0 0 -60,-60 z m 0,20 a 40,40 0 0 1 40,40 40,40 0 0 1 -40,40 40,40 0 0 1 -40,-40 40,40 0 0 1 40,-40 z" />
+    <path
+       id="circle1"
+       style="fill:#42ff00;fill-opacity:1;stroke-width:1.002"
+       d="m 140,100 a 40,40 0 0 1 -40,40 40,40 0 0 1 -19.955078,-5.4375 L 70,151.96094 a 60,60 0 0 0 60,0 A 60,60 0 0 0 160,100 Z" />
+  </g>
+</svg>

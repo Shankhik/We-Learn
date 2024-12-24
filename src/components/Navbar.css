@@ -1,0 +1,100 @@
+/*Navbar*/
+.navbar{
+    width: auto;
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.308);
+    background: linear-gradient(90deg,rgb(52, 90, 146) 15%, rgb(133, 165, 202)80%);
+}
+.sidebar-icon{
+    transition: all 0.2s ease-in-out;
+    display: none;
+}
+.sidebar-icon.active{
+    transition: all 0.2s ease-in-out;
+    display: none;
+}
+#navbar-sec1{
+    width: auto;
+    display: flex;
+    align-items: center;
+    background-color: rgba(31, 129, 44, 0);
+    img{
+        margin-left: 4vw;
+        filter: drop-shadow(0px 0px 10px rgba(153, 11, 219, 0.3));
+    }
+}
+#navbar-sec2{
+    width: auto;
+    margin: 0px 5vw 0px 0px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(31, 129, 44, 0);
+    
+}
+
+#username{
+    width: max-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.521);
+    height: 30px;
+    padding: 7px 12px 7px 0px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6);
+    border-radius: 22px;
+    &:hover,:active{
+        color: rgba(255, 255, 255, 1);
+    }
+    
+    /*User SVG*/
+    #user-svg{
+        position: relative;
+        left: -2px; 
+        scale: 1.5;
+    }
+}
+#logout-btn{
+    width: fit-content;
+    height: auto;
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 255, 255, 0);
+    border-radius:50%;
+    #logout-svg{
+        transition: all 0.1s ease;
+    }
+    &:hover{
+        #logout-svg{
+            fill: rgb(255, 120, 120);
+            transition: all 0.1s ease;
+        }
+    }
+    &:active{
+        #logout-svg{
+            fill: rgb(199, 61, 61);
+            transition: all 0.1s ease;
+        }
+    }
+}
+@media ( max-width: 900px ){
+    .navbar{
+        background:rgb(52, 90, 146)
+    }
+    .sidebar-icon{
+        display: block;
+    }
+    .sidebar-icon.active{
+        display: block;
+        transform-origin: center;
+        transform: rotate(90deg);
+        transition: all 0.2s ease-in-out;
+        g{ 
+            fill: rgb(136, 216, 120);
+        }
+    }
+}

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100"
+   height="100"
+   viewBox="0 0 100 100"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+
+  <g id="close-svg" fill="#ffffff">
+      <rect
+         transform='rotate(-135 50 50)'
+         id="rect1"
+         width="70"
+         height="25"
+         x="37.5"
+         y="37.5"
+         rx="12.5"
+         ry="12.5"
+      />
+      <rect
+         transform='rotate(135 50 50)'
+         id="rect2"
+         width="70"
+         height="25"
+         x="37.5"
+         y="37.5"
+         rx="12.5"
+         ry="12.5"
+      />
+      <rect
+         transform='rotate(-45 50 50)'
+         id="rect3"
+         width="70"
+         height="25"
+         x="37.5"
+         y="37.5"
+         rx="12.5"
+         ry="12.5"
+      />
+      <rect
+         transform='rotate(45 50 50)'
+         id="rect4"
+         width="70"
+         height="25"
+         x="37.5"
+         y="37.5"
+         rx="12.5"
+         ry="12.5"
+      />
+  </g>
+</svg>

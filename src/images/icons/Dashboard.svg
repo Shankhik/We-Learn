@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="50"
+   height="50"
+   viewBox="0 0 50 50.000002"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="dashboard-svg">
+    <path
+       id="border"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.460554;stroke-linecap:butt;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1"
+       d="M 9.359375,0 C 4.1739985,0 0,4.1739985 0,9.359375 v 31.28125 C 0,45.826002 4.1739985,50 9.359375,50 h 31.28125 C 45.826002,50 50,45.826002 50,40.640625 V 9.359375 C 50,4.1739985 45.826002,0 40.640625,0 Z m 3.128906,5 H 37.511719 C 41.66002,5 45,8.3399799 45,12.488281 V 37.511719 C 45,41.66002 41.66002,45 37.511719,45 H 12.488281 C 8.3399799,45 5,41.66002 5,37.511719 V 12.488281 C 5,8.3399799 8.3399799,5 12.488281,5 Z" />
+    <circle
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.271;stroke-linecap:butt;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1"
+       id="circle"
+       cx="36.384548"
+       cy="13.948399"
+       r="6" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.306551;stroke-linecap:butt;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1"
+       id="line1"
+       width="21.605181"
+       height="8"
+       x="7.3600068"
+       y="22.61937"
+       rx="4" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.306551;stroke-linecap:butt;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1"
+       id="line2"
+       width="35"
+       height="8"
+       x="7.5"
+       y="34"
+       rx="4" />
+  </g>
+</svg>

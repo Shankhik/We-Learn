@@ -1,0 +1,122 @@
+:root{
+    --BackgroundLight : rgb(206, 248, 232)
+}
+::selection{
+    background-color: rgb(223, 255, 233);
+    color: rgb(46, 71, 71);
+}
+.homepage{
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 100px 1fr;
+    height: 100dvh;
+    background-color: #2d3a49;
+    color: rgba(0, 0, 0, 0.8);
+    transition: background-color 0.2s ease;
+}
+.homepage-navbar{
+    grid-area: 1/1/2/-1;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(#4a6bb4,#ffffff00);
+    position: sticky;
+    top: 0px;
+    left: 0px;
+    #learn-page-logo{
+        margin: 0px 0px 0px 30px;
+        width: 150px;
+        height: auto;
+        transition: all 0.3s ease;
+        @media (max-width:900px){
+            width: 100px;
+            margin: 0px;
+        }
+    }
+}
+#show-sidebar-icon{
+    margin: 15px;
+    display: none;
+    align-self: center;
+    @media (max-width:900px) {
+        display: flex;
+    }
+}
+.homepage-sidebar{
+    grid-area: 2/1/3/2;
+    background-color: #2d3a49b3;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: background-color 0.2s ease;
+    &.enabled{
+        @media(max-width:900px){
+            transform: translateX(0px);
+        }
+    }
+    &.disabled{
+        @media(max-width:900px){
+            transform: translateX(-250px);
+        }
+    }
+    transition: transform 0.3s ease-in-out;
+}
+.homepage-sidebar-links{
+    padding: 14px;
+    border-radius: 10px;
+    &:hover{
+        background-color: #48628a;
+    }
+    transition: background-color 0.1s ease 0.1s;
+}
+.homepage-sidebar-links.active{
+    padding: 14px;
+    border-radius: 10px;
+    background-color: #678bc0;
+    &:hover{
+        background-color: #779ed8;
+    }
+    
+}
+.homepage-content{
+    grid-area: 2/2/3/3;
+    
+    margin: 0px 10px 0px 10px;
+    padding: 10px 10px 70px 10px;
+    background-color: rgba(255, 235, 235, 0);
+    position: relative;
+    
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .gradiant{
+        position: absolute;
+        left: 0px;
+        min-width: 100%;
+        height: 70px;
+        background-color: aqua;
+        background: linear-gradient(blanchedalmond,rgba(255, 255, 255, 0) );
+    }
+}
+@media (max-width: 900px) {
+    .homepage{
+        grid-template-columns: 1fr;
+    }
+    .homepage-navbar{
+        grid-area: 1/1/2/-1;
+        backdrop-filter: blur(10px);
+    }
+    .homepage-sidebar{
+        grid-area: 2/1/3/2;
+        position:sticky;
+        width: 250px;
+        z-index: 1;
+        backdrop-filter: blur(10px);
+        box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.1);
+        
+    }
+    .homepage-content{
+        grid-area: 2/1/3/-1;
+    }
+}

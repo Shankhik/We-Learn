@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="50"
+   height="50"
+   viewBox="0 0 50 50.000002"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer2"
+     style="display:inline;fill:#ffffff;fill-opacity:1">
+    <circle
+       style="fill:#ffffff;fill-opacity:1;stroke-width:1.002"
+       id="path2"
+       cx="25"
+       cy="15.961309"
+       r="8.4283943" />
+    <path
+       d="M 8.3613281,36.716797 A 20.370319,20.370319 0 0 0 25,45.371094 20.370319,20.370319 0 0 0 41.677734,36.693359 17.5,15.135497 0 0 0 25,26.134766 17.5,15.135497 0 0 0 8.3613281,36.716797 Z"
+       style="fill:#ffffff;fill-opacity:1;stroke-width:0.963304"
+       id="path9" />
+  </g>
+  <g
+     id="layer1"
+     style="display:inline;fill:#dedede;fill-opacity:1">
+    <path
+       id="path4"
+       style="display:inline;fill:#dedede;fill-opacity:1;stroke-width:1.002"
+       d="M 25,0 A 25,25 0 0 0 0,25 25,25 0 0 0 25,50 25,25 0 0 0 50,25 25,25 0 0 0 25,0 Z m 0,4.6289062 A 20.370319,20.370319 0 0 1 45.371094,25 20.370319,20.370319 0 0 1 25,45.371094 20.370319,20.370319 0 0 1 4.6289062,25 20.370319,20.370319 0 0 1 25,4.6289062 Z" />
+  </g>
+</svg>

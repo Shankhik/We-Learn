@@ -1,0 +1,10 @@
+Mouse Events:
+mouseOver:
+1. Bubbles up the DOM hierarchy.
+2. Triggered when the pointer enters the element or its child elements.
+3. Useful when you want to detect hover on an element and any of its descendants.
+
+mouseEnter:
+1. Does not bubble.
+2. Triggered only when the pointer enters the element itself (not its children).
+3. More specific and avoids unnecessary event handling for child elements.

@@ -1,0 +1,11 @@
+.unauthorized-page{
+    min-height: 100dvh;
+    min-width: 100dvw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background: linear-gradient(30deg, rgb(48, 58, 85), rgb(60, 14, 70));
+}

@@ -1,0 +1,15 @@
+.loading-page{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-height: 100dvh;
+    min-width: 100dvw;
+
+    position: absolute;
+    top: 0%;
+    left: 0%;
+
+    background: linear-gradient(30deg, rgb(131, 151, 206), rgb(88, 136, 88));
+}
+    

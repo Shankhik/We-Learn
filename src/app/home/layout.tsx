@@ -1,0 +1,307 @@
+"use client";
+
+import './global.css';
+import {useAuthContext } from "@/context/authContext"
+import {createContext, CSSProperties, MouseEvent, useEffect, useRef, useState } from "react"
+//components
+import UnauthorizedPage from '@/components/UnauthorizedPage';
+import LoadingPage from '@/components/LoadingPage';
+import { usePathname, useRouter } from 'next/navigation';
+import { background } from '@/images/background/background';
+import { getCookie, setCookie } from '@/lib/cookies';
+
+type PageState = 'loading' | 'un-authorized' | 'authorized';
+type SidebarLinks = 'dashboard' | 'lib' | 'courses' | 'settings';
+
+type AccentColors = 'red'|'green'|'blue'
+
+import { colorScheme } from '@/context/colorScheme';
+import Image from 'next/image';
+import logo from '@/images/logo/logo';
+
+
+export default function DashBoardLayout ({children}: Readonly<{children: React.ReactNode}>){
+
+    const {verified, updateAuth, user} = useAuthContext();
+    const [pageState,setPageState] = useState<PageState>('loading')
+    const [showSidebar, setShowSidebar] = useState<boolean>(false)
+    const router = useRouter();
+    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+    //Setting page state after JWT verification
+    useEffect(()=>{
+        const loading = async()=>{
+            await delay(1000);
+            
+            if(verified) setPageState('authorized')
+            else setPageState('un-authorized')
+        }
+        loading();
+    },[verified])
+
+    // Element References
+    const elements = {
+        navbar: useRef<HTMLDivElement|null>(null),
+        page: useRef<HTMLDivElement|null>(null),
+        sidebar: useRef<HTMLDivElement|null>(null)
+    }
+
+    // Themes Variables
+    const [effectiveTheme, setEffectedTheme] = useState<'light'|'dark'>('light')
+    const [theme, setTheme] = useState<'dark'|'light'|'default'>('light');
+    const [accentColor, setAccentColor] = useState<AccentColors>('blue')
+
+    //Checks Theme cookie on 1st render
+    useEffect(()=>{
+        let cookie = getCookie('ColorScheme').cookie
+        let cookie_theme, cookie_accentColor
+
+        if(cookie){
+            cookie_theme = cookie.split('; ')[0].split(': ')[1] as 'light'|'dark'|'default'
+            cookie_accentColor = cookie.split('; ')[1].split(': ')[1] as AccentColors
+        }
+    
+        if(cookie_theme && cookie_accentColor){
+            setTheme(cookie_theme)
+            setAccentColor(cookie_accentColor)
+        }else setCookie('ColorScheme',`Theme: ${theme}; AccentColor: ${accentColor}`)
+
+    },[])
+    //Checks for Theme changes
+    useEffect(()=>{
+        let cookie = getCookie('ColorScheme').cookie
+        let cookie_theme, cookie_accentColor
+        if(cookie){
+            cookie_theme = cookie.split('; ')[0].split(': ')[1] as 'light'|'dark'|'default'
+            cookie_accentColor = cookie.split('; ')[1].split(': ')[1] as AccentColors
+        }
+        if (cookie_theme!== theme || cookie_accentColor!== accentColor)
+            setCookie('ColorScheme', `Theme: ${theme}; AccentColor: ${accentColor}`)
+    },[theme,accentColor])
+
+    const [activeLink, setActiveLink] = useState<SidebarLinks>();
+    const pathname = usePathname()
+    
+    useEffect(()=>{
+        let paths = pathname.split('/');
+        let active = paths[2] as SidebarLinks
+        setActiveLink(active);
+        //pathname automatically changes on url change
+    },[pathname])
+    
+    const elementStyles: {[key: string]: CSSProperties} = {
+        navbar: {
+            background: `linear-gradient(${colorScheme.navbar[accentColor].background[effectiveTheme]},#00000000)`
+            
+        },
+        page: {
+            backgroundColor: colorScheme.page[accentColor].backgroundColor[effectiveTheme],
+            color: effectiveTheme==='dark'? 'rgba(255, 255, 255, 0.8)':''
+        },
+        sidebar: {
+            backgroundColor: colorScheme.sidebar[accentColor].backgroundColor[effectiveTheme]
+        },
+        sidebarActiveLink: {
+            color: 'rgba(255,255,255,0.9)',
+            backgroundColor: colorScheme.sidebar[accentColor].active[effectiveTheme]
+        }
+    }
+    const sidebarAccentColorsStyles = (color: AccentColors):CSSProperties=>{
+        return({
+            width: '30px',
+            height: '30px',
+            border: accentColor===color? `3px solid rgba(255,255,255,${effectiveTheme=== 'light'? '0.5':'0.7'})`:'3px solid transparent',
+            borderRadius: '50%',
+            scale: accentColor===color? '1.05':'0.8',
+            transition:'all 0.3s ease-in-out',
+            backgroundColor: colorScheme.navbar[color].background[effectiveTheme]
+        })
+    }
+    const sidebarThemeStyle = (mode: 'dark'|'light'|'default'):CSSProperties=>{
+        return({
+            padding: '5px 10px 5px 10px',
+            border: 'none',
+            borderRadius:'10px',
+            backgroundColor: theme===mode? colorScheme.sidebar[accentColor].active[effectiveTheme]:'rgba(0,0,0,0)',
+            color: effectiveTheme=== 'light'? (theme===mode? 'rgba(255,255,255,0.8)':''): 'rgba(255,255,255,0.8)',
+            position:'static',
+            transition:'all 0.3s ease',
+            fontWeight: '600',
+        })
+    }
+    useEffect(()=>{
+        const browserThemeChecker = (event:any)=>{
+            if (theme === 'default') {
+                if (event.matches){
+                    setEffectedTheme('dark')
+                }
+                else{
+                    setEffectedTheme('light')
+                }
+            }
+            else {
+                setEffectedTheme(theme=== 'light'? 'light':'dark')
+            }
+        }
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+        
+        //initial Run
+        browserThemeChecker(window.matchMedia('(prefers-color-scheme: dark)'))
+        
+        mediaQuery.addEventListener('change',browserThemeChecker)
+        return ()=> mediaQuery.removeEventListener('change',browserThemeChecker)
+
+    },[theme,accentColor])
+    
+    //Sidebar Hover Effects
+    const hoverEventOn = (e:MouseEvent)=>{
+        const target = e.currentTarget as HTMLDivElement
+        if(target.classList.contains('active')){
+            target.style.backgroundColor = colorScheme.sidebar[accentColor].activeHover[effectiveTheme]
+        }else{
+            target.style.backgroundColor = colorScheme.sidebar[accentColor].hover[effectiveTheme]
+        }
+        
+    }
+    const hoverEventOff = (e:MouseEvent)=>{
+        const target = e.currentTarget as HTMLDivElement
+        if(target.classList.contains('active')){
+            target.style.backgroundColor = colorScheme.sidebar[accentColor].active[effectiveTheme]
+        }else{
+            target.style.backgroundColor = ''
+        }
+    }
+    
+    //Sidebar Links Handler
+    const handleSidebarLinks = (link2: SidebarLinks)=>{
+        const link = `/home/${link2}`
+        if(link2==='settings') router.push(link)
+        else router.replace(link)
+        setActiveLink(link2)
+        setShowSidebar(false)
+    }
+    useEffect(()=>{
+        const sidebarOutsideClick = (e: globalThis.MouseEvent) =>{
+            if(showSidebar && !elements.sidebar.current?.contains(e.target as Node)){
+                setShowSidebar(false)
+            }
+        }
+        document.addEventListener("click",sidebarOutsideClick)
+        return ()=>{
+            document.removeEventListener('click',sidebarOutsideClick)
+        }
+    },[showSidebar])
+
+    const renderSelector = ()=>{
+        switch(pageState){
+            case 'loading':
+                return <LoadingPage zIndex={19} show={true}/>
+            case 'un-authorized':
+                return <UnauthorizedPage zIndex={18} show={true}/>
+            case 'authorized':
+                return(
+                <div className='homepage' style={elementStyles.page} ref={elements.page}>
+                    <nav className='homepage-navbar' style={elementStyles.navbar} ref={elements.navbar}>
+                        <svg width="50" height="40" viewBox="0 0 50 50.000002"
+                            id='show-sidebar-icon'
+                            style={{
+                                transform:`rotate(${showSidebar?'90deg':'0deg'})`,
+                                transition:'all 0.4s ease'
+                            }}
+                            onClick={()=>setShowSidebar(!showSidebar)}
+                        >
+
+                            <g fill={colorScheme.sidebar[accentColor].active[effectiveTheme]}>
+                            <rect
+                                style={{
+                                    strokeWidth: '0.377953',strokeLinecap:'round',strokeLinejoin:'round',
+                                    paintOrder:'stroke markers fill'
+                                }}
+                                id="rect2"
+                                width={showSidebar?'30':'42.669483'}
+                                height="6.3102398"
+                                x={showSidebar?'9.6':"3.6652584"}
+                                y="9.8448801"
+                                ry="3.1551199" />
+                            <rect
+                                style={{
+                                    strokeWidth: '0.377953',strokeLinecap:'round',strokeLinejoin:'round',
+                                    paintOrder:'stroke markers fill'
+                                }}
+                                id="rect3"
+                                width={showSidebar?'30':'42.669483'}
+                                height="6.3102398"
+                                x={showSidebar?'9.6':"3.6652584"}
+                                y="33.844879"
+                                ry="3.1551199" />
+                            <rect
+                                style={{
+                                    strokeWidth: '0.377953',strokeLinecap:'round',strokeLinejoin:'round',
+                                    paintOrder:'stroke markers fill'
+                                }}
+                                id="rect4"
+                                width="42.669483"
+                                height="6.3102398"
+                                x="3.6652584"
+                                y="21.844881"
+                                ry="3.1551199" />
+                            </g>
+                        </svg>
+                        <Image id='learn-page-logo' src={logo.fullLogo} alt='logo'/>
+                    </nav>
+                    <aside className={`homepage-sidebar ${showSidebar?'enabled':'disabled'}`} ref={elements.sidebar} style={elementStyles.sidebar}>
+                        <div className= {activeLink==='dashboard'? 'homepage-sidebar-links active':'homepage-sidebar-links'}
+                            style={activeLink==='dashboard'?elementStyles.sidebarActiveLink:{}}
+                            onMouseEnter={hoverEventOn} onMouseLeave={hoverEventOff}
+                            onClick={()=>{handleSidebarLinks('dashboard')}}
+                        >
+                            <h3>Dashboard</h3>
+                        </div>
+                        <div className= {activeLink==='lib'? 'homepage-sidebar-links active':'homepage-sidebar-links'}
+                            style={activeLink==='lib'?elementStyles.sidebarActiveLink:{}}
+                            onMouseEnter={hoverEventOn} onMouseLeave={hoverEventOff}
+                            onClick={()=>{handleSidebarLinks('lib')}}
+                        >
+                            <h3>Library</h3>
+                        </div>
+                        <div className= {activeLink==='courses'? 'homepage-sidebar-links active':'homepage-sidebar-links'}
+                            style={activeLink==='courses'?elementStyles.sidebarActiveLink:{}}
+                            onMouseEnter={hoverEventOn} onMouseLeave={hoverEventOff}
+                            onClick={()=>{handleSidebarLinks('courses')}}
+                        >
+                            <h3>Explore</h3>
+                        </div>
+                        <div style={{margin:'70% 0px 30px 13px'}}>
+                            <h3>Theme</h3>
+                            <h4 style={{margin:'10px 0px 0px 4px'}}>Color Mode</h4>
+                            <div style={{display:'flex', gap:'10px',margin:'5px 0px 5px 7px'}}>
+                                <button style={sidebarThemeStyle('light')} onClick={()=>{setTheme('light')}}>Light</button>
+                                <button style={sidebarThemeStyle('default')} onClick={()=>{setTheme('default')}}>Default</button>
+                                <button style={sidebarThemeStyle('dark')} onClick={()=>{setTheme('dark')}}>Dark</button>
+                            </div>
+                            <h4 style={{margin:'10px 0px 0px 4px'}}>Accent Color</h4>
+                            <div style={{display:'flex', gap:'10px', alignItems:'center', margin:'8px 0px 0px 8px'}}>
+                                <div style={sidebarAccentColorsStyles('red')} onClick={()=> setAccentColor('red')}></div>
+                                <div style={sidebarAccentColorsStyles('blue')} onClick={()=> setAccentColor('blue')}></div>
+                                <div style={sidebarAccentColorsStyles('green')} onClick={()=> setAccentColor('green')}></div>
+                            </div>
+                            
+                        </div>
+                        <div className= {activeLink==='settings'? 'homepage-sidebar-links active':'homepage-sidebar-links'}
+                            style={activeLink==='settings'?elementStyles.sidebarActiveLink:{}}
+                            onMouseEnter={hoverEventOn} onMouseLeave={hoverEventOff}
+                            onClick={()=> handleSidebarLinks('settings')}
+                        >
+                            <h3>Settings</h3>
+                        </div>
+                    </aside>
+                    <div className='homepage-content'>
+                        {children}
+                    </div>
+                </div>
+                )
+        }
+    }
+    
+    return renderSelector()
+}
