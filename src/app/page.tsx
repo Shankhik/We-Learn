@@ -125,7 +125,7 @@ export default function LandingPage (){
                 <div>
                     <h1>Unlock Your Potential</h1>
                     <p>We all Learn together with <b>We Learn</b></p>
-                    <button hidden={!verified} onClick={()=> router.push('home/dashboard')}>Let's Learn</button>
+                    <button hidden={!verified} onClick={()=> router.push('home/dashboard')}>{"Let's Learn"}</button>
                     
                 </div>
             </div>
