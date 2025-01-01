@@ -5,7 +5,7 @@ import {useAuthContext } from "@/context/authContext"
 import {createContext, CSSProperties, MouseEvent, useEffect, useRef, useState } from "react"
 //components
 import UnauthorizedPage from '@/components/UnauthorizedPage';
-import LoadingPage from '@/components/LoadingPage';
+import LoadingPage from '@/components/Loading';
 import { usePathname, useRouter } from 'next/navigation';
 import { background } from '@/images/background/background';
 import { getCookie, setCookie } from '@/lib/cookies';
@@ -18,23 +18,29 @@ type AccentColors = 'red'|'green'|'blue'
 import { colorScheme } from '@/context/colorScheme';
 import Image from 'next/image';
 import logo from '@/images/logo/logo';
+import LockedPage from '@/components/Locked';
 
 
 export default function DashBoardLayout ({children}: Readonly<{children: React.ReactNode}>){
 
     const {verified, updateAuth, user} = useAuthContext();
-    const [pageState,setPageState] = useState<PageState>('loading')
+    const [showLoading,setShowLoading] = useState<boolean>(true);
+    const [showLocked,setShowLocked] = useState<boolean>(false);
     const [showSidebar, setShowSidebar] = useState<boolean>(false)
     const router = useRouter();
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
     //Setting page state after JWT verification
     useEffect(()=>{
-        const loading = async()=>{
-            await delay(1000);
-            
-            if(verified) setPageState('authorized')
-            else setPageState('un-authorized')
+        const loading= async()=>{
+            if(verified){
+                setShowLocked(false);
+            }
+            else {
+                setShowLocked(true);
+            }
+            await delay(1500);
+            setShowLoading(false);
         }
         loading();
     },[verified])
@@ -45,7 +51,7 @@ export default function DashBoardLayout ({children}: Readonly<{children: React.R
         page: useRef<HTMLDivElement|null>(null),
         sidebar: useRef<HTMLDivElement|null>(null)
     }
-
+    
     // Themes Variables
     const [effectiveTheme, setEffectedTheme] = useState<'light'|'dark'>('light')
     const [theme, setTheme] = useState<'dark'|'light'|'default'>('light');
@@ -60,7 +66,6 @@ export default function DashBoardLayout ({children}: Readonly<{children: React.R
             cookie_theme = cookie.split('; ')[0].split(': ')[1] as 'light'|'dark'|'default'
             cookie_accentColor = cookie.split('; ')[1].split(': ')[1] as AccentColors
         }
-    
         if(cookie_theme && cookie_accentColor){
             setTheme(cookie_theme)
             setAccentColor(cookie_accentColor)
@@ -92,7 +97,6 @@ export default function DashBoardLayout ({children}: Readonly<{children: React.R
     const elementStyles: {[key: string]: CSSProperties} = {
         navbar: {
             background: `linear-gradient(${colorScheme.navbar[accentColor].background[effectiveTheme]},#00000000)`
-            
         },
         page: {
             backgroundColor: colorScheme.page[accentColor].backgroundColor[effectiveTheme],
@@ -105,6 +109,14 @@ export default function DashBoardLayout ({children}: Readonly<{children: React.R
             color: 'rgba(255,255,255,0.9)',
             backgroundColor: colorScheme.sidebar[accentColor].active[effectiveTheme]
         }
+    }
+    const loadingPageStyle:CSSProperties = {
+        background: effectiveTheme==='light'?'rgba(0, 0, 0, 0.6)':'rgba(0, 0, 0, 0.31)',
+        backdropFilter: 'blur(80px)'
+    }
+    const lockedPageStyle:CSSProperties = {
+        background: effectiveTheme==='light'?'rgba(0, 0, 0, 0.6)':'rgba(0, 0, 0, 0.31)',
+        backdropFilter: 'blur(80px)'
     }
     const sidebarAccentColorsStyles = (color: AccentColors):CSSProperties=>{
         return({
@@ -191,117 +203,109 @@ export default function DashBoardLayout ({children}: Readonly<{children: React.R
             document.removeEventListener('click',sidebarOutsideClick)
         }
     },[showSidebar])
-
-    const renderSelector = ()=>{
-        switch(pageState){
-            case 'loading':
-                return <LoadingPage zIndex={19} show={true}/>
-            case 'un-authorized':
-                return <UnauthorizedPage zIndex={18} show={true}/>
-            case 'authorized':
-                return(
-                <div className='homepage' style={elementStyles.page} ref={elements.page}>
-                    <nav className='homepage-navbar' style={elementStyles.navbar} ref={elements.navbar}>
-                        <svg width="50" height="40" viewBox="0 0 50 50.000002"
-                            id='show-sidebar-icon'
-                            style={{
-                                transform:`rotate(${showSidebar?'90deg':'0deg'})`,
-                                transition:'all 0.4s ease'
-                            }}
-                            onClick={()=>setShowSidebar(!showSidebar)}
-                        >
-
-                            <g fill={colorScheme.sidebar[accentColor].active[effectiveTheme]}>
-                            <rect
-                                style={{
-                                    strokeWidth: '0.377953',strokeLinecap:'round',strokeLinejoin:'round',
-                                    paintOrder:'stroke markers fill'
-                                }}
-                                id="rect2"
-                                width={showSidebar?'30':'42.669483'}
-                                height="6.3102398"
-                                x={showSidebar?'9.6':"3.6652584"}
-                                y="9.8448801"
-                                ry="3.1551199" />
-                            <rect
-                                style={{
-                                    strokeWidth: '0.377953',strokeLinecap:'round',strokeLinejoin:'round',
-                                    paintOrder:'stroke markers fill'
-                                }}
-                                id="rect3"
-                                width={showSidebar?'30':'42.669483'}
-                                height="6.3102398"
-                                x={showSidebar?'9.6':"3.6652584"}
-                                y="33.844879"
-                                ry="3.1551199" />
-                            <rect
-                                style={{
-                                    strokeWidth: '0.377953',strokeLinecap:'round',strokeLinejoin:'round',
-                                    paintOrder:'stroke markers fill'
-                                }}
-                                id="rect4"
-                                width="42.669483"
-                                height="6.3102398"
-                                x="3.6652584"
-                                y="21.844881"
-                                ry="3.1551199" />
-                            </g>
-                        </svg>
-                        <Image id='learn-page-logo' src={logo.fullLogo} alt='logo'/>
-                    </nav>
-                    <aside className={`homepage-sidebar ${showSidebar?'enabled':'disabled'}`} ref={elements.sidebar} style={elementStyles.sidebar}>
-                        <div className= {activeLink==='dashboard'? 'homepage-sidebar-links active':'homepage-sidebar-links'}
-                            style={activeLink==='dashboard'?elementStyles.sidebarActiveLink:{}}
-                            onMouseEnter={hoverEventOn} onMouseLeave={hoverEventOff}
-                            onClick={()=>{handleSidebarLinks('dashboard')}}
-                        >
-                            <h3>Dashboard</h3>
-                        </div>
-                        <div className= {activeLink==='lib'? 'homepage-sidebar-links active':'homepage-sidebar-links'}
-                            style={activeLink==='lib'?elementStyles.sidebarActiveLink:{}}
-                            onMouseEnter={hoverEventOn} onMouseLeave={hoverEventOff}
-                            onClick={()=>{handleSidebarLinks('lib')}}
-                        >
-                            <h3>Library</h3>
-                        </div>
-                        <div className= {activeLink==='courses'? 'homepage-sidebar-links active':'homepage-sidebar-links'}
-                            style={activeLink==='courses'?elementStyles.sidebarActiveLink:{}}
-                            onMouseEnter={hoverEventOn} onMouseLeave={hoverEventOff}
-                            onClick={()=>{handleSidebarLinks('courses')}}
-                        >
-                            <h3>Explore</h3>
-                        </div>
-                        <div style={{margin:'70% 0px 30px 13px'}}>
-                            <h3>Theme</h3>
-                            <h4 style={{margin:'10px 0px 0px 4px'}}>Color Mode</h4>
-                            <div style={{display:'flex', gap:'10px',margin:'5px 0px 5px 7px'}}>
-                                <button style={sidebarThemeStyle('light')} onClick={()=>{setTheme('light')}}>Light</button>
-                                <button style={sidebarThemeStyle('default')} onClick={()=>{setTheme('default')}}>Default</button>
-                                <button style={sidebarThemeStyle('dark')} onClick={()=>{setTheme('dark')}}>Dark</button>
-                            </div>
-                            <h4 style={{margin:'10px 0px 0px 4px'}}>Accent Color</h4>
-                            <div style={{display:'flex', gap:'10px', alignItems:'center', margin:'8px 0px 0px 8px'}}>
-                                <div style={sidebarAccentColorsStyles('red')} onClick={()=> setAccentColor('red')}></div>
-                                <div style={sidebarAccentColorsStyles('blue')} onClick={()=> setAccentColor('blue')}></div>
-                                <div style={sidebarAccentColorsStyles('green')} onClick={()=> setAccentColor('green')}></div>
-                            </div>
-                            
-                        </div>
-                        <div className= {activeLink==='settings'? 'homepage-sidebar-links active':'homepage-sidebar-links'}
-                            style={activeLink==='settings'?elementStyles.sidebarActiveLink:{}}
-                            onMouseEnter={hoverEventOn} onMouseLeave={hoverEventOff}
-                            onClick={()=> handleSidebarLinks('settings')}
-                        >
-                            <h3>Settings</h3>
-                        </div>
-                    </aside>
-                    <div className='homepage-content'>
-                        {children}
-                    </div>
-                </div>
-                )
-        }
-    }
     
-    return renderSelector()
+    return (
+        <div className='homepage' style={elementStyles.page} ref={elements.page}>
+            <LockedPage show={showLocked} message={'UnAuthorized'} style={lockedPageStyle} zIndex={4}/>
+            <LoadingPage show={showLoading} style={loadingPageStyle} zIndex={6}/>
+            <div className='fader' style={{zIndex:'5'}}></div>
+            <nav className='homepage-navbar' style={elementStyles.navbar} ref={elements.navbar}>
+                <svg width="50" height="40" viewBox="0 0 50 50.000002"
+                    id='homepage-sidebar-icon'
+                    style={{
+                        transform:`rotate(${showSidebar?'90deg':'0deg'})`,
+                        transition:'all 0.4s ease'
+                    }}
+                    onClick={()=>setShowSidebar(!showSidebar)}
+                >
+
+                    <g fill={colorScheme.sidebar[accentColor].active[effectiveTheme]}>
+                    <rect
+                        style={{
+                            strokeWidth: '0.377953',strokeLinecap:'round',strokeLinejoin:'round',
+                            paintOrder:'stroke markers fill'
+                        }}
+                        id="rect2"
+                        width={showSidebar?'30':'42.669483'}
+                        height="6.3102398"
+                        x={showSidebar?'9.6':"3.6652584"}
+                        y="9.8448801"
+                        ry="3.1551199" />
+                    <rect
+                        style={{
+                            strokeWidth: '0.377953',strokeLinecap:'round',strokeLinejoin:'round',
+                            paintOrder:'stroke markers fill'
+                        }}
+                        id="rect3"
+                        width={showSidebar?'30':'42.669483'}
+                        height="6.3102398"
+                        x={showSidebar?'9.6':"3.6652584"}
+                        y="33.844879"
+                        ry="3.1551199" />
+                    <rect
+                        style={{
+                            strokeWidth: '0.377953',strokeLinecap:'round',strokeLinejoin:'round',
+                            paintOrder:'stroke markers fill'
+                        }}
+                        id="rect4"
+                        width="42.669483"
+                        height="6.3102398"
+                        x="3.6652584"
+                        y="21.844881"
+                        ry="3.1551199" />
+                    </g>
+                </svg>
+                <Image id='learn-page-logo' src={logo.fullLogo} alt='logo'/>
+            </nav>
+            <aside className={`homepage-sidebar ${showSidebar?'enabled':'disabled'}`} ref={elements.sidebar} style={elementStyles.sidebar}>
+                <div className= {activeLink==='dashboard'? 'homepage-sidebar-links active':'homepage-sidebar-links'}
+                    style={activeLink==='dashboard'?elementStyles.sidebarActiveLink:{}}
+                    onMouseEnter={hoverEventOn} onMouseLeave={hoverEventOff}
+                    onClick={()=>{handleSidebarLinks('dashboard')}}
+                >
+                    <h3>Dashboard</h3>
+                </div>
+                <div className= {activeLink==='lib'? 'homepage-sidebar-links active':'homepage-sidebar-links'}
+                    style={activeLink==='lib'?elementStyles.sidebarActiveLink:{}}
+                    onMouseEnter={hoverEventOn} onMouseLeave={hoverEventOff}
+                    onClick={()=>{handleSidebarLinks('lib')}}
+                >
+                    <h3>Library</h3>
+                </div>
+                <div className= {activeLink==='courses'? 'homepage-sidebar-links active':'homepage-sidebar-links'}
+                    style={activeLink==='courses'?elementStyles.sidebarActiveLink:{}}
+                    onMouseEnter={hoverEventOn} onMouseLeave={hoverEventOff}
+                    onClick={()=>{handleSidebarLinks('courses')}}
+                >
+                    <h3>Explore</h3>
+                </div>
+                <div id='homepage-theme-section'>
+                    <h3>Theme</h3>
+                    <h4 style={{marginTop:'19px'}}>Color Mode</h4>
+                    <div style={{display:'flex', gap:'10px',margin:'8px 0px 5px 3px'}}>
+                        <button style={sidebarThemeStyle('light')} onClick={()=>{setTheme('light')}}>Light</button>
+                        <button style={sidebarThemeStyle('default')} onClick={()=>{setTheme('default')}}>Default</button>
+                        <button style={sidebarThemeStyle('dark')} onClick={()=>{setTheme('dark')}}>Dark</button>
+                    </div>
+                    <h4 style={{margin:'10px 0px 0px 0px'}}>Accent Color</h4>
+                    <div style={{display:'flex', gap:'10px', alignItems:'center', margin:'8px 0px 0px 8px'}}>
+                        <div style={sidebarAccentColorsStyles('red')} onClick={()=> setAccentColor('red')}></div>
+                        <div style={sidebarAccentColorsStyles('blue')} onClick={()=> setAccentColor('blue')}></div>
+                        <div style={sidebarAccentColorsStyles('green')} onClick={()=> setAccentColor('green')}></div>
+                    </div>
+                    
+                </div>
+                <div className= {activeLink==='settings'? 'homepage-sidebar-links active':'homepage-sidebar-links'}
+                    style={activeLink==='settings'?elementStyles.sidebarActiveLink:{}}
+                    onMouseEnter={hoverEventOn} onMouseLeave={hoverEventOff}
+                    onClick={()=> handleSidebarLinks('settings')}
+                >
+                    <h3>Settings</h3>
+                </div>
+            </aside>
+            <div className='homepage-content'>
+                {verified?children:""}
+            </div>
+        </div>
+    )
 }

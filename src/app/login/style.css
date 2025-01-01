@@ -1,0 +1,216 @@
+.login-page{
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    background: linear-gradient(30deg,rgb(120, 120, 255), rgb(231, 186, 90));
+}
+
+.login-box{
+    width: min(93%,380px);
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    background-color: rgb(140, 140, 196);
+    box-shadow: 0px 0px 2px white inset;
+    border-radius: 20px;
+    border: 2px solid rgb(95, 95, 177);
+}
+
+#login-heading{
+    margin-top: 60px;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, white, rgb(255, 214, 127));
+    background-clip: text;
+    color: rgba(255, 255, 255, 0.2);
+
+    text-align: center;
+    
+    @media (max-width:400px) {
+        margin-top: 30px;
+        margin-bottom: 5px;
+    }
+
+    transition: all 0.3s ease;
+}
+
+.login-box>form{
+    flex: 1 1;
+    padding: 10px 15px 30px 15px;
+    display: flex;
+    flex-direction: column;
+    
+    background-color: rgba(127, 255, 212, 0);
+
+    >div{
+        padding: 10px 15px 5px 15px;
+        gap: 5px;
+        display: flex;
+        flex-direction: column;
+
+        position: relative;
+        background-color: rgba(196, 193, 190, 0);
+
+        a{
+            color: rgba(255, 255, 255, 0.7);
+            align-self: center;
+            width: fit-content;
+            text-align: center;
+            &:hover,&:active{
+                color: rgb(255, 214, 127);
+            }
+        }
+        label{
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        input[type='text'],input[type='password'],input[type='email']{
+            padding: 0px 20px 0px 20px;
+            min-height: 40px;
+            font-size: 1rem;
+            outline: none;
+            color: rgba(0, 0, 0, 0.7);
+            letter-spacing: 1px;
+            font-weight: 500;
+            background-color: rgba(255, 255, 255, 0.5);
+            border: 2px solid rgba(0, 0, 0, 0);
+            border-radius: 25px;
+            &:focus{
+                letter-spacing:normal;
+                background-color: rgba(255, 255, 255, 0.9);
+                font-weight: 700;
+                font-size: 1.1rem;
+                color: rgb(93, 93, 161);
+                border: 2px solid rgb(98, 90, 202);
+                border-radius: 10px;
+            }
+            transition: all 0.2s ease, border-radius 1s ease;
+        }
+    }
+    #eye-svg{
+        width: 20px;
+        height: 100%;
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
+        transform: translate(-150%,20%);
+    }
+    /*Div wrapping submit btn*/
+    >:nth-last-child(1){
+        /*The Submit button(input)*/
+        input{
+            margin-top: 30px;
+        }
+        
+        margin-top: auto;
+    }
+
+    @media (max-width:800px) {
+        padding: 10px 0px 10px 0px;
+        >div{
+            label{
+                font-size: 0.9rem;
+            }
+            a{
+                font-size: 0.9rem;
+            }
+            input[type='text'],input[type='password']{
+                font-size: 0.9rem;
+                &:focus{
+                    font-size: 1rem;
+                }
+            }
+        }
+        >:nth-last-child(1){
+            /*The Submit button(input)*/
+            input{
+                margin-top: 10px;
+            }
+            margin-top: auto;
+        }
+
+    }
+    transition: padding 0.7s ease;
+}
+
+#login-submit{
+    padding: 0px;
+    height: 60px;
+    border: none;
+    font-weight: 600;
+    border-radius: 28px;
+    box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+    color: white;
+    font-size: 1.2rem;
+    background: linear-gradient(20deg, rgb(224, 156, 93), rgb(105, 105, 243));
+    &:focus{
+        font-weight: 600;
+    }
+    &:active{
+        box-shadow: 0px 0px 6px white inset;
+        background: linear-gradient(20deg, rgb(196, 142, 91), rgb(91, 91, 202));
+    }
+    @media (max-width:400px) {
+        height: 50px;
+        font-size: 0.9rem;
+    }
+}
+
+.login.alert-box{
+    padding: 40px;
+    width: min(300px, 70%);
+    height: fit-content;
+    position: inherit;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    box-shadow: 0px 0px 3px rgba(255, 255, 255, 0.5) inset;
+    background-color: rgba(168, 168, 212, 0.8);
+    @media (max-width:400px) {
+        padding: 20px;
+        padding-top: 30px;
+    }
+
+}
+.login.alert-box-heading{
+    margin-bottom: 30px;
+    text-align: center;
+    @media (max-width:400px) {
+        margin-bottom: 20px;
+        font-size: 1.2rem;
+    }
+}
+.login.alert-box-message{
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.1rem;
+    @media (max-width:400px) {
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+    }
+}
+.login.alert-box-close{
+    margin-top: auto;
+    align-self: center;
+    width: min(200px,60%);
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    &:hover{
+        color: rgba(255, 255, 255, 0.9);
+        background-color: rgb(78, 87, 168);
+    }
+    &:active{
+        letter-spacing: 2px;
+        font-weight: 800;
+    }
+    @media (max-width:400px) {
+        font-size: 0.7rem;
+    }
+    transition: all 0.2s ease;
+}

@@ -1,0 +1,45 @@
+.alert-popup{
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    
+    
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(7px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+    &.enabled{
+        display: flex;
+        animation: fade-in 0.2s ease forwards;
+    }
+    &.disabled{
+        animation: fade-out 0.3s ease forwards;
+    }
+}
+.alert-box-wrapper{
+    width: 100%;
+    display: contents;
+}
+@keyframes fade-in {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@keyframes fade-out {
+    0%{
+        display: flex;
+        opacity: 1;
+    }
+    100%{
+        display: none;
+        opacity: 0;
+    }
+}

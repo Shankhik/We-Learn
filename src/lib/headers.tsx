@@ -1,13 +1,15 @@
-const origins = ['http://localhost:3000']
+const origins = ['http://localhost:3000', 'https://we-learn.onrender.com']
 
 export const header = (origin: string|null): HeadersInit =>{
-    function checkOrigin(){
-        if (origins.includes(origin || '')) return true;
-        else return false
+    function checkOrigin():string{
+        if(origin!==null && origin){
+            if (origins.includes(origin)) return origin;
+        }
+        return ''
     }
     let header: HeadersInit = {
         'Access-Control-Allow-Credentials': 'true',
-        'Access-Control-Allow-Origin': `${checkOrigin()?origin: ''}`
+        'Access-Control-Allow-Origin': `${checkOrigin()}`
     };
     return header;
 }

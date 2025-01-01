@@ -1,6 +1,5 @@
 'use client'
 import './style.css'
-import LoadingPage from "@/components/LoadingPage";
 import UnauthorizedPage from "@/components/UnauthorizedPage";
 import { useAuthContext } from "@/context/authContext";
 import { getCookie, setCookie } from "@/lib/cookies";
@@ -9,31 +8,26 @@ import { Course, EnrolledCourses } from "@/types/databaseTypes";
 import { status } from "@/types/statusType";
 import Image from 'next/image';
 import { useRouter, useSearchParams } from "next/navigation";
-import { CSSProperties, FC, useEffect, useMemo, useRef, useState } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import { colorScheme } from '@/context/colorScheme';
 import parse from 'html-react-parser';
 import logo from '@/images/logo/logo';
-
+import ApiLinks from '@/lib/apiLinks';
+import LockedPage from '@/components/Locked';
+import LoadingPage from '@/components/Loading';
 
 type AccentColors = 'red'|'green'|'blue'
 
-class apiLinks{
-    static apiDomain = process.env.NEXT_PUBLIC_API_DOMAIN||'localhost:3000'
-    static httpsOrNot = process.env.NODE_ENV==='production'?'https':'http';
-    
-    static get getCourseDetails(){ return `${this.httpsOrNot}://${this.apiDomain}/api/courses/findone`}
-    static get getCourseHistory(){ return `${this.httpsOrNot}://${this.apiDomain}/api/courses/find-course-history`}
-    static get updateLastLoaded(){ return `${this.httpsOrNot}://${this.apiDomain}/api/courses/update-last-loaded`}
-    static get markAsRead(){ return `${this.httpsOrNot}://${this.apiDomain}/api/courses/inc`}
-    static get setAsCompleted(){ return `${this.httpsOrNot}://${this.apiDomain}/api/courses/complete-course`}
-}
 export default function CourseLearn ({params}:{params:{courseId:string}}){
     const delay = (ms: number)=> new Promise(resolve=> setTimeout(resolve,ms));
     const {verified,user,updateAuth} = useAuthContext();
     const searchParams = useSearchParams()
     const router = useRouter();
-    const [pageState,setPageState] = useState<'loading'|'un-authorized'|'authorized'|'not-enrolled'>('loading');
-    
+
+    //UI variables
+    const [showLoading, setShowLoading] = useState<boolean>(true);
+    const [showLocked, setShowLocked] = useState<boolean>(false);
+    const [showSidebar,setShowSidebar] = useState<boolean>(false);
     
     //CourseDetails
     const emptyCourse:Course= {
@@ -51,23 +45,20 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
         },
         modules: []
     }
-    const [course,setCourse] = useState<Course>(emptyCourse)
+    const [enrolled, setEnrolled] = useState<boolean>(true);
+    const [course,setCourse] = useState<Course>(emptyCourse);
     const completedUpto = useRef<number>(0);
     const [isCompleted, setIsCompleted] = useState<boolean>(false);
     const [currentModule,setCurrentModule] = useState<number>(parseInt(searchParams.get('module')||'0'));
-    const [showSidebar,setShowSidebar] = useState<boolean>(false);
     
-    const [trigger,setTrigger] = useState<boolean>(false);
-    const forceUpdate=()=>{
-        setTrigger(!trigger)
-    }
     //Initial details check about course and user
     useEffect(()=>{
         const loading = async ()=>{
-            await delay(800);
-            console.log(process.env.NODE_ENV)
             if(!verified||!user?.username){
-                setPageState('un-authorized')
+                setShowLocked(true);
+                await delay(1500);
+                setShowLoading(false);
+                return
             }
             
             var courseDetails:Course|undefined;
@@ -75,14 +66,21 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
             var numOfModules = 0;
             let moduleParamToSet:number = 0;
 
-            courseDetails = (await post(apiLinks.getCourseDetails,{courseId: params.courseId}) as status).course
-            courseHistory = (await post(apiLinks.getCourseHistory,{username:user?.username, courseId:params.courseId}) as status).courseHistory
+            courseHistory = (await post(ApiLinks.courses.findCourseHistory.this,{username:user?.username, courseId:params.courseId}) as status).courseHistory
+            
+            //first checks if you are enrolled or not
             if(courseHistory){
-                let update:status = await post(apiLinks.updateLastLoaded,{username:user?.username, courseId:params.courseId})
+                //loads course details
+                courseDetails = (await post(ApiLinks.courses.findone.this,{courseId: params.courseId}) as status).course
+                let update:status = await post(ApiLinks.courses.updateLastLoaded.this,{username:user?.username, courseId:params.courseId})
                 completedUpto.current = courseHistory.completedUpto;
-                setPageState('authorized');
+                //sets enrolled: true
+                setEnrolled(true);
+                //sets unauthorized: false
+                setShowLocked(false);
             }else{
-                setPageState('not-enrolled')
+                setEnrolled(false);
+                setShowLocked(true);
             }
 
             if(courseDetails){
@@ -93,7 +91,7 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
                     moduleParamToSet=completedUpto.current+1
                 else moduleParamToSet = courseDetails?.modules.length
             }
-            if(completedUpto.current===courseDetails?.modules.length) setIsCompleted(true)
+            if(completedUpto.current===courseDetails?.modules.length) setIsCompleted(true);
             
             //params and current module handler
             if(searchParams.get('module')===null){
@@ -109,7 +107,8 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
                     router.replace(`./${params.courseId}?module=${moduleParamToSet}`);
                 }
             }
-            
+            await delay(1500);
+            setShowLoading(false);
         }
         loading();
     },[verified, params.courseId])
@@ -232,7 +231,7 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
     //'Mark as Read' Button Handler
     const btnHandlerMarkAsRead = async()=>{
         let num = parseInt(searchParams.get('module')||'1');
-        await post(apiLinks.markAsRead,{username: user?.username||undefined, courseId: params.courseId})
+        await post(ApiLinks.courses.inc.this,{username: user?.username||undefined, courseId: params.courseId})
         completedUpto.current = completedUpto.current+1;
         if (completedUpto.current < course.modules.length){
             setCurrentModule(num+1);
@@ -240,25 +239,22 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
         }
         else{
             setIsCompleted(true);
-            let ack = await post(apiLinks.setAsCompleted,{username: user?.username, courseId: params.courseId})
+            let ack = await post(ApiLinks.courses.completeCourse.this,{username: user?.username, courseId: params.courseId})
             console.log(ack)
         }
     }
-    const renderSelector = ()=>{
-    switch(pageState){
-    case "loading":
-        return <LoadingPage zIndex={19} show={true}/>
-    case "un-authorized":
-        return <UnauthorizedPage zIndex={19} show={true}/>
-    case "not-enrolled":
-        return(
-        <div>
-            Not Enrolled
-        </div>
-        )
-    case "authorized":
-        return(
+    const loadingAndLockedStyle:CSSProperties ={
+        background: effectiveTheme==='light'?'rgba(0, 0, 0, 0.6)':'rgba(0, 0, 0, 0.31)',
+        backdropFilter: 'blur(80px)'
+    }
+    return (
         <div id="learn-page" style={cssStyles.page}>
+            <LoadingPage show={showLoading} style={loadingAndLockedStyle} zIndex={6}/>
+            <LockedPage show={showLocked||(!enrolled)} message={showLocked?'UnAuthorized':'Not Enrolled'}
+                zIndex={4}
+                style={loadingAndLockedStyle}
+            />
+            <div className='fader' style={{zIndex:'5'}}></div>
             <nav id='learn-page-navbar' style={cssStyles.navbar}>
                 <svg width="50" height="40" viewBox="0 0 50 50.000002"
                     id='show-sidebar-icon'
@@ -268,7 +264,6 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
                     }}
                     onClick={()=>setShowSidebar(!showSidebar)}
                 >
-
                     <g fill={colorScheme.sidebar[accentColor].active[effectiveTheme]}>
                     <rect
                         style={{
@@ -306,7 +301,7 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
                     </g>
                 </svg>
                 <Image id='learn-page-logo' src={logo.fullLogo} alt='logo'/>
-                <div style={{display:'flex', alignItems:'baseline',whiteSpace:'preserve',marginLeft:'5%'}}>
+                <div>
                     <h1>{course.courseName}</h1>
                     <h5>{`  [ ${course.courseId} ]`}</h5>
                 </div>
@@ -342,14 +337,10 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
                     <button id='complete-btn' onClick={btnHandlerMarkAsRead} hidden={isCompleted}
                         style={{backgroundColor:colorScheme.sidebar[accentColor].active[effectiveTheme]}}
                     >Mark as Completed</button>
-                    <h5 hidden={currentModule>completedUpto.current}>Completed</h5>
+                    <h4 hidden={currentModule>completedUpto.current}>Completed</h4>
                 </div>
             </div>
         </div>
-        )
-    }
-    }
-    
-    return renderSelector()
+    )
 }
 
