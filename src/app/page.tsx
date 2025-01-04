@@ -167,6 +167,7 @@ export default function LandingPage (){
                 </div>
                 <div>
                     <h3>About</h3>
+                    <div><strong>Version</strong>:<p style={{color:'rgb(176, 250, 255)'}}>0.2.3</p></div>
                     <div>
                         <p><strong>Framework</strong>: <a href="https://nextjs.org/" target='_blank'>NextJS</a></p>
                     </div>

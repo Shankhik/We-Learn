@@ -175,9 +175,8 @@
     grid-area: 2/2/3/3;
     
     margin: 0px 10px 0px 10px;
-    padding: 10px 10px 70px 10px;
+    padding: 10px 10px 50px 10px;
     position: relative;
-    
     
     overflow-y: scroll;
     overflow-x: hidden;

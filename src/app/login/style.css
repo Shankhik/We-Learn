@@ -146,13 +146,13 @@
     box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
     color: white;
     font-size: 1.2rem;
-    background: linear-gradient(20deg, rgb(224, 156, 93), rgb(105, 105, 243));
+    background: linear-gradient(20deg, rgb(252, 124, 124), rgb(255, 234, 143));
     &:focus{
         font-weight: 600;
     }
     &:active{
         box-shadow: 0px 0px 6px white inset;
-        background: linear-gradient(20deg, rgb(196, 142, 91), rgb(91, 91, 202));
+        background: linear-gradient(20deg, rgb(219, 114, 114), rgb(214, 197, 121));
     }
     @media (max-width:400px) {
         height: 50px;

@@ -4,22 +4,15 @@ import './global.css';
 import {useAuthContext } from "@/context/authContext"
 import {createContext, CSSProperties, MouseEvent, useEffect, useRef, useState } from "react"
 //components
-import UnauthorizedPage from '@/components/UnauthorizedPage';
 import LoadingPage from '@/components/Loading';
 import { usePathname, useRouter } from 'next/navigation';
-import { background } from '@/images/background/background';
 import { getCookie, setCookie } from '@/lib/cookies';
-
-type PageState = 'loading' | 'un-authorized' | 'authorized';
-type SidebarLinks = 'dashboard' | 'lib' | 'courses' | 'settings';
-
-type AccentColors = 'red'|'green'|'blue'
-
-import { colorScheme } from '@/context/colorScheme';
+import { useColorContext, colorScheme, AccentColors } from '@/context/colorScheme';
 import Image from 'next/image';
 import logo from '@/images/logo/logo';
 import LockedPage from '@/components/Locked';
 
+type SidebarLinks = 'dashboard' | 'lib' | 'courses' | 'settings';
 
 export default function DashBoardLayout ({children}: Readonly<{children: React.ReactNode}>){
 
@@ -52,37 +45,8 @@ export default function DashBoardLayout ({children}: Readonly<{children: React.R
         sidebar: useRef<HTMLDivElement|null>(null)
     }
     
-    // Themes Variables
-    const [effectiveTheme, setEffectedTheme] = useState<'light'|'dark'>('light')
-    const [theme, setTheme] = useState<'dark'|'light'|'default'>('light');
-    const [accentColor, setAccentColor] = useState<AccentColors>('blue')
-
-    //Checks Theme cookie on 1st render
-    useEffect(()=>{
-        let cookie = getCookie('ColorScheme').cookie
-        let cookie_theme, cookie_accentColor
-
-        if(cookie){
-            cookie_theme = cookie.split('; ')[0].split(': ')[1] as 'light'|'dark'|'default'
-            cookie_accentColor = cookie.split('; ')[1].split(': ')[1] as AccentColors
-        }
-        if(cookie_theme && cookie_accentColor){
-            setTheme(cookie_theme)
-            setAccentColor(cookie_accentColor)
-        }else setCookie('ColorScheme',`Theme: ${theme}; AccentColor: ${accentColor}`)
-
-    },[])
-    //Checks for Theme changes
-    useEffect(()=>{
-        let cookie = getCookie('ColorScheme').cookie
-        let cookie_theme, cookie_accentColor
-        if(cookie){
-            cookie_theme = cookie.split('; ')[0].split(': ')[1] as 'light'|'dark'|'default'
-            cookie_accentColor = cookie.split('; ')[1].split(': ')[1] as AccentColors
-        }
-        if (cookie_theme!== theme || cookie_accentColor!== accentColor)
-            setCookie('ColorScheme', `Theme: ${theme}; AccentColor: ${accentColor}`)
-    },[theme,accentColor])
+    // Themes Variables (check context for the implementation)
+    const {effectiveTheme,theme,setTheme,accentColor,setAccentColor} = useColorContext();
 
     const [activeLink, setActiveLink] = useState<SidebarLinks>();
     const pathname = usePathname()
@@ -141,29 +105,6 @@ export default function DashBoardLayout ({children}: Readonly<{children: React.R
             fontWeight: '600',
         })
     }
-    useEffect(()=>{
-        const browserThemeChecker = (event:any)=>{
-            if (theme === 'default') {
-                if (event.matches){
-                    setEffectedTheme('dark')
-                }
-                else{
-                    setEffectedTheme('light')
-                }
-            }
-            else {
-                setEffectedTheme(theme=== 'light'? 'light':'dark')
-            }
-        }
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-        
-        //initial Run
-        browserThemeChecker(window.matchMedia('(prefers-color-scheme: dark)'))
-        
-        mediaQuery.addEventListener('change',browserThemeChecker)
-        return ()=> mediaQuery.removeEventListener('change',browserThemeChecker)
-
-    },[theme,accentColor])
     
     //Sidebar Hover Effects
     const hoverEventOn = (e:MouseEvent)=>{

@@ -1,7 +1,16 @@
 # Change Log
 
 <!-- Add New Version above -->
+## Version: 0.2.3 [Jan 4th, 2025]
+### Modified
+- Login and Signup page
+- Re-written `README.md`
+- Course learn page's Course Name alignment
+### Fixed
+- Landing Page font-color when 'Browser Theme: Light'
+- Course skills not loading at first go.
 
+<!-- Add New Version above -->
 ## Version: 0.2.0 [Jan 1st, 2025]
 ### Added
 - Added Changelog in the Repository

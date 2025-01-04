@@ -1,22 +1,19 @@
 'use client'
-import './style.css'
-import UnauthorizedPage from "@/components/UnauthorizedPage";
+
+import './style.css';
 import { useAuthContext } from "@/context/authContext";
-import { getCookie, setCookie } from "@/lib/cookies";
+import {colorScheme, useColorContext} from "@/context/colorScheme"
 import { post } from "@/lib/fetchReq";
 import { Course, EnrolledCourses } from "@/types/databaseTypes";
 import { status } from "@/types/statusType";
 import Image from 'next/image';
 import { useRouter, useSearchParams } from "next/navigation";
 import { CSSProperties, useEffect, useRef, useState } from "react";
-import { colorScheme } from '@/context/colorScheme';
 import parse from 'html-react-parser';
 import logo from '@/images/logo/logo';
 import ApiLinks from '@/lib/apiLinks';
 import LockedPage from '@/components/Locked';
 import LoadingPage from '@/components/Loading';
-
-type AccentColors = 'red'|'green'|'blue'
 
 export default function CourseLearn ({params}:{params:{courseId:string}}){
     const delay = (ms: number)=> new Promise(resolve=> setTimeout(resolve,ms));
@@ -114,9 +111,7 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
     },[verified, params.courseId])
 
     //Theme Section
-    const [effectiveTheme,setEffectedTheme] = useState<'light'|'dark'>('light')
-    const [theme,setTheme] = useState<'light'|'dark'|'default'>('light');
-    const [accentColor,setAccentColor] = useState<AccentColors>('blue')
+    const {effectiveTheme, theme, setTheme, accentColor, setAccentColor}= useColorContext();
     
     //Elements Reference
     const elements = {
@@ -141,40 +136,27 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
 
         }
     }
-    //Collecting Theme details
-    useEffect(()=>{
-        let colorScheme = getCookie('ColorScheme').cookie
-        let cookie_theme, cookie_accentColor
-
-        if(colorScheme){
-            cookie_theme = colorScheme.split('; ')[0].split(': ')[1] as 'light'|'dark'|'default'
-            cookie_accentColor = colorScheme.split('; ')[1].split(': ')[1] as AccentColors
-        }
-        if(cookie_theme && cookie_accentColor){
-            setTheme(cookie_theme)
-            setAccentColor(cookie_accentColor)
-        }else setCookie('ColorScheme', `Theme: ${theme}; AccentColor: ${accentColor}`)
-    },[])
-    //Checking for Browser color scheme change
-    useEffect(()=>{
-        const browserThemeChecker = (event:any)=>{
-            if (theme === 'default') {
-                if (event.matches) setEffectedTheme('dark')
-                else setEffectedTheme('light')
-            }
-            else {
-                setEffectedTheme(theme=== 'light'? 'light':'dark')
-            }
-        }
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-        
-        //initial Run
-        browserThemeChecker(window.matchMedia('(prefers-color-scheme: dark)'))
-        
-        mediaQuery.addEventListener('change',browserThemeChecker)
-        return ()=> mediaQuery.removeEventListener('change',browserThemeChecker)
-    },[theme])
     
+    //Course Name color changer
+    const [inMobile,setInMobile] = useState<boolean>(false);
+    
+    useEffect(()=>{
+        const maxWidth = 400; //width you want to check
+        const widthChecker = (event:any) =>{
+            if (event.matches) setInMobile(true)
+            else setInMobile(false)
+        }
+        const mediaQuery = window.matchMedia(`(max-width: ${maxWidth}px)`);
+        //initial check
+        widthChecker(mediaQuery);
+
+        mediaQuery.addEventListener('change',widthChecker)
+        return ()=>{
+            mediaQuery.removeEventListener('change',widthChecker)
+        }
+    },[])
+
+    //module click handler
     const moduleClickHandler =(e:React.MouseEvent)=>{
         let num = parseInt(e.currentTarget.getAttribute('id')?.split('-')[1]||'1');
         
@@ -302,8 +284,12 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
                 </svg>
                 <Image id='learn-page-logo' src={logo.fullLogo} alt='logo'/>
                 <div>
-                    <h1>{course.courseName}</h1>
-                    <h5>{`  [ ${course.courseId} ]`}</h5>
+                    <h1 style={{
+                        color: !inMobile && effectiveTheme==='light'?'rgba(0,0,0,0.4)':'rgba(255,255,255,0.8)',
+                        transition: 'all 0.2s ease'
+                    }}
+                    >{course.courseName}</h1>
+                    {/*<h5>{`  [ ${course.courseId} ]`}</h5>*/}
                 </div>
                 
             </nav>

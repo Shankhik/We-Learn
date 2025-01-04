@@ -1,7 +1,7 @@
 'use client'
 
 import './style.css'
-import { CSSProperties, Dispatch, FC, FormEvent, SetStateAction, useEffect, useRef, useState } from 'react';
+import { FormEvent,useRef, useState } from 'react';
 import LoadingPage from '@/components/Loading';
 import Alert from '@/components/Alert';
 import { status } from '@/types/statusType';

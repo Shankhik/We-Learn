@@ -7,6 +7,8 @@ import { status } from "@/types/statusType";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 
+import { colorScheme, useColorContext } from '@/context/colorScheme';
+
 import ApiLinks from '@/lib/apiLinks';
 import Link from 'next/link';
 
@@ -32,6 +34,8 @@ export default function CourseDescription ({params}:{params: Props}) {
     })
     const [enrolled, setEnrolled] = useState<boolean>(false);
 
+    const {effectiveTheme, accentColor, theme} = useColorContext();
+
     const enroll = async ()=>{
         if(!enrolled){
             const data:status = await post(ApiLinks.courses.enroll.this,{username:user?.username,courseId: params.courseId});
@@ -43,6 +47,8 @@ export default function CourseDescription ({params}:{params: Props}) {
         })
         
     }
+
+
     useEffect(()=>{
         const loadCourseDetails = async () => {
             //console.log(user?.username)
@@ -65,7 +71,7 @@ export default function CourseDescription ({params}:{params: Props}) {
     const content:JSX.Element =(
         <div className='course-details-page'>
             <div className='course-name'>
-                <h1>{`${course.courseName}`}</h1>
+                <h1 style={{color: colorScheme.sidebar[accentColor].active[effectiveTheme]}}>{`${course.courseName}`}</h1>
                 <p>{`(${course.courseId})`}</p>
             </div>
             <h4 id='course-rating'>{course.rating.userCount!==0?`${(course.rating.rateCount/course.rating.userCount).toFixed(1)}/5.0 (${course.rating.userCount})`:'Not Yet Rated'}</h4>
@@ -73,13 +79,13 @@ export default function CourseDescription ({params}:{params: Props}) {
                 <h4>Description</h4>
                 <p>{course.description}</p>
                 <div>
-                    {course.skills.map(skill=> <h5 className='skills' key={skill}>{skill}</h5>)}  
+                    {course.skills.map(skill=> <h5 style={{border: effectiveTheme==='light'? '2px solid rgba(0, 0, 0, 0.3)':''}} key={skill}>{skill}</h5>)}  
                 </div>
             </div>
             <div className='course-modules'>
                 <div> {/* buttons section*/}
                     <button className={`enroll-btn ${enrolled? 'enrolled':''}`} onClick={enroll}>{enrolled? 'Enrolled':'Enroll'}</button>
-                    <div className={`go-to-btn ${!enrolled?'hidden':''}`} >
+                    <div className={`go-to-btn ${!enrolled?'hidden':''}`} style={{backgroundColor: colorScheme.sidebar[accentColor].active[effectiveTheme]}}>
                         <Link href={`/course/${course.courseId}`} hidden={!enrolled} target='_blank'>Go to Course</Link>
                     </div>
                 </div>

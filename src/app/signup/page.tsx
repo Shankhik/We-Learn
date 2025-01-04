@@ -170,10 +170,6 @@ export default function SignupPage() {
                     </g>
                 </svg>
                 </div>
-
-                <div>
-                <Link href={'/forgot-pwd'}>Forgot Password?</Link>
-                </div>
                 
                 <div>
                 <input id='signup-submit' type="submit" value='Submit'/>
