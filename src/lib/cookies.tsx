@@ -1,11 +1,20 @@
 'use client'
 
-import { status } from '@/types/statusType'
-import * as nookies from 'nookies'
-export const setCookie = (cookieName:string, cookieValue:string) : status =>{
+import { status } from '@/types/statusType';
+import * as nookies from 'nookies';
+
+/**
+ * Sets cookies.
+ * @param {string} cookieName - Cookie Name.
+ * @param {string} cookieValue - Cookie Value.
+ * @param {number} expireTime - Expiration time in minutes
+ * @returns {status} Operation details.
+ */
+export const setCookie = (cookieName:string, cookieValue:string, expireTime?: number) : status =>{
+    const expT = (expireTime||60*5)*60 
     try {
         nookies.setCookie(null, cookieName, cookieValue,{
-            maxAge: 60*60*5,
+            maxAge: expT,
             path: '/'
         })
         return {

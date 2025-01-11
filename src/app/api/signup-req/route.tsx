@@ -1,4 +1,6 @@
+import ApiLinks from "@/lib/apiLinks";
 import { bcryptHash } from "@/lib/bcrypt";
+import { post } from "@/lib/fetchReq";
 import { header } from "@/lib/headers";
 import { signToken } from "@/lib/jwt";
 import { createNewUserHistory } from "@/mongoDB/usercourses";
@@ -32,8 +34,20 @@ export async function POST(req: NextRequest) {
             await createNewUserHistory(reqData.username)
             //hashes password or make no changes
             reqData.password = (await bcryptHash(reqData.password)).hashed || reqData.password
+            
+            //Adding user to Database
             response = await addUser(reqData);
             response.token = token
+
+            //If added successfully
+            if(response.status){
+                let emailDetails = {
+                    username: reqData.username,
+                    email: reqData.email
+                }
+                // Sending Signup Email
+                await post(ApiLinks.email.signup.this, emailDetails)
+            }
             
         }else /*User exists*/{
             response = {

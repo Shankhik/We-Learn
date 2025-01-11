@@ -1,6 +1,12 @@
 # Change Log
 
 <!-- Add New Version above -->
+## Version: 0.2.5 [Jan 11th, 2025]
+### Added
+- **Forgot Password** Section
+- Email Service for **SignUp**, **Forgot Password OTP** 
+
+<!-- Add New Version above -->
 ## Version: 0.2.3 [Jan 4th, 2025]
 ### Modified
 - Login and Signup page

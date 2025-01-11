@@ -7,8 +7,8 @@ import { CSSProperties, Dispatch, FC, ReactNode, SetStateAction, useEffect, useR
 type AlertProp={
     close: Dispatch<SetStateAction<boolean>>,
     show: boolean,
-    children: ReactNode,
-    content?:ReactNode,
+    children?: ReactNode,
+    content?:JSX.Element,
     style?: CSSProperties
 }
 const Alert = ({show,close,children,style,content}:AlertProp):JSX.Element=>{
@@ -21,7 +21,7 @@ const Alert = ({show,close,children,style,content}:AlertProp):JSX.Element=>{
     const AlertBox = ({children}:{children:ReactNode})=>{
         return (
             <div ref={element.alertBox} className='alert-box-wrapper'>
-                {children}
+                {children||content||null}
             </div>
         )
     }

@@ -1,11 +1,14 @@
+import { bcryptHash } from "@/lib/bcrypt";
 import { mongoServer } from "./mongoServer";
-import { loginDataType, signupDataType } from "@/types/authType";
+import { forgotPwdDataType, loginDataType, signupDataType } from "@/types/authType";
 import { User } from "@/types/databaseTypes";
 import type { status } from "@/types/statusType";
+import { Collection } from "mongodb";
 
 type seachObjectType = {
-    username: string
+    username: string;
     password?: string;
+    email?: `${string}@${string}`;
 }
 const adminUsers :{ username: string,password: string }[]= [
     // presets Admin Users
@@ -62,7 +65,10 @@ export const findUsers = async () : Promise<status>=>{
     }
     
 }
-export const findUser = async ( userObject: loginDataType|signupDataType, searchObject: seachObjectType): Promise<status> =>{
+export const findUser = async (
+        userObject: loginDataType|signupDataType|forgotPwdDataType,
+        searchObject: seachObjectType
+    ): Promise<status> =>{
     try {
         const db = mongoServer.db('E-Learning');
         const users = db.collection('users');
@@ -129,6 +135,31 @@ export const addUser = async (userObject : User): Promise<status> =>{
             status: true,
             message: `User ${userObject.username} Added to Users collection`
         }
+    }catch(error: any){
+        return {
+            status: false,
+            error: error.message
+        }
+    }
+}
+
+export const changePwd =  async (username: string, password: string): Promise<status>=>{
+    try{
+
+        const db = mongoServer.db('E-Learning');
+        const users = db.collection('users') as Collection<User>;
+
+        let res = await users.updateOne({username: username},{
+            $set:{
+                password: password
+            }
+        })
+
+        return {
+            status: true,
+            message: `${username}'s password updated!`
+        }
+        
     }catch(error: any){
         return {
             status: false,

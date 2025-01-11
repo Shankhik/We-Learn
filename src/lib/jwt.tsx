@@ -1,19 +1,21 @@
-import { User } from '@/types/databaseTypes'
+
 import {JwtPayload, Secret, sign,verify} from 'jsonwebtoken'
 import { status } from '@/types/statusType'
 
 export interface tokenType extends JwtPayload {
-    username: string;
-    email: string;
-    admin: boolean;
+    username?: string;
+    email?: string;
+    admin?: boolean;
+    password?: string;
 }
 const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY||'';
 
-export const signToken = (payload: tokenType): status =>{
+export const signToken = (payload: tokenType, expireTime?:number): status =>{
+    const expT = (expireTime||60*5)*60 ;
     try{
         const token = sign(payload, secretKey,{
             algorithm: 'HS256',
-            expiresIn: 60*60*5,
+            expiresIn: expT,
             issuer: 'we-learn'
         })
         
@@ -33,7 +35,7 @@ export const signToken = (payload: tokenType): status =>{
 }
 export const verifyToken = (token: string) :status  =>{
     try {
-        const decoded: tokenType = verify(token, secretKey, { algorithms: ['HS256'] }) as tokenType;
+        const decoded = verify(token, secretKey, { algorithms: ['HS256'] }) as tokenType;
         
         if(decoded) /* undefined = tampered */{
             return {

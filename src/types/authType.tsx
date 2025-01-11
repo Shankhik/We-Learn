@@ -8,3 +8,7 @@ export type signupDataType = {
     password: string;
     admin: boolean;
 }
+export type forgotPwdDataType = {
+    username:string;
+    email:`${string}@${string}`
+}

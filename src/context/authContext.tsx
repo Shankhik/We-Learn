@@ -38,9 +38,9 @@ export const AuthProvider=({children} :{children: ReactNode})=>{
                     verified: true,
                     updateAuth: updateAuth,
                     user: {
-                        username: payload.username,
-                        email: payload.email,
-                        admin: payload.admin
+                        username: payload.username||'',
+                        email: payload.email||'',
+                        admin: payload.admin||false
                     }
                 })
             }else{

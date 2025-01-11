@@ -32,12 +32,33 @@ class ApiLinks {
         }
     }
     
+    static email = {
+        signup: {
+            this: `${this.firstPart}/email/signup`,//api/email/signup
+        },
+        forgotPwd: {
+            this: `${this.firstPart}/email/forgot-pwd`,//api/email/forgot-pwd
+        }
+    }
     static loginReq ={
         this: `${this.firstPart}/login-req`,//api/login-req
     }
 
     static signupReq ={
         this: `${this.firstPart}/signup-req`,//api/signup-req
+    }
+
+    static forgotPwd = {
+        verifyUser: {
+            this: `${this.firstPart}/forgot-pwd/verify-user`
+        },
+        /**
+         * method: POST;
+         * Authorization header:{username, password}
+         */
+        changePwd: {
+            this: `${this.firstPart}/forgot-pwd/change-pwd`
+        }
     }
 }
 export default ApiLinks;
