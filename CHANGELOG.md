@@ -1,6 +1,11 @@
 # Change Log
 
 <!-- Add New Version above -->
+## Version: 0.2.6 [Jan 16th, 2025]
+### Added
+- **More** details in landing page footer
+
+<!-- Add New Version above -->
 ## Version: 0.2.5 [Jan 11th, 2025]
 ### Added
 - **Forgot Password** Section

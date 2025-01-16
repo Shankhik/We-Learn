@@ -9,6 +9,7 @@ import { CSSProperties, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { delCookie } from '@/lib/cookies';
 import icons from '@/images/icons/icons';
+import Link from 'next/link';
 
 export default function LandingPage (){
 
@@ -166,17 +167,13 @@ export default function LandingPage (){
                 </div>
                 <div>
                     <h3>About</h3>
-                    <div><strong>Version</strong>:<p style={{color:'rgb(176, 250, 255)'}}>0.2.5</p></div>
-                    <div>
-                        <p><strong>Framework</strong>: <a href="https://nextjs.org/" target='_blank'>NextJS</a></p>
-                    </div>
-                    <div>
-                        <p><strong>Database</strong>: <a href="https://www.mongodb.com/products/platform/atlas-database" target='_blank'>MongoDB</a></p>
-                    </div>
+                    <div><strong>Version</strong>:<p style={{color:'rgb(176, 250, 255)'}}>0.2.6</p></div>
                     <div>
                         <p><strong>Hosted on</strong>: <a href="https://render.com" target='_blank'>Render</a></p>
                     </div>
-                    <div></div>
+                    <div>
+                        <p><strong>Learn <Link href="/more/about">More</Link></strong></p>
+                    </div>
                 </div>
             </div>
         </div>

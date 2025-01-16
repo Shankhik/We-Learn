@@ -29,11 +29,6 @@ export default function ForgotPassword (){
     const otpForm = useRef<HTMLFormElement|null>(null)
     const changePwdForm = useRef<HTMLFormElement|null>(null)
     const lastOtp = useRef<HTMLInputElement|null>(null)
-    // Used for refencing the last OTP field
-    useEffect(()=>{
-        const ele = document.getElementById('otp-3') as HTMLInputElement
-        if (ele) lastOtp.current = ele
-    },[idVerified])
     
     //Label Focus Style
     const onFocus = (e:React.FocusEvent<HTMLInputElement>)=>{
@@ -69,7 +64,7 @@ export default function ForgotPassword (){
             setUsername(username);
             setIdVerified(true);
         }else{
-            setShowAlert(true)
+            setShowAlert(true);
         }
         
     }
