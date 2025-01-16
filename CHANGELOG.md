@@ -1,9 +1,14 @@
 # Change Log
 
 <!-- Add New Version above -->
+## Version: 0.2.7 [Jan 16th, 2025]
+### Fixed
+- **Learn More** sections text alignment for mobile devices
+
+<!-- Add New Version above -->
 ## Version: 0.2.6 [Jan 16th, 2025]
 ### Added
-- **More** details in landing page footer
+- **Learn More** details in landing page footer
 
 <!-- Add New Version above -->
 ## Version: 0.2.5 [Jan 11th, 2025]

@@ -5,11 +5,19 @@ import './style.css'
 export default function Changelog (){
     const changelog = [
         <>
+            <h2>Version: 0.2.7 </h2>
+            <h6>16/01/2025</h6>
+            <h3>Fixed</h3>
+            <ul>
+                <li><strong>Learn More</strong> {`sections's`} text alignment for mobile devices</li>
+            </ul>
+        </>,
+        <>
             <h2>Version: 0.2.6 </h2>
             <h6>16/01/2025</h6>
             <h3>Added</h3>
             <ul>
-                <li><strong>More</strong> details in Landing page footer</li>
+                <li><strong>Learn More</strong> details in Landing page footer</li>
             </ul>
             
         </>,
