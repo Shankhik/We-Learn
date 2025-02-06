@@ -1,9 +1,22 @@
 'use client'
 
+import Link from 'next/link'
 import './style.css'
 
 export default function Changelog (){
     const changelog = [
+        <>
+            <h2>Version: 0.2.8 </h2>
+            <h6>06/02/2025</h6>
+            <h3>Modified</h3>
+            <ul>
+                <li><strong>Dashboard</strong>{`'s`} course card</li>
+            </ul>
+            <h3>Fixed</h3>
+            <ul>
+                <li><strong>Landing Page</strong>{`'s`} highlights icons</li>
+            </ul>
+        </>,
         <>
             <h2>Version: 0.2.7 </h2>
             <h6>16/01/2025</h6>
@@ -94,6 +107,7 @@ export default function Changelog (){
                     <hr hidden={index===changelog.length-1? true:false}/>
                 </div>
             })}</div>
+            {/*<Link href={'upload'}>Upload</Link>*/}
         </>
     )
 }

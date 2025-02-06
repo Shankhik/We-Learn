@@ -2,8 +2,7 @@
 import { useAuthContext } from '@/context/authContext'
 import './style.css'
 import { useEffect, useState } from 'react';
-import CourseBox from '@/components/CourseBox';
-import { courseCovers } from '@/images/course/courseCovers';
+import CourseCard from '@/components/CourseCard';
 export default function Dashboard (){
 
     const {user, updateAuth} = useAuthContext();
@@ -21,11 +20,13 @@ export default function Dashboard (){
     return(
         <>
         <h1>{welcomeNote}</h1>
-        <h2>Trending</h2>
+        <h2>New</h2>
         <div className='course-list'>
-            <CourseBox cover={courseCovers.java}name={'Java'} skills={['coding','java','oops']}/>
-            <CourseBox cover={courseCovers.java}name={'Java'} skills={['coding','java','oops']}/>
-            <CourseBox cover={courseCovers.java}name={'Java'} skills={['coding','java','oops']}/>
+            <CourseCard courseDetails={{
+                course:'java',
+                courseId:'java101',
+                skills: ['coding', 'java', 'oops'],
+            }}/>
         </div>
         </>
     )

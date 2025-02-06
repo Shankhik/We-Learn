@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="50"
+   height="50"
+   viewBox="0 0 50 50.000002"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <filter
+       style="color-interpolation-filters:sRGB"
+       id="filter15"
+       x="-0.033362294"
+       y="-0.033362294"
+       width="1.0695048"
+       height="1.0695048">
+      <feFlood
+         result="flood"
+         in="SourceGraphic"
+         flood-opacity="0.301961"
+         flood-color="rgb(0,0,0)"
+         id="feFlood14" />
+      <feGaussianBlur
+         result="blur"
+         in="SourceGraphic"
+         stdDeviation="0.500000"
+         id="feGaussianBlur14" />
+      <feOffset
+         result="offset"
+         in="blur"
+         dx="0.100000"
+         dy="0.100000"
+         id="feOffset14" />
+      <feComposite
+         result="comp1"
+         operator="in"
+         in="flood"
+         in2="offset"
+         id="feComposite14" />
+      <feComposite
+         result="comp2"
+         operator="over"
+         in="SourceGraphic"
+         in2="comp1"
+         id="feComposite15" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB"
+       id="filter24"
+       x="-0.064864865"
+       y="-0.4"
+       width="1.1351351"
+       height="1.8333333">
+      <feFlood
+         result="flood"
+         in="SourceGraphic"
+         flood-opacity="0.223529"
+         flood-color="rgb(0,0,0)"
+         id="feFlood23" />
+      <feGaussianBlur
+         result="blur"
+         in="SourceGraphic"
+         stdDeviation="0.500000"
+         id="feGaussianBlur23" />
+      <feOffset
+         result="offset"
+         in="blur"
+         dx="0.100000"
+         dy="0.100000"
+         id="feOffset23" />
+      <feComposite
+         result="comp1"
+         operator="in"
+         in="flood"
+         in2="offset"
+         id="feComposite23" />
+      <feComposite
+         result="comp2"
+         operator="over"
+         in="SourceGraphic"
+         in2="comp1"
+         id="feComposite24" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB"
+       id="filter27"
+       x="-0.081151765"
+       y="-0.3233689"
+       width="1.1690662"
+       height="1.6736852">
+      <feFlood
+         result="flood"
+         in="SourceGraphic"
+         flood-opacity="0.223529"
+         flood-color="rgb(0,0,0)"
+         id="feFlood26" />
+      <feGaussianBlur
+         result="blur"
+         in="SourceGraphic"
+         stdDeviation="0.500000"
+         id="feGaussianBlur26" />
+      <feOffset
+         result="offset"
+         in="blur"
+         dx="0.100000"
+         dy="0.100000"
+         id="feOffset26" />
+      <feComposite
+         result="comp1"
+         operator="in"
+         in="flood"
+         in2="offset"
+         id="feComposite26" />
+      <feComposite
+         result="comp2"
+         operator="over"
+         in="SourceGraphic"
+         in2="comp1"
+         id="feComposite27" />
+    </filter>
+  </defs>
+  <path
+     d="M 25,7.015625 A 17.984531,17.984531 0 0 0 7.015625,25 17.984531,17.984531 0 0 0 25,42.984375 17.984531,17.984531 0 0 0 42.984375,25 17.984531,17.984531 0 0 0 25,7.015625 Z m 0,4.867188 A 13.117431,13.117431 0 0 1 38.117187,25 13.117431,13.117431 0 0 1 25,38.117187 13.117431,13.117431 0 0 1 11.882813,25 13.117431,13.117431 0 0 1 25,11.882813 Z"
+     style="fill:#e88a87;fill-opacity:0.982729;stroke-width:3.40157;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke markers fill;filter:url(#filter15)"
+     id="path4" />
+  <g
+     id="g5"
+     style="filter:url(#filter24)">
+    <rect
+       style="fill:#f3ada7;fill-opacity:0.982729;stroke-width:3.37729;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke markers fill"
+       id="rect3"
+       width="12.5"
+       height="3"
+       x="23.5"
+       y="23.5"
+       ry="1.5" />
+    <rect
+       style="fill:#b57676;fill-opacity:0.982729;stroke-width:3.40157;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke markers fill"
+       id="rect4"
+       width="9"
+       height="3"
+       x="17.5"
+       y="23.5"
+       ry="1.5" />
+  </g>
+  <g
+     id="g6">
+    <path
+       d="M 12.744688,3.1530023 A 9.00427,9.00427 0 0 0 3.7405862,12.157105 9.00427,9.00427 0 0 0 12.744688,21.161208 9.00427,9.00427 0 0 0 21.74879,12.157105 9.00427,9.00427 0 0 0 12.744688,3.1530023 Z"
+       style="fill:#7bdac3;fill-opacity:0.982729;stroke-width:1.84955;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke markers fill"
+       id="path5" />
+    <path
+       d="M 9.0649414,13.768176 H 6.6040039 v -0.510254 q 0.2563477,-0.219727 0.5126953,-0.439453 0.2587891,-0.219727 0.480957,-0.437012 0.4687501,-0.454102 0.6420899,-0.720215 0.1733398,-0.268555 0.1733398,-0.578613 0,-0.283203 -0.1879882,-0.441895 -0.1855469,-0.161133 -0.5200196,-0.161133 -0.2221679,0 -0.480957,0.07813 Q 6.965332,10.635861 6.71875,10.796989 H 6.694336 v -0.512695 q 0.1733399,-0.08545 0.4614258,-0.15625 0.2905274,-0.0708 0.5615235,-0.0708 0.559082,0 0.8764648,0.270996 0.3173828,0.268555 0.3173828,0.729981 0,0.207519 -0.053711,0.388183 -0.05127,0.178223 -0.1538086,0.339356 -0.095215,0.151367 -0.2246094,0.297851 Q 8.3520508,12.23009 8.1689453,12.408312 7.9077148,12.66466 7.6293945,12.906359 7.3510742,13.145617 7.109375,13.350695 h 1.9555664 z m 4.2617186,-1.02295 h -0.539551 v 1.02295 h -0.46875 v -1.02295 h -1.740722 v -0.561523 l 1.760254,-2.050781 h 0.449218 v 2.221679 h 0.539551 z m -1.008301,-0.390625 v -1.640625 l -1.408691,1.640625 z m 5.0625,1.413575 h -0.578613 l -0.773926,-1.047364 -0.778808,1.047364 h -0.534668 l 1.064453,-1.359864 -1.054688,-1.367187 h 0.578614 l 0.769043,1.030273 0.771484,-1.030273 h 0.537109 l -1.071777,1.342773 z m 4.010254,-3.090821 -1.645508,3.090821 h -0.52246 l 1.750488,-3.208008 H 18.90332 v -0.427246 h 2.487793 z"
+       id="text5"
+       style="font-size:5px;line-height:6.92307px;font-family:'HoloLens MDL2 Assets';-inkscape-font-specification:'HoloLens MDL2 Assets';letter-spacing:1px;word-spacing:0px;white-space:pre;fill:#ffffff;fill-opacity:0.982729;stroke-width:3.40157;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke markers fill;filter:url(#filter27)"
+       transform="matrix(0.80489994,0,0,0.95199091,1.478054,0.81631651)"
+       aria-label="24x7" />
+  </g>
+</svg>

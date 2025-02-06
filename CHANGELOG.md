@@ -1,6 +1,13 @@
 # Change Log
 
 <!-- Add New Version above -->
+## Version: 0.2.8 [Feb 6th, 2025]
+### Modified
+- **Dashboard**'s course card
+### Fixed
+- **Landing Page**'s highlights icons
+
+<!-- Add New Version above -->
 ## Version: 0.2.7 [Jan 16th, 2025]
 ### Fixed
 - **Learn More** sections text alignment for mobile devices

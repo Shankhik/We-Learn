@@ -5,10 +5,17 @@ class ApiLinks {
     static firstPart = `${this.httpsOrNot}://${this.apiDomain}/api`
 
     //get key word make it a member which needs computation
-
+    static cloudinary = {
+        url:{
+            this:`${this.firstPart}/cloudinary/url`
+        },
+        upload:{
+            this:`${this.firstPart}/cloudinary/upload`
+        }
+    }
     static courses = {
         this:`${this.firstPart}/courses`,//api/courses
-
+        
         completeCourse:{
             this: `${this.firstPart}/courses/complete-course`,//api/courses/complete-course
         },

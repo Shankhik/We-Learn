@@ -1,7 +1,17 @@
 .course-list{
     height: 200px;
-
+    padding: 10px 0px;
     display: flex;
+    flex-wrap: nowrap;
+    overflow-y: auto;
     gap: 20px;
     background-color: rgba(127, 255, 212, 0);
+
+    @media (max-width:900px) {
+        height: 180px;
+    }
+    @media (max-width:400px) {
+        height: 160px;
+    }
+    transition: height 0.5s ease;
 }

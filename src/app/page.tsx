@@ -88,6 +88,27 @@ export default function LandingPage (){
         return ()=> window.removeEventListener('scroll',changeNavbarColor)
     },[])
     
+    const hoverEffects ={
+        highlight1: {
+            mouseEnter:(e:React.MouseEvent)=>{
+                let svgElement = (e.target as HTMLDivElement).children[2] as SVGSVGElement
+                let effectElement = svgElement.querySelector('#effect')
+    
+                if(effectElement){
+                    (effectElement as SVGGElement).style.scale = '1.2'
+                }
+                
+            },
+            mouseLeave:(e:React.MouseEvent)=>{
+                let svgElement = (e.target as HTMLDivElement).children[2] as SVGSVGElement
+                let effectElement = svgElement.querySelector('#effect')
+    
+                if(effectElement){
+                    (effectElement as SVGGElement).style.scale = ''
+                }
+            }
+        }
+    }
     return(
         <div id='landing-page'>
             {/*<div style={{gridArea:'1/1/-1/-1',zIndex:'0',width:'100%',height:'100dvh', overflow:'hidden', backgroundColor:'green', opacity:'0.2', position:'sticky', top:'0px', left:'0px'}} hidden={!showPopUpBG} onClick={()=> {setShowOption(false); setShowPopUpBG(false)}}></div>*/}
@@ -126,26 +147,10 @@ export default function LandingPage (){
             <div className='landing-page-content'>
                 <h2 className='content-heading'>Features</h2>
                 <div className='highlights-container'>
-                    <div className='highlight'>
-                        <h2>Personalized Learning Paths</h2>
-                        <p>Tailored courses and recommendations that adapt to each learner’s needs and goals.</p>
-                        <Image src={icons.personalize} alt='perosnalize'/> 
-                    </div>
-                    <div className='highlight'>
-                        <h2>24/7 Access</h2>
-                        <p>Access courses anytime, anywhere, on mobile, tablet, or desktop.</p>
-                        <Image src={icons.personalize} alt='perosnalize'/>
-                    </div>
-                    <div className='highlight'>
-                        <h2>Progress Tracking Dashboard</h2>
-                            <p>Monitor your learning progress, track completed courses, and set personal goals.</p>
-                            <Image src={icons.personalize} alt='perosnalize'/>
-                    </div>
-                    <div className='highlight'>
-                        <h2>Certifications & Badges</h2>
-                        <p>Earn industry-recognized certificates and digital badges for each completed course.</p>
-                        <Image src={icons.personalize} alt='perosnalize'/>
-                    </div>
+                    <HighLight1/>
+                    <HighLight2/>
+                    <HighLight3/>
+                    <HighLight4/>
                 </div>
             </div>
             <div className='landing-page-footer'>
@@ -167,7 +172,7 @@ export default function LandingPage (){
                 </div>
                 <div>
                     <h3>About</h3>
-                    <div><strong>Version</strong>:<p style={{color:'rgb(176, 250, 255)'}}>0.2.7</p></div>
+                    <div><strong>Version</strong>:<p style={{color:'rgb(176, 250, 255)'}}>0.2.8</p></div>
                     <div>
                         <p><strong>Hosted on</strong>: <a href="https://render.com" target='_blank'>Render</a></p>
                     </div>
@@ -176,6 +181,815 @@ export default function LandingPage (){
                     </div>
                 </div>
             </div>
+        </div>
+    )
+}
+const HighLight1 = ():JSX.Element =>{
+    const color={
+        faded: "rgb(109, 119, 153)",
+        user: 'rgb(105, 127, 197)',
+        brush:'rgb(171, 238, 94)',
+        brushFaded: "rgb(255, 255, 255)"
+    }
+    const radii = {
+        c1: 0,
+        c1Hover: 9.021,
+        c2: 0,
+        c2Hover: 4.811,
+        c3: 5,
+        c3Hover: 2
+    }
+    const elements ={
+        hightlight: useRef<HTMLDivElement|null>(null),
+        svg:{
+            user: useRef<SVGGElement|null>(null),
+            effects: {
+                c1: useRef<SVGCircleElement|null>(null),
+                c2: useRef<SVGCircleElement|null>(null),
+                c3: useRef<SVGCircleElement|null>(null),
+            },
+            brushHead: useRef<SVGGElement|null>(null)
+        }
+    }
+
+    const onMouseEnter = ()=>{
+        let user = elements.svg.user.current
+        let c1 = elements.svg.effects.c1.current
+        let c2 = elements.svg.effects.c2.current
+        let c3 = elements.svg.effects.c3.current
+        let brushHead = elements.svg.brushHead.current
+
+        if( !user || !c1 || !c2|| !c3 || !brushHead) return
+
+        c1.style.r = `${radii.c1Hover}`
+        c2.style.r = `${radii.c2Hover}`
+        c2.style.fill= 'rgb(178, 255, 91)'
+        c3.style.r = `${radii.c3Hover}`
+        c3.style.fill= 'rgb(178, 255, 91)'
+
+        user.style.fill = color.user
+
+        brushHead.style.fill = color.brush
+    }
+    const onMouseLeave = ()=>{
+        let user = elements.svg.user.current
+        let c1 = elements.svg.effects.c1.current
+        let c2 = elements.svg.effects.c2.current
+        let c3 = elements.svg.effects.c3.current
+        let brushHead = elements.svg.brushHead.current
+        if( !user || !c1 || !c2|| !c3 || !brushHead ) return
+
+        c1.style.r = `${radii.c1}`
+        c2.style.r = `${radii.c2}`
+        c3.style.fill = 'rgb(255,255,255)'
+        c3.style.r = `${radii.c3}`
+        c3.style.fill = 'rgb(255,255,255)'
+
+        user.style.fill = color.faded
+
+        brushHead.style.fill = color.brushFaded
+    }
+    return(
+        <div className='highlight' ref={elements.hightlight}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+        >
+            <h2>Personalized Learning Paths</h2>
+            <p>{`Tailored courses and recommendations that adapt to each learner's needs and goals.`}</p>
+            <svg xmlns="http://www.w3.org/2000/svg" width={50} height={50} viewBox='0 0 50 50'>
+                <defs>
+                <filter
+                    id="b"
+                    width={1.178}
+                    height={1.143}
+                    x={-0.085}
+                    y={-0.068}
+                    colorInterpolationFilters='sRGB'
+                >
+                    <feFlood floodColor="#000" floodOpacity={0.533} result="flood" />
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation={0.5} />
+                    <feOffset dx={0.1} dy={0.1} in="blur" result="offset" />
+                    <feComposite in="flood" in2="offset" operator="in" result="comp1" />
+                    <feComposite in="SourceGraphic" in2="comp1" result="comp2" />
+                </filter>
+                <filter
+                    id="a"
+                    width={1.078}
+                    height={1.056}
+                    x={-0.038}
+                    y={-0.027}
+                    colorInterpolationFilters='sRGB'
+                >
+                    <feFlood floodColor="#000" floodOpacity={0.2} result="flood" />
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation={0.5} />
+                    <feOffset dx={0.1} dy={0.1} in="blur" result="offset" />
+                    <feComposite in="flood" in2="offset" operator="in" result="comp1" />
+                    <feComposite in="SourceGraphic" in2="comp1" result="comp2" />
+                </filter>
+                </defs>
+                <g
+                ref={elements.svg.user}
+                style={{
+                    fill:color.faded,
+                    fillOpacity: 1,
+                    filter: "url(#a)",
+                }}
+                >
+                <circle
+                    cx={25}
+                    cy={12.108}
+                    r={8.903}
+                    style={{
+                    fillOpacity: 1,
+                    strokeWidth: 3.40157,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    paintOrder: "stroke markers fill",
+                    }}
+                />
+                <path
+                    d="M25 24.098A16.085 16.085 0 0 0 9.5 35.959a15.966 9.675 0 0 0-.467 2.225 15.966 9.675 0 0 0 .016.127A15.966 9.675 0 0 0 25 47.857a15.966 9.675 0 0 0 15.96-9.625 16.085 16.085 0 0 0-.19-1.18 16.085 16.085 0 0 1 .19 1.18 15.966 9.675 0 0 0 .007-.048 15.966 9.675 0 0 0-.498-2.393 16.085 16.085 0 0 1 .281 1.164 16.085 16.085 0 0 0-.281-1.164A16.085 16.085 0 0 0 25 24.098Z"
+                    style={{
+                    fillOpacity: 1,
+                    strokeWidth: 3.40157,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    paintOrder: "stroke markers fill",
+                    }}
+                />
+                </g>
+                <g transform="translate(-.226 .564)">
+                <circle
+                    ref={elements.svg.effects.c1}
+                    cx={27.197}
+                    cy={34.416}
+                    r={radii.c1}
+                    style={{
+                    fill: "#fff",
+                    fillOpacity: 0.301923,
+                    strokeWidth: 0,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeDasharray: "none",
+                    paintOrder: "stroke markers fill",
+                    transition: 'r 0.5s ease'
+                    }}
+                />
+                <circle
+                    ref={elements.svg.effects.c2}
+                    cx={27.197}
+                    cy={34.416}
+                    r={radii.c2}
+                    style={{
+                    fill: "#fff",
+                    fillOpacity: 0.301923,
+                    strokeWidth: 0,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeDasharray: "none",
+                    paintOrder: "stroke markers fill",
+                    transition: 'r 0.5s ease'
+                    }}
+                />
+                <circle
+                    ref={elements.svg.effects.c3}
+                    cx={27.197}
+                    cy={34.416}
+                    r={radii.c3}
+                    style={{
+                    fill: "#fff",
+                    fillOpacity: 0.4,
+                    strokeWidth: 0,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeDasharray: "none",
+                    paintOrder: "stroke markers fill",
+                    transition: 'r 0.5s ease'
+                    }}
+                />
+                </g>
+                <g
+                style={{
+                    fillOpacity: 1,
+                    filter: "url(#b)",
+                }}
+                transform="translate(20.817 11.836)"
+                >
+                <rect
+                    width={15.314}
+                    height={3.086}
+                    x={-8.854}
+                    y={17.741}
+                    ry={1.543}
+                    style={{
+                    fill: "#fff",
+                    fillOpacity: 1,
+                    strokeWidth: 3.40157,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    paintOrder: "stroke markers fill",
+                    }}
+                    transform="rotate(-54.645)"
+                />
+                <g
+                    ref={elements.svg.brushHead}
+                    style={{
+                    fill: color.brushFaded,
+                    fillOpacity: 0.982729,
+                    }}
+                >
+                    <circle
+                    cx={8.903}
+                    cy={20.299}
+                    r={1.899}
+                    style={{
+                        fillOpacity: 0.982729,
+                        strokeWidth: 3.40157,
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        paintOrder: "stroke markers fill",
+                    }}
+                    />
+                    <path
+                    d="M7.03 20.062c-.23 2.392-.986 3.064-.986 3.064s.886-.033 1.322-.105c.42-.07.851-.137 1.238-.315 1.827-.844 2.077-1.7 2.077-1.7z"
+                    style={{
+                        fillOpacity: 0.982729,
+                        strokeWidth: 3.40157,
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        paintOrder: "stroke markers fill",
+                    }}
+                    />
+                </g>
+                </g>
+            </svg>
+        </div>
+    )
+}
+
+const HighLight2 = ():JSX.Element=>{
+    const color = {
+        minHand: 'rgb(189, 113, 113)',
+        hourHand: 'rgb(117, 73, 73)',
+        dial: 'rgb(236, 145, 145)',
+        faded: 'rgb(204, 159, 159)'
+    }
+    const elements = {
+        highlight: useRef<HTMLDivElement|null>(null),
+        svg:{
+            dial: useRef<SVGPathElement|null>(null),
+            hands: {
+                hour: useRef<SVGRectElement|null>(null),
+                minute: useRef<SVGRectElement|null>(null)
+            }
+        }
+    }
+    const onMouseEnter = (e: React.MouseEvent)=>{
+        let minHand = elements.svg.hands.minute.current
+        let hourHand = elements.svg.hands.hour.current
+        let dial = elements.svg.dial.current
+
+        if(!minHand||!hourHand||!dial) return
+
+        dial.style.fill = color.dial
+        minHand.style.transform = `rotate(4290deg)`
+        minHand.style.fill = color.minHand
+        hourHand.style.transform = `rotate(${450+5}deg)`
+        hourHand.style.fill = color.hourHand
+        
+    }
+    const onMouseLeave = (e: React.MouseEvent)=>{
+        let minHand = elements.svg.hands.minute.current
+        let hourHand = elements.svg.hands.hour.current
+        let dial = elements.svg.dial.current
+
+        if(!minHand||!hourHand||!dial) return
+
+        dial.style.fill = color.faded
+        minHand.style.transform = 'rotate(-25deg)'
+        minHand.style.fill = color.faded
+        hourHand.style.transform = 'rotate(60deg)'
+        hourHand.style.fill = color.faded
+    }
+    return(
+        <div className='highlight' ref={elements.highlight} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+            <h2>24/7 Access</h2>
+            <p>Access courses anytime, anywhere, on mobile, tablet, or desktop.</p>
+            <svg xmlns="http://www.w3.org/2000/svg" width={50} height={50} viewBox='0 0 50 50'>
+                <defs>
+                <filter
+                    id="a"
+                    width={1.07}
+                    height={1.07}
+                    x={-0.033}
+                    y={-0.033}
+                    colorInterpolationFilters='sRGB'
+                >
+                    <feFlood floodColor="#000" floodOpacity={0.302} result="flood" />
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation={0.5} />
+                    <feOffset dx={0.1} dy={0.1} in="blur" result="offset" />
+                    <feComposite in="flood" in2="offset" operator="in" result="comp1" />
+                    <feComposite in="SourceGraphic" in2="comp1" result="comp2" />
+                </filter>
+                <filter
+                    id="b"
+                    width={1.135}
+                    height={1.833}
+                    x={-0.065}
+                    y={-0.4}
+                    colorInterpolationFilters='sRGB'
+                >
+                    <feFlood floodColor="#000" floodOpacity={0.224} result="flood" />
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation={0.5} />
+                    <feOffset dx={0.1} dy={0.1} in="blur" result="offset" />
+                    <feComposite in="flood" in2="offset" operator="in" result="comp1" />
+                    <feComposite in="SourceGraphic" in2="comp1" result="comp2" />
+                </filter>
+                <filter
+                    id="c"
+                    width={1.169}
+                    height={1.674}
+                    x={-0.081}
+                    y={-0.323}
+                    colorInterpolationFilters='sRGB'
+                >
+                    <feFlood floodColor="#000" floodOpacity={0.224} result="flood" />
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation={0.5} />
+                    <feOffset dx={0.1} dy={0.1} in="blur" result="offset" />
+                    <feComposite in="flood" in2="offset" operator="in" result="comp1" />
+                    <feComposite in="SourceGraphic" in2="comp1" result="comp2" />
+                </filter>
+                </defs>
+                <path
+                    ref={elements.svg.dial}
+                    d="M25 7.016A17.985 17.985 0 0 0 7.016 25 17.985 17.985 0 0 0 25 42.984 17.985 17.985 0 0 0 42.984 25 17.985 17.985 0 0 0 25 7.016Zm0 4.867A13.117 13.117 0 0 1 38.117 25 13.117 13.117 0 0 1 25 38.117 13.117 13.117 0 0 1 11.883 25 13.117 13.117 0 0 1 25 11.883Z"
+                    style={{
+                        fill: color.faded,
+                        fillOpacity: 0.982729,
+                        strokeWidth: 3.40157,
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        paintOrder: "stroke markers fill",
+                        filter: "url(#a)",
+                    }}
+                />
+                <g
+                    style={{
+                        //filter: "url(#b)",
+                    }}
+                >
+                <rect
+                    ref={elements.svg.hands.minute}
+                    width={12.5}
+                    height={3}
+                    x={23.5}
+                    y={23.5}
+                    ry={1.5}
+                    style={{
+                    fill: color.faded,
+                    fillOpacity: 0.982729,
+                    strokeWidth: 3.37729,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    paintOrder: "stroke markers fill",
+                    transition:'all 15s ease-in-out',
+                    transformOrigin: '25px 25px',
+                    transform: 'rotate(-25deg)'
+                    }}
+                />
+                <rect
+                    ref={elements.svg.hands.hour}
+                    width={9}
+                    height={3}
+                    x={17.5}
+                    y={23.5}
+                    ry={1.5}
+                    style={{
+                    fill: color.faded,
+                    fillOpacity: 0.982729,
+                    strokeWidth: 3.40157,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    paintOrder: "stroke markers fill",
+                    transition:'all 15s ease-in-out',
+                    transformOrigin: '25px 25px',
+                    transform:'rotate(60deg)'
+                    }}
+                />
+                </g>
+                <path
+                d="M12.745 3.153a9.004 9.004 0 0 0-9.004 9.004 9.004 9.004 0 0 0 9.004 9.004 9.004 9.004 0 0 0 9.004-9.004 9.004 9.004 0 0 0-9.004-9.004Z"
+                style={{
+                    fill: "#7bdac3",
+                    fillOpacity: 0.982729,
+                    strokeWidth: 1.84955,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    paintOrder: "stroke markers fill",
+                }}
+                />
+                <path
+                d="M9.065 13.768H6.604v-.51l.513-.44q.258-.22.48-.437.47-.454.643-.72.173-.268.173-.578 0-.284-.188-.442-.185-.161-.52-.161-.222 0-.48.078-.26.078-.506.239h-.025v-.513q.174-.085.462-.156.29-.07.561-.07.56 0 .877.27.317.269.317.73 0 .208-.054.388-.05.179-.153.34-.096.151-.225.298-.127.146-.31.324-.261.257-.54.498-.278.24-.52.445h1.956zm4.262-1.023h-.54v1.023h-.469v-1.023h-1.74v-.561l1.76-2.051h.45v2.222h.539zm-1.009-.39v-1.641l-1.408 1.64zm5.063 1.413h-.579l-.774-1.047-.778 1.047h-.535l1.064-1.36-1.054-1.367h.578l.77 1.03.77-1.03h.538l-1.072 1.343zm4.01-3.09-1.645 3.09h-.523l1.75-3.208h-2.07v-.427h2.488z"
+                aria-label="24x7"
+                style={{
+                    fontSize: 5,
+                    lineHeight: "6.92307px",
+                    fontFamily: "&quot",
+                    letterSpacing: 1,
+                    wordSpacing: 0,
+                    whiteSpace: "pre",
+                    fill: "#fff",
+                    fillOpacity: 0.982729,
+                    strokeWidth: 3.40157,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    paintOrder: "stroke markers fill",
+                    filter: "url(#c)",
+                }}
+                transform="matrix(.8049 0 0 .952 1.478 .816)"
+                />
+            </svg>
+            
+        </div>
+        
+    )
+}
+
+const HighLight3 = ():JSX.Element=>{
+    const color = {
+        bar1:'rgb(222, 139, 91)',
+        bar2:"rgb(82, 170, 240)",
+        bar3:"rgb(74, 201, 152)",
+        barDefault: 'rgb(166, 199, 229)'
+    }
+    const elements = {
+        highlight: useRef<HTMLDivElement|null>(null),
+        svg:{
+            bar1: useRef<SVGRectElement|null>(null),
+            bar2: useRef<SVGRectElement|null>(null),
+            bar3: useRef<SVGRectElement|null>(null),
+            circle: useRef<SVGCircleElement|null>(null),
+            tick: useRef<SVGPathElement|null>(null)
+        }
+    }
+
+    const onMouseEnter = (e: React.MouseEvent)=>{
+        let bar1 = elements.svg.bar1.current
+        let bar2 = elements.svg.bar2.current
+        let bar3 = elements.svg.bar3.current
+        let circle = elements.svg.circle.current
+        let tick = elements.svg.tick.current
+
+        if(!circle || !bar1 || !bar2 || !bar3 || !tick) return
+
+        bar1.style.width = '14'
+        bar1.style.fill = color.bar1
+
+        bar2.style.width = '17'
+        bar2.style.fill = color.bar2
+
+        bar3.style.width = '40'
+        bar3.style.fill = color.bar3
+
+        circle.style.transition = 'stroke-dashoffset 0.7s ease-in-out, fill 0.5s ease 0.3s'
+        circle.style.strokeDashoffset = '74'
+        circle.style.fill = "rgb(72, 199, 81)"
+        
+        tick.style.transition = 'stroke-dashoffset 0.7s 0.4s ease'
+        tick.style.strokeDashoffset = '0'
+    }
+    const onMouseLeave = (e: React.MouseEvent)=>{
+        let bar1 =elements.svg.bar1.current
+        let bar2 = elements.svg.bar2.current
+        let bar3 = elements.svg.bar3.current
+        let circle = elements.svg.circle.current
+        let tick = elements.svg.tick.current
+
+        if(!circle || !bar1 || !bar2 || !bar3 || !tick) return
+
+        bar1.style.width = '12'
+        bar1.style.fill = color.barDefault
+
+        bar2.style.width = '15'
+        bar2.style.fill = color.barDefault
+
+        bar3.style.width = '34'
+        bar3.style.fill = color.barDefault
+
+        circle.style.transition = 'stroke-dashoffset 0.7s ease-in-out 0.3s, fill 1s ease'
+        circle.style.strokeDashoffset = '100'
+        circle.style.fill = 'rgba(0, 0, 0, 0)'
+
+        tick.style.transition = 'stroke-dashoffset 0.5s ease'
+        tick.style.strokeDashoffset = '24'
+    }
+    return(
+        <div className='highlight' ref={elements.highlight} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+            <h2>Progress Tracking Dashboard</h2>
+            <p>Monitor your learning progress, track completed courses, and set personal goals.</p>
+            <svg width={50} height={50} viewBox='0 0 50 50'>
+                <defs>
+                <filter
+                    id="d"
+                    width={1.403}
+                    height={1.403}
+                    x={-0.198}
+                    y={-0.198}
+                    colorInterpolationFilters='sRGB'
+                >
+                    <feFlood floodColor="#000" floodOpacity={0.227} result="flood" />
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation={0.5} />
+                    <feOffset dx={0.1} dy={0.1} in="blur" result="offset" />
+                    <feComposite in="flood" in2="offset" operator="in" result="comp1" />
+                    <feComposite in="SourceGraphic" in2="comp1" result="comp2" />
+                </filter>
+                <filter
+                    id="b"
+                    width={1.074}
+                    height={1.297}
+                    x={-0.035}
+                    y={-0.142}
+                    colorInterpolationFilters='sRGB'
+                >
+                    <feFlood floodColor="#000" floodOpacity={0.224} result="flood" />
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation={0.5} />
+                    <feOffset dx={0.1} dy={0.1} in="blur" result="offset" />
+                    <feComposite in="flood" in2="offset" operator="in" result="comp1" />
+                    <feComposite in="SourceGraphic" in2="comp1" result="comp2" />
+                </filter>
+                <filter
+                    id="a"
+                    width={1.143}
+                    height={1.297}
+                    x={-0.069}
+                    y={-0.142}
+                    colorInterpolationFilters='sRGB'
+                >
+                    <feFlood floodColor="#000" floodOpacity={0.224} result="flood" />
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation={0.5} />
+                    <feOffset dx={0.1} dy={0.1} in="blur" result="offset" />
+                    <feComposite in="flood" in2="offset" operator="in" result="comp1" />
+                    <feComposite in="SourceGraphic" in2="comp1" result="comp2" />
+                </filter>
+                <filter
+                    id="c"
+                    width={1.144}
+                    height={1.297}
+                    x={-0.069}
+                    y={-0.142}
+                    colorInterpolationFilters='sRGB'
+                >
+                    <feFlood floodColor="#000" floodOpacity={0.224} result="flood" />
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation={0.5} />
+                    <feOffset dx={0.1} dy={0.1} in="blur" result="offset" />
+                    <feComposite in="flood" in2="offset" operator="in" result="comp1" />
+                    <feComposite in="SourceGraphic" in2="comp1" result="comp2" />
+                </filter>
+                </defs>
+                <rect
+                ref={elements.svg.bar1}
+                width={12}
+                height={8.428}
+                x={3.8}
+                y={6.786}
+                ry={2.687}
+                style={{
+                    fill:color.barDefault,
+                    fillOpacity: 0.982729,
+                    strokeWidth: 3.40157,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    paintOrder: "stroke markers fill",
+                    filter: "url(#c)",
+                    transform:'translate(2px)',
+                    transition:'all 0.3s ease'
+                }}
+                />
+                <rect
+                ref={elements.svg.bar2}
+                width={15}
+                height={8.428}
+                x={3.8}
+                y={20.786}
+                ry={2.687}
+                style={{
+                    fill: color.barDefault,
+                    fillOpacity: 0.982729,
+                    strokeWidth: 3.40157,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    paintOrder: "stroke markers fill",
+                    filter: "url(#a)",
+                    transform:'translate(2px)',
+                    transition:'all 0.6s ease'
+                }}
+                />
+                <rect
+                ref={elements.svg.bar3}
+                width={33.95}
+                height={8.428}
+                x={3.8}
+                y={34.786}
+                ry={2.687}
+                style={{
+                    fill:color.barDefault,
+                    fillOpacity: 0.982729,
+                    strokeWidth: 3.40157,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    paintOrder: "stroke markers fill",
+                    filter: "url(#b)",
+                    transform:'translate(2px)',
+                    transition:'all 1s ease'
+                }}
+                />
+                <g 
+                    style={{
+                        translate: '1px 4px'
+                    }}
+                >
+                <circle
+                ref={elements.svg.circle}
+                cx={-29.869}
+                cy={25.209}
+                r={8.073}
+                style={{
+                    fill: "rgba(0,0,0,0)",
+                    fillOpacity: 0.982729,
+                    stroke:"rgb(72, 199, 81)",
+                    strokeWidth: 4,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeDasharray: 128,
+                    strokeDashoffset: 100,
+                    strokeOpacity: 1,
+                    paintOrder: "fill stroke markers",
+                    filter: "url(#d)",
+                }}
+                transform="rotate(-120)"
+                />
+                <path
+                ref={elements.svg.tick}
+                d="m32.737 12.927 2.686 3.861 5.204-6.715"
+                style={{
+                    fill: "none",
+                    fillOpacity: 0.982729,
+                    stroke: "rgba(255, 255, 255, 0.8)",
+                    strokeWidth: 2,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeDasharray: 24,
+                    strokeDashoffset: 24,
+                    strokeOpacity: 1,
+                    paintOrder: "stroke markers fill",
+                }}
+                />
+                </g>
+            </svg>
+            
+        </div>
+        
+    )
+}
+
+const HighLight4 = ():JSX.Element=>{
+    const intervalId = useRef<NodeJS.Timeout|number|null>(null)
+    const transform = {
+        innerStar: {
+            default: 'matrix(0.44873199,-0.44873199,0.44873199,0.44873199,17.805687,30.046758)',
+            hover: 'matrix(0.42413412,0,0,0.42413412,19.21497,23.985083)'
+        },
+        outerStar: {
+            default: "matrix(0.63460287,0,0,0.63460287,16.344256,23.481449)",
+            hover: "matrix(0.66383464,0,0,0.66383464,15.945547,23.411499)"
+        }
+    }
+    const elements = {
+        highlight: useRef<HTMLDivElement|null>(null),
+        svg:{
+            circle: useRef<SVGCircleElement|null>(null),
+            star: {
+                inner: useRef<SVGPathElement|null>(null),
+                outer: useRef<SVGPathElement|null>(null),
+            }
+        }
+    }
+    const onMouseEnter = (e: React.MouseEvent)=>{
+        let circle = elements.svg.circle.current
+        let innerStar = elements.svg.star.inner.current
+        let outerStar = elements.svg.star.outer.current
+
+        let t = 0;
+
+        if(!circle || !innerStar || !outerStar) return
+
+        circle.style.fill = "rgb(165, 92, 221)"
+
+        innerStar.style.transform = transform.innerStar.hover
+        //outerStar.style.transform = transform.outerStar.hover
+        
+        if(intervalId.current==null){
+            intervalId.current = setInterval(()=>{
+                if(t==0){
+                    outerStar.style.transform = transform.outerStar.hover
+                    t++;
+                }else{
+                    outerStar.style.transform = transform.outerStar.default
+                    t--;
+                }
+            },500)
+        }
+        
+        //console.log(intervalId.current)
+        
+    }
+    const onMouseLeave = (e: React.MouseEvent)=>{
+        let circle = elements.svg.circle.current
+        let innerStar = elements.svg.star.inner.current
+        let outerStar = elements.svg.star.outer.current
+
+        if(!circle || !innerStar || !outerStar) return
+
+        circle.style.fill = "rgb(171, 129, 204)"
+
+        innerStar.style.transform = transform.innerStar.default
+        if(intervalId.current){
+            clearInterval(intervalId.current)
+            intervalId.current = null
+        }
+        outerStar.style.transform = transform.outerStar.default
+    }
+    return(
+        <div className='highlight' ref={elements.highlight} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+            <h2>Certifications & Badges</h2>
+            <p>Earn industry-recognized certificates and digital badges for each completed course.</p>
+            <svg width={50} height={50} viewBox='0 0 50 50'>
+                <defs>
+                <filter
+                    id="a"
+                    width={1.064}
+                    height={1.064}
+                    x={-0.031}
+                    y={-0.031}
+                    colorInterpolationFilters='sRGB'
+                >
+                    <feFlood floodColor="#000" floodOpacity={0.224} result="flood" />
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation={0.5} />
+                    <feOffset dx={0.1} dy={0.1} in="blur" result="offset" />
+                    <feComposite in="flood" in2="offset" operator="in" result="comp1" />
+                    <feComposite in="SourceGraphic" in2="comp1" result="comp2" />
+                </filter>
+                </defs>
+                <circle
+                ref={elements.svg.circle}
+                cx={25}
+                cy={25}
+                r={19.528}
+                style={{
+                    fill:"rgb(171, 129, 204)",
+                    fillOpacity: 0.982729,
+                    stroke: "none",
+                    strokeWidth: 3.56406,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    paintOrder: "stroke markers fill",
+                    filter: "url(#a)",
+                    transition:'fill 0.4s ease'
+                }}
+                />
+                <path
+                ref={elements.svg.star.inner}
+                d="M13.64 22.858c-3.016 0-5.103-11.097-7.236-13.23-2.132-2.132-13.23-4.22-13.23-7.235 0-3.016 11.098-5.103 13.23-7.236 2.133-2.132 4.22-13.23 7.236-13.23 3.015 0 5.103 11.098 7.235 13.23 2.133 2.133 13.23 4.22 13.23 7.236s-11.097 5.103-13.23 7.235c-2.132 2.133-4.22 13.23-7.235 13.23z"
+                style={{
+                    fill:"rgb(243, 192, 12)",
+                    fillOpacity: 0.982729,
+                    stroke: "none",
+                    strokeWidth: 3.40157,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeOpacity: 1,
+                    paintOrder: "stroke markers fill",
+                    transition: 'transform 0.7s ease',
+                }}
+                transform={transform.innerStar.default}
+                />
+                <path
+                ref={elements.svg.star.outer}
+                d="M13.64 22.858c-3.016 0-5.103-11.097-7.236-13.23-2.132-2.132-13.23-4.22-13.23-7.235 0-3.016 11.098-5.103 13.23-7.236 2.133-2.132 4.22-13.23 7.236-13.23 3.015 0 5.103 11.098 7.235 13.23 2.133 2.133 13.23 4.22 13.23 7.236s-11.097 5.103-13.23 7.235c-2.132 2.133-4.22 13.23-7.235 13.23z"
+                style={{
+                    fill:"rgb(243, 207, 12)",
+                    fillOpacity: 0.982729,
+                    stroke: "none",
+                    strokeWidth: 3.40157,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeOpacity: 1,
+                    paintOrder: "stroke markers fill",
+                    transition:'transform 0.5s linear'
+                }}
+                transform={transform.outerStar.default}
+                />
+            </svg>
         </div>
     )
 }
