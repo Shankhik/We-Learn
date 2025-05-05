@@ -47,6 +47,22 @@ class ApiLinks {
             this: `${this.firstPart}/email/forgot-pwd`,//api/email/forgot-pwd
         }
     }
+    static forgotPwd = {
+        /**
+         * method: POST;
+         * Authorization header:{username, password}
+         */
+        changePwd: {
+            this: `${this.firstPart}/forgot-pwd/change-pwd`
+        },
+        verifyUser: {
+            this: `${this.firstPart}/forgot-pwd/verify-user`
+        },
+        
+    }
+    static getUserDetails = {
+        this: `${this.firstPart}/get-user-details`
+    }
     static loginReq ={
         this: `${this.firstPart}/login-req`,//api/login-req
     }
@@ -54,18 +70,10 @@ class ApiLinks {
     static signupReq ={
         this: `${this.firstPart}/signup-req`,//api/signup-req
     }
-
-    static forgotPwd = {
-        verifyUser: {
-            this: `${this.firstPart}/forgot-pwd/verify-user`
-        },
-        /**
-         * method: POST;
-         * Authorization header:{username, password}
-         */
-        changePwd: {
-            this: `${this.firstPart}/forgot-pwd/change-pwd`
-        }
+    
+    static updateUserDetails = {
+        this: `${this.firstPart}/update-user-details`,//api/signup-req
     }
+    
 }
 export default ApiLinks;

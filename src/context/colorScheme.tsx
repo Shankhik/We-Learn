@@ -174,7 +174,7 @@ export const ColorContextProvider= ({children}:{children:ReactNode})=>{
             setAccentColor(cookie_accentColor)
         }else setCookie('ColorScheme',`Theme: ${theme}; AccentColor: ${accentColor}`)
 
-    },[])
+    })
     //Checks for Theme changes
     useEffect(()=>{
         let cookie = getCookie('ColorScheme').cookie

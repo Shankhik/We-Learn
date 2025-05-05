@@ -6,6 +6,85 @@ export interface ParseResponse extends status{
     formData?: object;
     filePath?: string|null;
 }
+export const getFormData = async (req: Request):Promise<ParseResponse>=>{
+    const body = req.body;
+
+    if(body === null) {
+        //console.error("body is null");
+        throw new Error("body is null");
+    }
+
+    let chunks = [];
+    let reader = body.getReader()
+
+    let isDone = false;
+
+    while (!isDone) {
+        const {value, done: doneReading} = await reader.read();
+        if (value) chunks.push(value);
+        isDone = doneReading;
+    }
+    const buffer = Buffer.concat(chunks)
+    const binaryBody = buffer.toString('binary')
+
+
+    try{
+        writeFileSync('public/upload/reqBody.txt', binaryBody)
+    }catch(error:any){
+        console.log('error:', error.message)
+    }
+
+    const boundary = binaryBody.split('\r\n')[0]
+    let fields = binaryBody.split(boundary+'\r\n')
+    fields.splice(0,1)
+
+    let data = {}
+
+    fields.forEach((part)=>{
+
+        const contentType = (part.split('\r\n')[1]).split(": ")[1]
+        const contentDisposition = part.split('\r\n')[0]
+
+        const fields = {
+            name: getFieldName(contentDisposition, 'name'),
+            filename: getFieldName(contentDisposition, 'filename')
+        }
+
+        const content = getContent(part,boundary)
+        let tempName;
+        // If it's a file
+        if(contentType && fields.filename!==null){
+            let date = new Date();
+
+            tempName = `${getRandomInt(100,999)}-${fields.filename}`
+            let buffer = new Uint8Array(Buffer.from(content,'binary'));
+            try{
+                writeFileSync(`public/upload/${tempName}`,buffer)
+            }catch(error:any){
+                console.log("Couldn't save file")
+            }
+        }
+
+        Object.defineProperty(data,fields.name||'field',{
+            value: fields.filename? tempName:content,
+            writable:true, enumerable:true,
+            configurable:true
+        })
+    })
+
+    if(data){
+        return {
+            status: true,
+            message: 'Parsed FormData',
+            formData: data
+        }
+    }
+    return{
+        status: false,
+        error: 'Form Data is Empty!'
+    }
+}
+
 export const parseFormData = async (req: Request, fieldName: string): Promise<ParseResponse> => {
     
     const body = req.body;
@@ -231,4 +310,3 @@ function getRandomInt(min:number, max:number) {
     // Generate random integer between min (inclusive) and max (inclusive)
     return num
 }
-

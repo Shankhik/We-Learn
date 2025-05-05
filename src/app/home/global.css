@@ -46,7 +46,7 @@
     position: relative;
     display: grid;
     grid-template-columns: auto 1fr;
-    grid-template-rows: 100px 1fr;
+    grid-template-rows: auto 1fr;
     height: 100dvh;
     background-color: #000000;
     color: rgba(0, 0, 0, 0.8);
@@ -62,21 +62,32 @@
 }
 .homepage-navbar{
     grid-area: 1/1/2/-1;
+    height: auto;
     display: flex;
     align-items: center;
     background: linear-gradient(#4a6bb4,#ffffff00);
+    padding: 10px 10px 10px 10px;
     position: relative;
     top: 0px;
     left: 0px;
     
     #learn-page-logo{
-        margin: 0px 0px 0px 30px;
+        margin-left:30px;
         width: 150px;
         height: auto;
+        padding: 3px 30px;
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0.1));
+        border-radius: 10px;
         transition: all 0.3s ease;
         @media (max-width:900px){
             width: 100px;
-            margin: 0px;
+            margin-left: 20px;
+            padding: 10px;
+        }
+        @media (max-width:400px) {
+            width: 80px;
+            margin-left: 10px;
+            padding: 3px 10px;
         }
     }
     @media (max-width: 900px) {
@@ -84,7 +95,8 @@
         backdrop-filter: blur(10px);
     }
     @media (max-width: 400px) {
-        /*Add if needed*/
+        padding: 10px;
+        
     }
     
 }
@@ -97,9 +109,9 @@
     }
     @media (max-width: 400px) {
         /*Add if needed*/
-        margin: 10px;
+        margin: 0px;
         width: 40px;
-        height: 35px;
+        height: auto;
     }
 }
 .homepage-sidebar{

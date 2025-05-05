@@ -6,6 +6,18 @@ import './style.css'
 export default function Changelog (){
     const changelog = [
         <>
+            <h2>Version: 0.3.0 </h2>
+            <h6>05/05/2025</h6>
+            <h3>Added</h3>
+            <ul>
+                <li><strong>Settings</strong> Page</li>
+            </ul>
+            <h3>Modified</h3>
+            <ul>
+                <li><strong>Dashboard</strong>{`'s`} Layout</li>
+            </ul>
+        </>,
+        <>
             <h2>Version: 0.2.8 </h2>
             <h6>06/02/2025</h6>
             <h3>Modified</h3>

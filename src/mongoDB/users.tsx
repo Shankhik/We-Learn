@@ -22,7 +22,7 @@ const adminUsers :{ username: string,password: string }[]= [
     }
 ];
 
-//checks if the user is an preset Admin User or not
+//checks if the user is a preset Admin User or not
 export const checkAdmin = (username: string, password: string): boolean=>{
     let user: { username: string, password: string } = {
         username: username,
@@ -164,6 +164,67 @@ export const changePwd =  async (username: string, password: string): Promise<st
         return {
             status: false,
             error: error.message
+        }
+    }
+}
+
+export const getUserDetails = async (username: string):Promise<status>=>{
+    try {
+        const db = mongoServer.db('E-Learning');
+        const users = db.collection('users') as Collection<User>
+
+        let res = await users.findOne({username: username})
+        let user = {...res} //if res=null => user={}
+
+        if(res !== null){
+            delete user.password
+            return {
+                status: true,
+                message: 'retrieved user details',
+                user: user
+            }
+        }
+        return {
+            status: false,
+            message: 'No User Found!'
+        }
+        
+    } catch (error:any) {
+       return {
+            status: false,
+            error: error.message
+        }
+    }
+}
+
+export const updateUserDetails = async (
+    username:string,
+    fields: {[key in keyof User]?: any}
+):Promise<status> => {
+    
+    try {
+        const db = mongoServer.db('E-Learning')
+        const users = db.collection('users') as Collection<User>
+        
+        let res = await users.updateOne({username: username},{
+            $set: fields
+        })
+
+        if(res.acknowledged){
+            return {
+                status: true,
+                message: `Update Successfull`
+            }
+        }else{
+            return {
+                status: false,
+                message: `Update Unsuccessfull`
+            }
+        }
+    } catch (error:any) {
+        return {
+            status: false,
+            error: error.any
         }
     }
 }

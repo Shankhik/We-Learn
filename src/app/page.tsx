@@ -172,7 +172,7 @@ export default function LandingPage (){
                 </div>
                 <div>
                     <h3>About</h3>
-                    <div><strong>Version</strong>:<p style={{color:'rgb(176, 250, 255)'}}>0.2.8</p></div>
+                    <div><strong>Version</strong>:<p style={{color:'rgb(176, 250, 255)'}}>0.3.0</p></div>
                     <div>
                         <p><strong>Hosted on</strong>: <a href="https://render.com" target='_blank'>Render</a></p>
                     </div>

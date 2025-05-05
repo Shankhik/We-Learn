@@ -46,7 +46,7 @@ export default function SignupPage() {
         const response:status = await post(ApiLinks.signupReq.this,formData)
         
         if(response.token){
-            setCookie('authToken',response.token)
+            setCookie('authToken',response.token, 60*20)
             updateAuth();
             await delay(2000);
             router.replace('/home/dashboard')

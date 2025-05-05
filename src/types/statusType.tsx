@@ -9,6 +9,7 @@ export type status ={
     error?: string;
     token?: string;
     cookie?: string;
+    link?:string|null;
     documentId?: ObjectId;
     users?: any [];
     user?: any;

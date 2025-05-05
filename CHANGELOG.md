@@ -1,6 +1,13 @@
 # Change Log
 
 <!-- Add New Version above -->
+## Version: 0.3.0 [May 5th, 2025]
+### Added
+- **Settings** Page
+### Modified
+- **Dashboard**'s Layout
+
+<!-- Add New Version above -->
 ## Version: 0.2.8 [Feb 6th, 2025]
 ### Modified
 - **Dashboard**'s course card

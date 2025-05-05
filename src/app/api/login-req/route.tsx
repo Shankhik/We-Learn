@@ -11,7 +11,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
     const origin = req.headers.get('origin');
     let response: status;
-    let user: User;
+    //let user: User;
     let token: string|undefined;
     try{
         let reqData:loginDataType = await req.json();
@@ -23,13 +23,12 @@ export async function POST(req: NextRequest) {
             let email =response.user.email;
             let admin =response.user.admin;
             //let samePwd = await bcryptCompare(reqData.password, password)
-
             if((await bcryptCompare(reqData.password, password)).status){
                 token = signToken({
                     username: username,
                     email: email,
                     admin: admin
-                }).token
+                },60*20).token
                 response = {
                     status: true,
                     message: `Login Successfull`,

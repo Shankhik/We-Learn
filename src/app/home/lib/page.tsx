@@ -1,7 +1,7 @@
 export default function Library (){
     return(
-        <div>
-            Library Page
-        </div>
+        <>
+            <h1>Enrolled Courses</h1>
+        </>
     )
 }

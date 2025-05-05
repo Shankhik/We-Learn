@@ -4,8 +4,10 @@ import { ReactHTML } from "react";
 export type User = {
     _id?: ObjectId | undefined;
     username: string;
+    displayName: string;
     email?: string;
     password: string;
+    profilePicture?: number|null;
     admin?: boolean;
 }
 export type Skills = 'coding'|'java'|'c++'|'c'|'python'|'svg'|'oops';

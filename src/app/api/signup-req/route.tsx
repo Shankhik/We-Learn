@@ -6,6 +6,7 @@ import { signToken } from "@/lib/jwt";
 import { createNewUserHistory } from "@/mongoDB/usercourses";
 import { addUser, checkAdmin, findUser } from "@/mongoDB/users";
 import { signupDataType } from "@/types/authType";
+import { User } from "@/types/databaseTypes";
 import { status } from "@/types/statusType";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,11 +14,25 @@ export async function POST(req: NextRequest) {
     const origin = req.headers.get('origin');
     let response:status;
     let token: string|undefined;
+    let userDocument: User = {
+        username: "",
+        displayName: "",
+        email:"",
+        password: "",
+        profilePicture: null,
+        admin: false
+    };
     try {
-        let reqData: signupDataType = await req.json();
+        const reqData: signupDataType = await req.json();
+
+        userDocument.username = reqData.username;
+        userDocument.email = reqData.email;
+        userDocument.displayName = reqData.username;
+        userDocument.profilePicture = null;
+
         //checks if the user is an Preset admin or not
         if (checkAdmin(reqData.username,reqData.password)){
-            reqData.admin = true;
+            userDocument.admin = true;
         }
         //finds user
         const mongoUser = (await findUser(reqData,{username: reqData.username})).user;
@@ -26,24 +41,24 @@ export async function POST(req: NextRequest) {
         if (!mongoUser) /*User Doesnt exists*/ {
             //generating token
             token = signToken({
-                username: reqData.username,
-                email: reqData.email,
-                admin: reqData.admin
-            }).token
+                username: userDocument.username,
+                email: userDocument.email,
+                admin: userDocument.admin
+            },60*20).token
             //creating user course history document
-            await createNewUserHistory(reqData.username)
+            await createNewUserHistory(userDocument.username)
             //hashes password or make no changes
-            reqData.password = (await bcryptHash(reqData.password)).hashed || reqData.password
+            userDocument.password = (await bcryptHash(reqData.password)).hashed || reqData.password
             
             //Adding user to Database
-            response = await addUser(reqData);
+            response = await addUser(userDocument);
             response.token = token
 
             //If added successfully
             if(response.status){
                 let emailDetails = {
-                    username: reqData.username,
-                    email: reqData.email
+                    username: userDocument.username,
+                    email: userDocument.email
                 }
                 // Sending Signup Email
                 await post(ApiLinks.email.signup.this, emailDetails)

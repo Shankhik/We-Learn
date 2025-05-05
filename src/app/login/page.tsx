@@ -43,7 +43,7 @@ export default function LoginPage() {
         
 
         if(response.token){
-            setCookie('authToken',response.token)
+            setCookie('authToken',response.token,60*20)
             updateAuth();
             await delay(2000);
             router.replace('/home/dashboard')
@@ -57,7 +57,7 @@ export default function LoginPage() {
     }
     return(
     <div className="login-page">
-        <LoadingPage show={pageState==='working'?true:false}/>
+        <LoadingPage show={pageState==='working'}/>
         <Alert show={showAlert} close={setShowAlert}>
             <div className='login alert-box'>
                 <h2 className='login alert-box-heading'>{alertHeading}</h2>
