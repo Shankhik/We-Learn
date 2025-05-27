@@ -52,7 +52,7 @@ export default function WaitingSVG( {style}: {style: CSSProperties} ) {
         return ()=>{
             clearInterval(id)
         }
-    })
+    },[])
     return (
     <svg width={200} height={200} viewBox={'0 0 200 200'} style={style}>
         <circle

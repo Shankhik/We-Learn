@@ -90,6 +90,21 @@
             padding: 3px 10px;
         }
     }
+    /*Profile Picture container*/
+    >:nth-last-child(2){
+        width: 50px;
+        @media (max-width: 400px) {
+            width: 40px;
+            
+        }
+    }
+    /*Profile Picture pop up ations*/
+    >:nth-last-child(1){
+        translate: -35px 100%;
+        @media (max-width: 400px) {
+            translate: -4dvw 100%;
+        }
+    }
     @media (max-width: 900px) {
         grid-area: 1/1/2/-1;
         backdrop-filter: blur(10px);

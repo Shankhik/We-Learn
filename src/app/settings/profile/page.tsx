@@ -418,7 +418,7 @@ const FileChoseOption = ({show,setShow}:{
                 body: data,
             })
             response = (await response.json()) as status;
-            console.log(response)
+            //console.log(response)
 
             if(response.status){
                 updateUserDetails();
@@ -662,14 +662,15 @@ const CropOverlay = ({img, setCropDimensions}: CropOverlayType)=>{
         requestAnimationFrame(()=>{
             updateCropDimensions();
         })
-    });
+    },[]);
 
-    const resize = (e:React.MouseEvent)=>{
-        e.preventDefault();
-
+    const resize = (e:React.MouseEvent | React.TouchEvent)=>{
+        if(!('touches' in e)) {
+            e.preventDefault()
+        }
         if( !elementReset.current || !elementMain.current || !elementInnerCircle.current) return;
 
-        const innerCircle = elementInnerCircle.current;
+        const isTouch = 'touches' in e
 
         // Gets the rect properties
         const mainBox = getRect(elementMain.current);
@@ -681,8 +682,8 @@ const CropOverlay = ({img, setCropDimensions}: CropOverlayType)=>{
             elementReset.current.contains(e.target as Node)
         ) return;
 
-        const startX = e.clientX;
-        const startY = e.clientY;
+        const startX = isTouch?e.touches[0].clientX:e.clientX;
+        const startY = isTouch?e.touches[0].clientY:e.clientY;
         const startSize = size;
 
         // finds the closest edge distance
@@ -693,28 +694,32 @@ const CropOverlay = ({img, setCropDimensions}: CropOverlayType)=>{
             parentBox.right - mainBox.centerX - mainBox.height/2
         )
 
-        const onMouseMove = (e:MouseEvent) => {
+        const onMouseMove = (e:MouseEvent|TouchEvent) => {
+            const isTouch = 'touches' in e
+
+            const clientX = isTouch? e.touches[0].clientX: e.clientX
+            const clientY = isTouch? e.touches[0].clientY: e.clientY
             let delta = 0;
             //console.log(mainProps?.top)
             const direction = getDragDirection(
-                e.clientX,startX, e.clientY, startY
+               clientX, startX, clientY, startY
             )
             // left half
             if (startX < mainBox.centerX){
                 // top-left Quadrant
                 if (startY < mainBox.centerY) {
                     if (direction === 'bottomRight'){
-                        delta = - Math.abs(Math.max(e.clientX-startX, e.clientY-startY));
+                        delta = - Math.abs(Math.max(clientX-startX, clientY-startY));
                     }else {
-                        delta = Math.abs(Math.max(e.clientX-startX, e.clientY-startY));
+                        delta = Math.abs(Math.max(clientX-startX, clientY-startY));
                     }
                 }
                 // bottom-left Quadrant
                 else {
                     if (direction === 'topRight'){
-                        delta = - Math.abs(Math.max(e.clientX-startX, e.clientY-startY));
+                        delta = - Math.abs(Math.max(clientX-startX, clientY-startY));
                     }else {
-                        delta = Math.abs(Math.max(e.clientX-startX, e.clientY-startY));
+                        delta = Math.abs(Math.max(clientX-startX, clientY-startY));
                     }
                 }
             }
@@ -723,17 +728,17 @@ const CropOverlay = ({img, setCropDimensions}: CropOverlayType)=>{
                 // top-right Quadrant
                 if (startY < mainBox.centerY) {
                     if (direction === 'bottomLeft'){
-                        delta = - Math.abs(Math.max(e.clientX-startX, e.clientY-startY));
+                        delta = - Math.abs(Math.max(clientX-startX, clientY-startY));
                     }else {
-                        delta = Math.abs(Math.max(e.clientX-startX, e.clientY-startY));
+                        delta = Math.abs(Math.max(clientX-startX, clientY-startY));
                     }
                 }
                 // bottom-right Quadrant
                 else {
                     if (direction === 'topLeft'){
-                        delta = - Math.abs(Math.max(e.clientX-startX, e.clientY-startY));
+                        delta = - Math.abs(Math.max(clientX-startX, clientY-startY));
                     }else {
-                        delta = Math.abs(Math.max(e.clientX-startX, e.clientY-startY));
+                        delta = Math.abs(Math.max(clientX-startX, clientY-startY));
                     }
                 }
             }
@@ -747,15 +752,23 @@ const CropOverlay = ({img, setCropDimensions}: CropOverlayType)=>{
 
         const onMouseUp = () => {
             updateCropDimensions();
+            window.removeEventListener('touchmove',onMouseMove);
             window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('touchend', onMouseUp);
             window.removeEventListener('mouseup', onMouseUp);
         };
 
+        window.addEventListener('touchmove',onMouseMove);
         window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('touchend', onMouseUp);
         window.addEventListener('mouseup', onMouseUp);
+        
     }
-    const move = (e:React.MouseEvent)=>{
-        e.preventDefault();
+    const move = (e: React.MouseEvent|React.TouchEvent)=>{
+        if(!('touches' in e)) {
+            e.preventDefault()
+        }
+        const isTouch = 'touches' in e
         
         if(!elementMain.current || !elementReset.current) return;
 
@@ -766,15 +779,24 @@ const CropOverlay = ({img, setCropDimensions}: CropOverlayType)=>{
         const parentBox = getRect(elementMain.current.parentElement as HTMLDivElement);
 
         // Mouse Down Coordinate
-        const start = [e.clientX, e.clientY];
+        const start = [
+            isTouch? e.touches[0].clientX: e.clientX,
+            isTouch? e.touches[0].clientY: e.clientY
+        ];
 
         // Max Value of Coordinate (wrt. the size of crop box)
         let maxX = (parentBox.width/2) - (mainBox.width/2);
         let maxY = (parentBox.height/2) - (mainBox.height/2);
 
-        const onMouseMove = (e:MouseEvent)=>{
-            e.preventDefault();
-            let delta = [e.clientX-start[0],e.clientY-start[1]];
+        const onMouseMove = (e:MouseEvent|TouchEvent)=>{
+            if(!('touches' in e)) {
+                e.preventDefault()
+            }
+            const isTouch = 'touches' in e
+            let delta = [
+                isTouch?e.touches[0].clientX-start[0]:e.clientX-start[0],
+                isTouch?e.touches[0].clientY-start[1]:e.clientY-start[1]
+            ];
 
             let x = boxCoordinates[0]+delta[0];
             x = Math.abs(x)>maxX ? (x<0 ? -maxX : maxX): x
@@ -786,10 +808,14 @@ const CropOverlay = ({img, setCropDimensions}: CropOverlayType)=>{
 
         const onMouseUp = ()=>{
             updateCropDimensions();
+            window.removeEventListener('touchmove', onMouseMove);
             window.removeEventListener('mousemove',onMouseMove);
+            window.removeEventListener('touchend', onMouseUp);
             window.removeEventListener('mouseup',onMouseUp);
         }
+        window.addEventListener('touchmove', onMouseMove);
         window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('touchend', onMouseUp);
         window.addEventListener('mouseup', onMouseUp);
     }
 
@@ -803,7 +829,7 @@ const CropOverlay = ({img, setCropDimensions}: CropOverlayType)=>{
             translate:`calc(-50% + ${boxCoordinates[0]}px) calc(-50% + ${boxCoordinates[1]}px)`,
             background:'rgba(0,0,0,0.5)',
         }}
-        onMouseDown={resize} ref={elementMain}
+        onMouseDown={resize} onTouchStart={resize} ref={elementMain}
     >
         <div
             ref={elementInnerCircle}
@@ -812,7 +838,7 @@ const CropOverlay = ({img, setCropDimensions}: CropOverlayType)=>{
                 borderRadius:'50%',maxWidth:'96%',height:'auto',
                 backdropFilter:'brightness(200%)',alignSelf:"center",
                 margin:'0 auto',border:`2px solid white`
-            }} onMouseDown={move}
+            }} onMouseDown={move} onTouchStart={move}
         ></div>
         <div style={{
             position:'absolute', bottom: '15%', left: '15%',

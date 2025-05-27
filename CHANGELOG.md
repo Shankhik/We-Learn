@@ -1,6 +1,12 @@
 # Change Log
 
 <!-- Add New Version above -->
+## Version: 0.3.1 [May 27th, 2025]
+### Fixed
+- Profile-picture upload issue
+- Profile-picture crop not working for mobile devices
+
+<!-- Add New Version above -->
 ## Version: 0.3.0 [May 5th, 2025]
 ### Added
 - **Settings** Page

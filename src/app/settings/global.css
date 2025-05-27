@@ -53,6 +53,10 @@
         border-radius: 20px;
         background: linear-gradient(30deg,rgb(123, 134, 235), rgb(216, 164, 116));
         color: white;
+        @media (max-width:400px) {
+            text-align: center;
+            width: clamp(10px, 20dvw, 60px);
+        }
     }
     /*Logout Btn*/
     >:nth-last-child(1){

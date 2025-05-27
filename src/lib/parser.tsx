@@ -1,5 +1,5 @@
 import { status } from "@/types/statusType";
-import { writeFileSync } from "fs";
+import { existsSync, writeFileSync } from "fs";
 
 export interface ParseResponse extends status{
     fileName?: string|null;
@@ -7,10 +7,15 @@ export interface ParseResponse extends status{
     filePath?: string|null;
 }
 export const getFormData = async (req: Request):Promise<ParseResponse>=>{
+
+    try {
+        existsSync('public/upload')
+    } catch (error) {
+        console.error('No "public/upload" Found')
+    }
     const body = req.body;
 
     if(body === null) {
-        //console.error("body is null");
         throw new Error("body is null");
     }
 
@@ -26,13 +31,6 @@ export const getFormData = async (req: Request):Promise<ParseResponse>=>{
     }
     const buffer = Buffer.concat(chunks)
     const binaryBody = buffer.toString('binary')
-
-
-    try{
-        writeFileSync('public/upload/reqBody.txt', binaryBody)
-    }catch(error:any){
-        console.log('error:', error.message)
-    }
 
     const boundary = binaryBody.split('\r\n')[0]
     let fields = binaryBody.split(boundary+'\r\n')
@@ -73,6 +71,7 @@ export const getFormData = async (req: Request):Promise<ParseResponse>=>{
     })
 
     if(data){
+        console.log(data)
         return {
             status: true,
             message: 'Parsed FormData',
@@ -84,7 +83,74 @@ export const getFormData = async (req: Request):Promise<ParseResponse>=>{
         error: 'Form Data is Empty!'
     }
 }
+export const getFormBuffer = async (req: Request):Promise<ParseResponse>=>{
+    const body = req.body;
+    if(body === null) {
+        throw new Error("body is null");
+    }
 
+    let chunks = [];
+    let reader = body.getReader()
+
+    let isDone = false;
+
+    while (!isDone) {
+        const {value, done: doneReading} = await reader.read();
+        if (value) chunks.push(value);
+        isDone = doneReading;
+    }
+    const buffer = Buffer.concat(chunks)
+    const binaryBody = buffer.toString('binary')
+
+    const boundary = binaryBody.split('\r\n')[0]
+
+    let fields = binaryBody.split(boundary+'\r\n')
+    fields.splice(0,1)
+
+    let data = {}
+
+    fields.forEach((part)=>{
+        const contentType = (part.split('\r\n')[1]).split(": ")[1]
+        const contentDisposition = part.split('\r\n')[0]
+
+        const fields = {
+            name: getFieldName(contentDisposition, 'name'),
+            filename: getFieldName(contentDisposition, 'filename')
+        }
+
+        // Part's content ( string | binary-string )
+        const content = getContent(part,boundary)
+
+        let buffer: Buffer|undefined;
+
+        // If it's a file
+        if(contentType && fields.filename!==null){
+            //console.log(`${fields.name}: ${fields.filename}`)
+            buffer = Buffer.from(content,'binary');
+        }//else console.log(`${fields.name}: ${content}`);
+
+        Object.defineProperty(data,fields.name||'field',{
+            value: !buffer? content: {
+                filename: fields.filename,
+                buffer: buffer
+            },
+            writable:true, enumerable:true,
+            configurable:true
+        })
+    })
+
+    if(data){
+        return {
+            status: true,
+            message: 'Parsed FormData',
+            formData: data
+        }
+    }
+    return{
+        status: false,
+        error: 'Form Data is Empty!'
+    }
+}
 export const parseFormData = async (req: Request, fieldName: string): Promise<ParseResponse> => {
     
     const body = req.body;

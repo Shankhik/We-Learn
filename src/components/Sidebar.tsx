@@ -34,7 +34,7 @@ export const Sidebar: FC<Props> = ({classname, id, width, sidebar}) =>{
     
     useEffect(()=>{
         checkURLforActiveLink();
-    })
+    },[])
     
     const references = {
         sidebar:useRef<HTMLElement>(null),

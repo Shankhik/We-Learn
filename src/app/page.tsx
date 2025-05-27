@@ -5,10 +5,9 @@ import './style.css'
 import logo from '@/images/logo/logo'
 import Image from 'next/image'
 import { background } from '@/images/background/background';
-import { CSSProperties, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { delCookie } from '@/lib/cookies';
-import icons from '@/images/icons/icons';
 import Link from 'next/link';
 
 export default function LandingPage (){
@@ -24,6 +23,9 @@ export default function LandingPage (){
     }
     const [showOption,setShowOption] = useState<boolean>(false);
     const onClick = {
+        more: ()=>{
+            router.push('settings')
+        },
         profilePicture: ()=>{
             setShowOption(!showOption);
         },
@@ -111,7 +113,6 @@ export default function LandingPage (){
     }
     return(
         <div id='landing-page'>
-            {/*<div style={{gridArea:'1/1/-1/-1',zIndex:'0',width:'100%',height:'100dvh', overflow:'hidden', backgroundColor:'green', opacity:'0.2', position:'sticky', top:'0px', left:'0px'}} hidden={!showPopUpBG} onClick={()=> {setShowOption(false); setShowPopUpBG(false)}}></div>*/}
             <nav id='landing-page-navbar' ref={references.navbar}>
                 <div>
                     <Image src={logo.fullLogo} alt='logo' width={150} ref={references.navbarLogo}/>
@@ -122,7 +123,7 @@ export default function LandingPage (){
                         <h3 id='landing-page-profile-pic' onClick={onClick.profilePicture} >{user?.username.substring(0,1)||"Shankhik".substring(0,1)}</h3>
                         <div className={`login-options ${showOption?'enable':'disable'}`} hidden={!showOption} ref={references.loginPopUp}>
                             <h4>{user?.username}</h4>
-                            <button>More</button>
+                            <button onClick={onClick.more}>More</button>
                             <button onClick={onClick.logout}>Logout</button>
                         </div>
                     </div>
@@ -172,7 +173,7 @@ export default function LandingPage (){
                 </div>
                 <div>
                     <h3>About</h3>
-                    <div><strong>Version</strong>:<p style={{color:'rgb(176, 250, 255)'}}>0.3.0</p></div>
+                    <div><strong>Version</strong>:<p style={{color:'rgb(176, 250, 255)'}}>0.3.1</p></div>
                     <div>
                         <p><strong>Hosted on</strong>: <a href="https://render.com" target='_blank'>Render</a></p>
                     </div>

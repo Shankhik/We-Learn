@@ -1,10 +1,18 @@
 'use client'
 
-import Link from 'next/link'
 import './style.css'
 
 export default function Changelog (){
     const changelog = [
+        <>
+            <h2>Version: 0.3.1 </h2>
+            <h6>27/05/2025</h6>
+            <h3>Fixed</h3>
+            <ul>
+                <li><strong>Profile-picture</strong> upload issue</li>
+                <li><strong>Profile-picture</strong> crop not working for mobile devices</li>
+            </ul>
+        </>,
         <>
             <h2>Version: 0.3.0 </h2>
             <h6>05/05/2025</h6>

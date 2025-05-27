@@ -220,7 +220,7 @@ export default function DashBoardLayout ({children}: Readonly<{children: React.R
                 <img id='learn-page-logo' src='https://res.cloudinary.com/dwjtsqbqn/image/upload/v1739002192/WeLearn/full-logo.png' alt='logo'/>
 
                 <div style={{
-                    margin:'0 3% 0 auto', aspectRatio:'1/1', width:'50px',
+                    margin:'0 min(40px, 2%) 0 auto', aspectRatio:'1/1',
                     borderRadius:'50%',overflow:'hidden',
                     border:`2px solid ${colorScheme.page[accentColor].backgroundColor.light}`
                 }} onClick={()=>{setShowProfileAction(!showProfileActions)}}
@@ -239,14 +239,14 @@ export default function DashBoardLayout ({children}: Readonly<{children: React.R
                 {/* Profile Actions */}
                 <div style={{
                     position:'absolute', bottom:'0', right:"0",
-                    translate:'-35px 100%', minWidth:'100px',
+                    minWidth:'100px',
                     padding: '15px 15px', display: showProfileActions?'flex':'none',
                     flexDirection:'column',borderRadius:'20px',
                     backgroundColor: effectiveTheme==='light'?
                         'rgb(255, 255, 255)': colorScheme.navbar[accentColor].background.dark
                     ,boxShadow:'1px 1px 10px rgba(0, 0, 0, 0.3)'
                 }}>
-                    <h4 style={{textAlign:'right'}}>{displayName}</h4>
+                    <h4 style={{textAlign:'center'}}>{displayName}</h4>
                     
                     <div style={{
                         display:'flex',alignItems:'center',
