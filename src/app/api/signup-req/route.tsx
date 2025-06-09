@@ -62,6 +62,8 @@ export async function POST(req: NextRequest) {
                 }
                 // Sending Signup Email
                 await post(ApiLinks.email.signup.this, emailDetails)
+
+                console.log(`Signed-Up: ${userDocument.username}`)
             }
             
         }else /*User exists*/{

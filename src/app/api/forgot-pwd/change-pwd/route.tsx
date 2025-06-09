@@ -19,6 +19,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<status>> {
         if (decoded && decoded.password && decoded.username){
             const hashedPwd = (await bcryptHash(decoded.password)).hashed as string;
             status = await changePwd(decoded.username, hashedPwd);
+            console.log(`Changed Password for: ${decoded.username}`)
         }else{
             status = {
                 status: false,

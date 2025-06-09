@@ -4,7 +4,6 @@ var uri = process.env.NODE_ENV==='production'? (process.env.MONGODB_URI||'') : (
 const connect = async ()=>{
     mongoServer = new MongoClient(uri);
     await mongoServer.connect();
-    console.log('Connected to MONGODB');
 }
 connect();
 export { mongoServer }

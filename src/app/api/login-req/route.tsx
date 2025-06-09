@@ -3,9 +3,7 @@ import { header } from "@/lib/headers";
 import { signToken } from "@/lib/jwt";
 import { checkAdmin, findUser } from "@/mongoDB/users";
 import { loginDataType } from "@/types/authType";
-import { User } from "@/types/databaseTypes";
 import { status } from "@/types/statusType";
-import { log } from "console";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -22,7 +20,7 @@ export async function POST(req: NextRequest) {
             let username =response.user.username;
             let email =response.user.email;
             let admin =response.user.admin;
-            //let samePwd = await bcryptCompare(reqData.password, password)
+
             if((await bcryptCompare(reqData.password, password)).status){
                 token = signToken({
                     username: username,
@@ -34,6 +32,9 @@ export async function POST(req: NextRequest) {
                     message: `Login Successfull`,
                     token: token
                 }
+                
+                console.log(`Logged-In: ${reqData.username}`)
+
                 return NextResponse.json(response,{
                     status: 200,
                     headers: header(origin)

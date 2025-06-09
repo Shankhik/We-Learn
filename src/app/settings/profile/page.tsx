@@ -640,17 +640,26 @@ const CropOverlay = ({img, setCropDimensions}: CropOverlayType)=>{
             ratioX = Number(ratioX.toFixed(6));
             ratioY = Number(ratioY.toFixed(6));
 
-            let top = (main?.top - parent?.top)*ratioY || 0;
-            let left = (main?.left - parent?.left)*ratioX || 0;
-            let width = main?.width * ratioX;
-            let height = main?.height * ratioY;
-
+            let top = (main.top - parent.top)*ratioY || 0;
+            let left = (main.left - parent.left)*ratioX || 0;
+            let width = main.width * ratioX;
+            let height = main.height * ratioY;
+            
+            
             // getting the proper int pixel values
             top = Math.max(0, Math.round(top))
             left = Math.max(0, Math.round(left))
             width = Math.min(img.width, Math.round(width))
             height = Math.min(img.height, Math.round(height))
 
+            // if the any of the numbers are NaN
+            if(
+                Number.isNaN(top)||Number.isNaN(left)||
+                Number.isNaN(width)||Number.isNaN(height)
+            ){
+                requestAnimationFrame(updateCropDimensions)
+                return;
+            }
             setCropDimensions({top, left, width, height})
         }
     }
@@ -659,9 +668,8 @@ const CropOverlay = ({img, setCropDimensions}: CropOverlayType)=>{
     useEffect(() => {
         const main = elementMain.current
         if(!main) return;
-        requestAnimationFrame(()=>{
-            updateCropDimensions();
-        })
+        
+        updateCropDimensions()
     },[]);
 
     const resize = (e:React.MouseEvent | React.TouchEvent)=>{

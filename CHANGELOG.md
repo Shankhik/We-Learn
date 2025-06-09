@@ -1,6 +1,11 @@
 # Change Log
 
 <!-- Add New Version above -->
+## Version: 0.3.2 [June 11th, 2025]
+### Fixed
+- Settings Page's Sidebar layout
+
+<!-- Add New Version above -->
 ## Version: 0.3.1 [May 27th, 2025]
 ### Fixed
 - Profile-picture upload issue

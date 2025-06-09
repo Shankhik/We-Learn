@@ -5,6 +5,14 @@ import './style.css'
 export default function Changelog (){
     const changelog = [
         <>
+            <h2>Version: 0.3.2 </h2>
+            <h6>11/06/2025</h6>
+            <h3>Fixed</h3>
+            <ul>
+                <li>Settings {"Page's"} <strong>Sidebar</strong> layout</li>
+            </ul>
+        </>,
+        <>
             <h2>Version: 0.3.1 </h2>
             <h6>27/05/2025</h6>
             <h3>Fixed</h3>
