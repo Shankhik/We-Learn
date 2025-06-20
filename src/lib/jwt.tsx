@@ -8,7 +8,7 @@ export interface tokenType extends JwtPayload {
     admin?: boolean;
     password?: string;
 }
-const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY||'';
+const secretKey = process.env.SECRET_KEY||'';
 
 export const signToken = (payload: tokenType, expireTime?:number): status =>{
     const expT = (expireTime||60*5)*60 ;
@@ -54,6 +54,27 @@ export const verifyToken = (token: string) :status  =>{
         return {
             status: false,
             error: `Error: ${error.message}`
+        }
+    }
+}
+
+export const verifyAuthHeader = (req: Request):status =>{
+    try {
+        const token = req.headers.get('authorization')
+        if (!token) throw new Error('No Authorization header found');
+
+        const decoded = verifyToken(token.split('Bearer ')[1]).decoded;
+        if(!decoded) throw new Error('Incorrect Token Signature');
+
+        return {
+            status: true,
+            message: 'Authorization header verified',
+            decoded
+        }
+    } catch (error:any) {
+        return {
+            status: false,
+            error: error.message
         }
     }
 }

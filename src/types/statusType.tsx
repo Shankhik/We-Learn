@@ -1,7 +1,6 @@
 import { tokenType } from "@/lib/jwt";
-import { JwtPayload } from "jsonwebtoken";
-import { ObjectId, WithId } from "mongodb";
-import { Course, CourseHistory, EnrolledCourses } from "./databaseTypes";
+import { ObjectId } from "mongodb";
+import { Course, EnrolledCourses } from "./databaseTypes";
 
 export type status ={
     status: boolean;

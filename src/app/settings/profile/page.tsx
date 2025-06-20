@@ -100,20 +100,11 @@ export default function Profile() {
 
     const removeOnClick = async ()=>{
         let res: Response|status;
-        let token = getCookie("authToken").cookie;
-
-        if(!token){
-            console.error('No token Found!')
-            return;
-        }
+        
         try{
             res = await fetch("/api/upload/del-profile-picture",{
                 method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
             })
-
             res = (await res.json()) as status;
         }catch(e:any){
             console.error(e);
@@ -396,8 +387,7 @@ const FileChoseOption = ({show,setShow}:{
 
     // Uploading Function
     const setImage = async ()=>{
-        const authCookie = getCookie('authToken').cookie;
-        if(img === null || cropDimensions === null || !authCookie) return;
+        if(img === null || cropDimensions === null) return;
 
         const data = new FormData();
         data.append('file',img.image)
@@ -409,16 +399,14 @@ const FileChoseOption = ({show,setShow}:{
         try{
             setPopupText('Updating ...')
             setIsWorking(true);
-            let response:Response|status = await fetch('/api/upload/profile-picture',{
+            let response:Response|status = await fetch('/api/upload/add-profile-picture',{
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${authCookie}`,
                     'Content-Type': 'multipart/form-data',
                 },
                 body: data,
             })
             response = (await response.json()) as status;
-            //console.log(response)
 
             if(response.status){
                 updateUserDetails();

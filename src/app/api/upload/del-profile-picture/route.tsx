@@ -1,42 +1,41 @@
 import {header} from "@/lib/headers";
-import {verify} from "jsonwebtoken";
-import {verifyToken} from "@/lib/jwt";
 import {NextResponse} from "next/server";
 import {status} from "@/types/statusType";
 import {updateUserDetails} from "@/mongoDB/users";
 import {Cloudinary} from "@/lib/cloudinaryConfig";
 
 export async function GET (req: Request): Promise<NextResponse<status>> {
+    const userDetails = JSON.parse(
+        req.headers.get('x-user-details') as string
+    ) as status['decoded']
+    
     try {
-        const token = req.headers.get('authorization');
-        if (!token) throw new Error ("No token provided");
-
-        const decoded = verifyToken(token.split("Bearer ")[1]).decoded
-        if(!decoded?.username) throw new Error ("Tampered token provided");
-
         // Deleting media from CDN
         const folder = 'WeLearn/profile-picture/'
-        let cldRes = await Cloudinary.uploader.destroy(folder+decoded.username,{
+        let cldRes = await Cloudinary.uploader.destroy(folder+userDetails?.username,{
             invalidate: true
-        })
-        console.log(cldRes)
+        }) as { result: string } // just defining the actual type [by default: any]
 
         // Updating MongoDB
-        let res = updateUserDetails(decoded.username,{
-            profilePicture: null
-        })
+        if(cldRes.result === 'ok'){
+            await updateUserDetails(userDetails?.username||'',{
+                profilePicture: null
+            })
+            console.log(`-> Profile Picture Removed [${userDetails?.username}]`);
+        }
+        
         return NextResponse.json({
             status: true,
             message: "Successfully Deleted the file",
         },{
-            status: 200, headers: header(req.headers.get('origin')||null)
+            status: 200, headers: header(req.headers.get('origin'))
         })
     }catch (e:any) {
         return NextResponse.json({
             status: false,
             error: e.message,
         },{
-            status: 200, headers: header(req.headers.get('origin')||null)
+            status: 500, headers: header(req.headers.get('origin'))
         })
     }
 

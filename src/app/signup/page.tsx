@@ -12,6 +12,7 @@ import { setCookie } from '@/lib/cookies';
 import { useRouter } from 'next/navigation';
 import { signupDataType } from '@/types/authType';
 import ApiLinks from '@/lib/apiLinks';
+import { bcryptHash } from '@/lib/bcrypt';
 
 
 export default function SignupPage() {
@@ -35,15 +36,17 @@ export default function SignupPage() {
     
     const submitForm = async(e: FormEvent)=>{
         e.preventDefault();
+        
+        const password = (await bcryptHash(elements.formPassword.current?.value.trim() || '')).hashed
 
         const formData:signupDataType = {
-            username: elements.formUsername.current?.value || '',
-            email: elements.formEmail.current?.value || '',
-            password: elements.formPassword.current?.value || '',
+            username: elements.formUsername.current?.value.trim() || '',
+            email: elements.formEmail.current?.value.trim()  || '',
+            password: password as string,
             admin: false
         }
         setPageState('working')
-        const response:status = await post(ApiLinks.signupReq.this,formData)
+        const response:status = await post('/api/signup-req',formData)
         
         if(response.token){
             setCookie('authToken',response.token, 60*20)
@@ -74,24 +77,30 @@ export default function SignupPage() {
             <form onSubmit={submitForm}>
                 <div>
                 <label>Username</label>
-                <input type="text" ref={elements.formUsername}/>
+                <input type="text" ref={elements.formUsername} required/>
                 </div>
 
                 <div>
                 <label>Email</label>
-                <input type="email" ref={elements.formEmail}/>
+                <input type="email" ref={elements.formEmail} required/>
                 </div>
 
                 <div>
                 <label>Password</label>
-                <input ref={elements.formPassword} type={showPwd?'text':'password'} />
+                <input ref={elements.formPassword} type={showPwd?'text':'password'} required/>
                 <svg
                     ref={elements.showPwdIcon}
                     width="60"
                     height="auto"
                     viewBox="0 0 60 60"
                     id="eye-svg"
-                    onClick={()=>setShowPwd(!showPwd)}>        
+                    onClick={()=>{
+                        setShowPwd(!showPwd);
+                        if(document.activeElement === elements.formPassword.current){
+                            elements.formPassword.current?.focus()
+                        } 
+                    }}onMouseDown={(e)=> e.preventDefault()}
+                    >        
                     <g id="eye-svg-g" fill="rgb(104, 104, 104)">
                     <g id="iris">
                         <path

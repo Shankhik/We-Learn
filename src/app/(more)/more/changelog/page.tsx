@@ -4,9 +4,27 @@ import './style.css'
 
 export default function Changelog (){
     const changelog = [
+        // <>
+        //     <h2>Version: 0.3.6</h2>
+        //     <h6>11/06/2025</h6>
+        //     <h3>Added</h3>
+        //     <ul>
+        //         <li>{`Home -> Dashboard section(s)`}</li>
+        //         <li>{`Home -> Library section(s)`}</li>
+        //         <li>{`Home -> Explore section(s)`}</li>
+        //     </ul>
+        // </>,
         <>
-            <h2>Version: 0.3.2 </h2>
-            <h6>11/06/2025</h6>
+            <h2>Version: 0.3.4</h2>
+            <h6>16/06/2025</h6>
+            <h3>Improved</h3>
+            <ul>
+                <li>{`Account Secuity`}</li>
+            </ul>
+        </>,
+        <>
+            <h2>Version: 0.3.2</h2>
+            <h6>10/06/2025</h6>
             <h3>Fixed</h3>
             <ul>
                 <li>Settings {"Page's"} <strong>Sidebar</strong> layout</li>

@@ -9,10 +9,9 @@ import { post } from '@/lib/fetchReq';
 import ApiLinks from '@/lib/apiLinks';
 import { forgotPwdDataType } from '@/types/authType';
 import { status } from '@/types/statusType';
-import { bcryptCompare, bcryptHash } from '@/lib/bcrypt';
+import { bcryptCompare } from '@/lib/bcrypt';
 import { delCookie, getCookie, setCookie } from '@/lib/cookies';
 import { useRouter } from 'next/navigation';
-import { signToken } from '@/lib/jwt';
 import LoadingPage from '@/components/Loading';
 export default function ForgotPassword (){
     const router = useRouter();
@@ -111,10 +110,14 @@ export default function ForgotPassword (){
                 username: username,
                 email: emailAdrress as `${string}@${string}`
             }
-            let token = signToken({
-                username: username,
-                password: pwd
-            },10).token
+
+            let token = (await post('/api/jwt/sign',{
+                payload: {
+                    username: username,
+                    password: pwd
+                },
+                expiresTime: 10
+            })).token as status['token']
             
             let res = await post(ApiLinks.forgotPwd.changePwd.this, data,{
                 'Authorization':`Bearer ${token}`,

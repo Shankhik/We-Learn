@@ -1,8 +1,9 @@
 'use client';
 
-import { useContext, createContext, useState, ReactNode, Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { useContext, createContext, useState, ReactNode, useEffect } from "react";
 import { getCookie } from "@/lib/cookies";
-import { verifyToken } from "@/lib/jwt";
+import { post } from "@/lib/fetchReq";
+import { status } from "@/types/statusType";
 
 //auth Context all data
 export type authContextType ={
@@ -30,31 +31,38 @@ export const AuthProvider=({children} :{children: ReactNode})=>{
     
     
     useEffect(()=>{
-        const authTokenCookie = getCookie('authToken').cookie
-        if(authTokenCookie){
-            let payload = verifyToken(authTokenCookie).decoded
-            if (payload){
-                setAuthValue({
-                    verified: true,
-                    updateAuth: updateAuth,
-                    user: {
-                        username: payload.username||'',
-                        email: payload.email||'',
-                        admin: payload.admin||false
-                    }
-                })
+        const fetch = async ()=>{
+            const authTokenCookie = getCookie('authToken').cookie
+
+            if(authTokenCookie){
+                let payload = (await post('/api/jwt/verify',{
+                    token: authTokenCookie 
+                })).decoded as status['decoded']
+                
+                if (payload){
+                    setAuthValue({
+                        verified: true,
+                        updateAuth: updateAuth,
+                        user: {
+                            username: payload.username||'',
+                            email: payload.email||'',
+                            admin: payload.admin||false
+                        }
+                    })
+                }else{
+                    setAuthValue({
+                        verified: false,
+                        updateAuth: updateAuth,
+                    })
+                }
             }else{
                 setAuthValue({
                     verified: false,
-                    updateAuth: updateAuth,
+                    updateAuth: updateAuth
                 })
             }
-        }else{
-            setAuthValue({
-                verified: false,
-                updateAuth: updateAuth
-            })
         }
+        fetch()
     },[trigger])
     
     return(
@@ -67,23 +75,3 @@ export const useAuthContext = ()=>{
     const {verified, updateAuth, user} = useContext (authContext)
     return {verified, updateAuth, user}
 }
-/*
-export const getAuthContext = (): authContextType=>{
-    const context = useContext(authContext).authDetails;
-    let data:authContextType = {};
-    if(context?.username){
-        data.username = context.username
-    }
-    if(context?.email){
-        data.email = context.email
-    }
-    if(context?.token){
-        data.token = context.token
-    }
-    return data;
-}
-export const refreshAuthContext =()=>{
-    const context = useContext(authContext).refreshTrigger;
-    return context;
-}
-*/

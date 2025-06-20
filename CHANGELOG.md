@@ -1,7 +1,12 @@
 # Change Log
 
 <!-- Add New Version above -->
-## Version: 0.3.2 [June 11th, 2025]
+## Version: 0.3.4 [June 16th, 2025]
+### Improved
+- Api routes security
+
+<!-- Add New Version above -->
+## Version: 0.3.2 [June 10th, 2025]
 ### Fixed
 - Settings Page's Sidebar layout
 

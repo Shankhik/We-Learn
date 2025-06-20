@@ -1,5 +1,5 @@
 import { header } from "@/lib/headers";
-import { findAllCourses, findCourse } from "@/mongoDB/courses";
+import { findCourse } from "@/mongoDB/courses";
 import { NextRequest, NextResponse } from "next/server";
 
 type Request = {

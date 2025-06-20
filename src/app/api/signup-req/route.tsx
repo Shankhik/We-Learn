@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
         userDocument.username = reqData.username;
         userDocument.email = reqData.email;
         userDocument.displayName = reqData.username;
+        userDocument.password = reqData.password; // already hashed
         userDocument.profilePicture = null;
 
         //checks if the user is an Preset admin or not
@@ -45,10 +46,9 @@ export async function POST(req: NextRequest) {
                 email: userDocument.email,
                 admin: userDocument.admin
             },60*20).token
+            
             //creating user course history document
             await createNewUserHistory(userDocument.username)
-            //hashes password or make no changes
-            userDocument.password = (await bcryptHash(reqData.password)).hashed || reqData.password
             
             //Adding user to Database
             response = await addUser(userDocument);
@@ -62,8 +62,8 @@ export async function POST(req: NextRequest) {
                 }
                 // Sending Signup Email
                 await post(ApiLinks.email.signup.this, emailDetails)
-
-                console.log(`Signed-Up: ${userDocument.username}`)
+                //await post('/api/email/signup', emailDetails)
+                console.log(`-> Signed-Up [${userDocument.username}]`)
             }
             
         }else /*User exists*/{

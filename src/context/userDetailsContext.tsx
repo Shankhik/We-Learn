@@ -5,7 +5,6 @@ import { post } from "@/lib/fetchReq";
 import { status } from "@/types/statusType";
 import ApiLinks from "@/lib/apiLinks";
 import { getCookie } from "@/lib/cookies";
-import { verifyToken } from "@/lib/jwt";
 
 type UserDetailsContext = {
     username?: string;
@@ -38,19 +37,20 @@ export const UserDetailsProvider = ({children}:{children:React.ReactNode})=>{
     })
 
     useEffect(()=>{
-
         const loadDetails = async ()=>{
             const authCookie = getCookie('authToken').cookie
             let payload;
             if(authCookie){
-                payload = verifyToken(authCookie).decoded
+                payload = (await post('/api/jwt/verify',{
+                    token: authCookie
+                })).decoded as status['decoded']
             }
             if(payload){
                 const res:status = await post(ApiLinks.getUserDetails.this,{
                     username: payload.username
                 })
                 const details:UserDetails = res.user
-                //console.log(details)
+                
                 setContextValue({
                     username: details.username,
                     displayName: details.displayName,
