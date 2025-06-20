@@ -1,5 +1,5 @@
 import { header } from "@/lib/headers";
-import {getFormBuffer, getFormData} from "@/lib/parser";
+import {getFormBuffer} from "@/lib/parser";
 import sharp from "sharp";
 import {Cloudinary} from "@/lib/cloudinaryConfig";
 import {UploadApiResponse} from 'cloudinary'
@@ -15,15 +15,12 @@ type TypeOfBuffer = {
 
 const fileFieldName = 'file';
 export async function POST (req: Request){
-
     const reqCopy = req.clone();
-
-    const userDetails = JSON.parse(
-        req.headers.get('x-user-details') as string
-    ) as status['decoded']
-
+    let userDetailsHeader: status['decoded']|string = req.headers.get('x-user-details')
     try {
-        
+        if(!userDetailsHeader) throw new Error('User Details Not Found!');
+        const userDetails = JSON.parse(userDetailsHeader) as status['decoded']
+
         let sharpImage:Buffer|undefined = undefined;
         
         let response = await getFormBuffer(reqCopy);
@@ -50,14 +47,14 @@ export async function POST (req: Request){
                 height: Number(formData.height),
             }).toBuffer()
             
-            if(!sharpImage) throw new Error("Could'nt crop the image");
+            if(!sharpImage) throw new Error("Couldn't crop the image");
 
             // Uploading the image
             try {
                 cldRes = await new Promise<UploadApiResponse|undefined> ((resolve)=>{
                     Cloudinary.uploader.upload_stream({
                         folder:'WeLearn/profile-picture',
-                        public_id: userDetails?.username,
+                        public_id: userDetails?.username ,
                         invalidate:true,
                         transformation:{
                             crop:'fill',aspect_ratio:'1:1',
@@ -79,7 +76,7 @@ export async function POST (req: Request){
             await updateUserDetails(userDetails?.username||'',{
                 profilePicture: cldRes.version
             })
-            console.log(`-> Profile Picture Modified [${userDetails?.username}]`);
+            console.log(`-> User [${userDetails?.username}] : Profile-picture updated `)
         }
         
         return Response.json({
@@ -87,15 +84,16 @@ export async function POST (req: Request){
             message: `Uploaded the File Successfully`,
         },{
             status: 200,
-            headers: header(req.headers.get('origin'))
+            headers: header(req.headers.get('origin')||null)
         })
     } catch (error:any) {
+        //console.log('error:', error.message)
         return Response.json({
             status: false,
             error: error.message
         },{
             status: 500,
-            headers: header(req.headers.get('origin'))
+            headers: header(req.headers.get('origin')||null)
         })
     }
 }

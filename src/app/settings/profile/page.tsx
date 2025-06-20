@@ -387,6 +387,7 @@ const FileChoseOption = ({show,setShow}:{
 
     // Uploading Function
     const setImage = async ()=>{
+        //const authCookie = getCookie('authToken').cookie;
         if(img === null || cropDimensions === null) return;
 
         const data = new FormData();
@@ -407,6 +408,7 @@ const FileChoseOption = ({show,setShow}:{
                 body: data,
             })
             response = (await response.json()) as status;
+            
 
             if(response.status){
                 updateUserDetails();
@@ -557,23 +559,6 @@ const FileChoseOption = ({show,setShow}:{
             </div>
 
         </div>
-}
-/**
- * For CLoudinary Image URL generation using
- * PublicID and optimization
- * option
- * @param publicId - Public ID of the media
- * @param folder - Folder of the Media
- * @param opts - Optimization Options like in a link (e.g. f_auto,c_fill) separated by ","
- */
-const CldPicture = (
-    publicId: string|null,
-    folder: string|null,
-    opts: string|null
-):string =>{
-    //const domain = `https://res.cloudinary.com/${ process.env.NEXT_PUBLIC_CLD_NAME }/image/upload/c_fill,ar_1:1,w_500/v1/Portfolio/profile-picture`
-    //console.log(`https://res.cloudinary.com/${ process.env.NEXT_PUBLIC_CLD_NAME }/image/upload/${opts}/v1/${publicId}`)
-    return `https://res.cloudinary.com/${ process.env.NEXT_PUBLIC_CLD_NAME }/image/upload/${opts}/v1/${folder}/${publicId}`
 }
 
 type CropOverlayType = {

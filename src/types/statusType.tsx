@@ -16,5 +16,6 @@ export type status ={
     decoded?: tokenType|null;
     course?: Course;
     courses?: Course[];
+    moreAvailable?: boolean;
     courseHistory?: EnrolledCourses;
 }

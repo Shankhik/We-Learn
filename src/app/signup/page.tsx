@@ -6,7 +6,7 @@ import LoadingPage from '@/components/Loading';
 import Alert from '@/components/Alert';
 import { status } from '@/types/statusType';
 import Link from 'next/link';
-import { post } from '@/lib/fetchReq';
+import { apiLink, post } from '@/lib/fetchReq';
 import { useAuthContext } from '@/context/authContext';
 import { setCookie } from '@/lib/cookies';
 import { useRouter } from 'next/navigation';
@@ -46,7 +46,7 @@ export default function SignupPage() {
             admin: false
         }
         setPageState('working')
-        const response:status = await post('/api/signup-req',formData)
+        const response:status = await post(apiLink("signup-req"),formData)
         
         if(response.token){
             setCookie('authToken',response.token, 60*20)

@@ -1,26 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { status } from "./types/statusType";
 import { header } from "./lib/headers";
+import { apiLink } from "./lib/fetchReq";
 
 export async function middleware (req:NextRequest){
     const pathname = req.nextUrl.pathname
-    const origin = req.headers.get('origin')
-
+    
     // Paths thats requires userDetails
     if(
         pathname.startsWith('/api/courses') ||
         pathname.startsWith('/api/upload') ||
         pathname === '/api/update-user-details'
     ){
+        // Getting Cookie
         const auth = req.cookies.get('authToken')?.value
-        
+
+        // If Cookie is found
         if(auth){
-            const res = await (await fetch(`${req.nextUrl.origin}/api/jwt/verify`,{
+            // Verifying the JWT cookie
+            const res = await (await fetch(apiLink('api/jwt/verify'),{
                 method:'POST',
                 body:JSON.stringify({
                     token: auth
                 })
             })).json() as status
+
             if (res.decoded) {
                 req.headers.set("x-user-details", JSON.stringify(res.decoded))
                 return NextResponse.next({
@@ -36,10 +40,13 @@ export async function middleware (req:NextRequest){
             status: false,
             error:'Unauthorized!'
         },{
-            status: 401, headers: header(origin)
+            status: 401, headers: header(req.headers.get('origin'))
         })
-        
     }
 
     return NextResponse.next()
+}
+
+const protectedApiRoutes = async (req:NextRequest) =>{
+    
 }

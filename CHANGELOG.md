@@ -1,9 +1,9 @@
 # Change Log
 
 <!-- Add New Version above -->
-## Version: 0.3.4 [June 16th, 2025]
+## Version: 0.3.4 [June 20th, 2025]
 ### Improved
-- Api routes security
+- Api route's security
 
 <!-- Add New Version above -->
 ## Version: 0.3.2 [June 10th, 2025]

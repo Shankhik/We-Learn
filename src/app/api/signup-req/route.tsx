@@ -61,9 +61,11 @@ export async function POST(req: NextRequest) {
                     email: userDocument.email
                 }
                 // Sending Signup Email
-                await post(ApiLinks.email.signup.this, emailDetails)
-                //await post('/api/email/signup', emailDetails)
-                console.log(`-> Signed-Up [${userDocument.username}]`)
+                if(process.env.NODE_ENV === 'production'){
+                    await post(ApiLinks.email.signup.this, emailDetails)
+                }
+                
+                console.log(`-> User [${userDocument.username}] : Signed-up `)
             }
             
         }else /*User exists*/{

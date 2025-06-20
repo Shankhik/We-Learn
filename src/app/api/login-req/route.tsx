@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
                     token: token
                 }
                 
-                console.log(`-> Logged-In [${reqData.username}]`)
+                console.log(`-> User [${reqData.username}] : Logged-in`)
 
                 return NextResponse.json(response,{
                     status: 200,

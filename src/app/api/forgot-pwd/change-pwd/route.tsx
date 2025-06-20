@@ -11,10 +11,11 @@ type ReqDataType = {
 
 export async function POST(req: NextRequest): Promise<NextResponse<status>> {
     const origin = req.headers.get('origin');
-    const auth = req.headers.get('authorization')||'test';
+    const auth = req.headers.get('authorization');
     let status: status;
     try{
-        let decoded = verifyToken(auth?.split(' ')[1]).decoded
+        if(!auth) throw new Error('No Authorization header found!');
+        let decoded = verifyToken(auth.split(' ')[1]).decoded
 
         if (decoded && decoded.password && decoded.username){
             const hashedPwd = (await bcryptHash(decoded.password)).hashed as string;

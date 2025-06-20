@@ -31,22 +31,35 @@ export const findCourse = async(courseQuery:CourseShort): Promise<status> => {
         }
     }
 }
-export const findAllCourses = async ():Promise<status>=>{
+export const findAllCourses = async (options?:{
+    skip?: number, limit?: number
+}):Promise<status>=>{
+
+    // console.log("skip:", options?.skip)
+    // console.log("limit:", options?.limit)
     try{
         const db = mongoServer.db('E-Learning');
         const courses = db.collection('courses');
-        const allCourses = await courses.find({}).toArray() as Course[];
 
+        const collectionLength = await courses.countDocuments({});
+        const allCourses = await courses.find({})
+        .skip(options?.skip || 0)
+        .limit(options?.limit || 20)
+        .toArray() as Course[]
+        
+        const moreAvailable = collectionLength > (options?.skip||0)+allCourses.length
         if(allCourses.length!==0){
             return {
                 status: true,
                 message: `All Courses:`,
-                courses: allCourses
+                courses: allCourses,
+                moreAvailable: moreAvailable
             }
         }else {
             return {
                 status: false,
                 message: `No courses available`,
+                moreAvailable: moreAvailable
             }
         }
     }catch(error:any){

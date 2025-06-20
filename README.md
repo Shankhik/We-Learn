@@ -25,13 +25,13 @@ npm install
 ```bash
 NEXT_PUBLIC_API_DOMAIN = '<local domain>'
 MONGODB_URI_DEV = '<dev mongodb uri>'
-NEXT_PUBLIC_SECRET_KEY = '<jwt secret key>'
+SECRET_KEY = '<jwt secret key>'
 ```
 - ```.env.production```: 
 ```bash
 NEXT_PUBLIC_API_DOMAIN = '<production domain>'
 MONGODB_URI = '<production mongodb uri>'
-NEXT_PUBLIC_SECRET_KEY = '<jwt secret key>'
+SECRET_KEY = '<jwt secret key>'
 ```
 
 ## Running Dev Server
