@@ -1,36 +1,37 @@
 {
   "name": "e-learning",
-  "version": "0.3.4",
+  "version": "0.3.5-T",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "node start.js --dev",
     "build": "next build",
-    "start": "next start",
+    "start": "node start.js",
     "lint": "next lint"
   },
   "dependencies": {
     "@react-email/components": "0.0.31",
-    "bcrypt-ts": "^5.0.2",
-    "cloudinary": "^2.5.1",
-    "html-react-parser": "^5.1.16",
+    "bcrypt-ts": "^5.0.3",
+    "cloudinary": "^2.7.0",
+    "html-react-parser": "^5.2.5",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^6.8.0",
-    "next": "14.2.6",
+    "mongodb": "^6.17.0",
+    "next": "^15.3.4",
     "nodemailer": "6.9.16",
     "nookies": "^2.5.2",
     "react": "^18",
     "react-dom": "^18",
-    "sharp": "^0.33.5"
+    "sharp": "^0.33.5",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.9",
-    "@types/node": "^20",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^20.19.1",
     "@types/nodemailer": "^6.4.17",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
     "eslint": "^8",
     "eslint-config-next": "14.2.6",
-    "typescript": "^5"
+    "typescript": "^5.8.3"
   }
 }

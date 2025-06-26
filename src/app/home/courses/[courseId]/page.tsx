@@ -12,12 +12,13 @@ import { colorScheme, useColorContext } from '@/context/colorScheme';
 import ApiLinks from '@/lib/apiLinks';
 import Link from 'next/link';
 
-type Props= {
+type Props= Promise<{
     courseId: string;
-}
-export default function CourseDescription ({params}:{params: Props}) {
+}>
+export default async function CourseDescription ({params}:{params: Props}) {
     const {user, updateAuth} = useAuthContext();
     const router = useRouter();
+    const {courseId} = await params
     const [course,setCourse] = useState<Course>({
         courseName: "",
         courseId: "",
@@ -38,7 +39,7 @@ export default function CourseDescription ({params}:{params: Props}) {
 
     const enroll = async ()=>{
         if(!enrolled){
-            const data:status = await post(ApiLinks.courses.enroll.this,{username:user?.username,courseId: params.courseId});
+            const data:status = await post(ApiLinks.courses.enroll.this,{username:user?.username,courseId: courseId});
             if (data.status && data.courseHistory) setEnrolled(true);
             console.log(data)
         }else console.log({
@@ -52,13 +53,13 @@ export default function CourseDescription ({params}:{params: Props}) {
     useEffect(()=>{
         const loadCourseDetails = async () => {
             //console.log(user?.username)
-            const data:status = await post(ApiLinks.courses.findone.this,{courseId: params.courseId});
+            const data:status = await post(ApiLinks.courses.findone.this,{courseId: courseId});
             //console.log(data.course)
             if(data.course){
                 setCourse(data.course)
             }
             if(user?.username){
-                const history:status = await post(ApiLinks.courses.findCourseHistory.this,{username:user?.username, courseId:params.courseId})
+                const history:status = await post(ApiLinks.courses.findCourseHistory.this,{username:user?.username, courseId:courseId})
                 if (history.courseHistory){
                     setEnrolled(true);
                 }

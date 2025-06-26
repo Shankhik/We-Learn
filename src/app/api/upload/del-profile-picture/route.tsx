@@ -3,13 +3,14 @@ import {NextResponse} from "next/server";
 import {status} from "@/types/statusType";
 import {updateUserDetails} from "@/mongoDB/users";
 import {Cloudinary} from "@/lib/cloudinaryConfig";
+import { colorText, serverLog } from "@/lib/colorText";
 
 export async function GET (req: Request): Promise<NextResponse<status>> {
-    let userDetailsHeader: status['decoded']|string = req.headers.get('x-user-details')
+    let userDetailsHeader: status['decoded']|string = req.headers.get('x-user-details');
+    let userDetails: status['decoded'];
     try {
         if(!userDetailsHeader) throw new Error('User Details Not Found!');
-        const userDetails = JSON.parse(userDetailsHeader) as status['decoded']
-
+        userDetails = JSON.parse(userDetailsHeader) as status['decoded'];
         // Deleting media from CDN
         const folder = 'WeLearn/profile-picture/'
         let cldRes = await Cloudinary.uploader.destroy(folder+userDetails?.username,{
@@ -22,7 +23,10 @@ export async function GET (req: Request): Promise<NextResponse<status>> {
         let res = updateUserDetails(userDetails?.username||"",{
             profilePicture: null
         })
-        console.log(`-> User [${userDetails?.username}] : Profile-picture removed `)
+
+        serverLog('success','USER','profile-picture-delete',{
+            username: userDetails?.username,
+        })
 
         return NextResponse.json({
             status: true,
@@ -31,6 +35,12 @@ export async function GET (req: Request): Promise<NextResponse<status>> {
             status: 200, headers: header(req.headers.get('origin'))
         })
     }catch (e:any) {
+
+        serverLog('failed','USER','profile-picture-delete',{
+            username: userDetails?.username,
+            error: e.message
+        })
+
         return NextResponse.json({
             status: false,
             error: e.message,

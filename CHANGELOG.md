@@ -1,6 +1,11 @@
 # Change Log
 
 <!-- Add New Version above -->
+## Version: 0.3.5 [June 30th, 2025]
+### Added
+- Contents in Dashboard, Library, Explore
+
+<!-- Add New Version above -->
 ## Version: 0.3.4 [June 20th, 2025]
 ### Improved
 - Api route's security

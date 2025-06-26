@@ -15,7 +15,14 @@ import ApiLinks from '@/lib/apiLinks';
 import LockedPage from '@/components/Locked';
 import LoadingPage from '@/components/Loading';
 
-export default function CourseLearn ({params}:{params:{courseId:string}}){
+export default async function CourseLearn ({
+    params,
+}:
+    {
+        params:Promise<{courseId:string}>
+    }
+){
+    const {courseId} = await params;
     const delay = (ms: number)=> new Promise(resolve=> setTimeout(resolve,ms));
     const {verified,user,updateAuth} = useAuthContext();
     const searchParams = useSearchParams()
@@ -63,13 +70,13 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
             var numOfModules = 0;
             let moduleParamToSet:number = 0;
 
-            courseHistory = (await post(ApiLinks.courses.findCourseHistory.this,{username:user?.username, courseId:params.courseId}) as status).courseHistory
+            courseHistory = (await post(ApiLinks.courses.findCourseHistory.this,{username:user?.username, courseId:courseId}) as status).courseHistory
             
             //first checks if you are enrolled or not
             if(courseHistory){
                 //loads course details
-                courseDetails = (await post(ApiLinks.courses.findone.this,{courseId: params.courseId}) as status).course
-                let update:status = await post(ApiLinks.courses.updateLastLoaded.this,{username:user?.username, courseId:params.courseId})
+                courseDetails = (await post(ApiLinks.courses.findone.this,{courseId: courseId}) as status).course
+                let update:status = await post(ApiLinks.courses.updateLastLoaded.this,{username:user?.username, courseId:courseId})
                 completedUpto.current = courseHistory.completedUpto;
                 //sets enrolled: true
                 setEnrolled(true);
@@ -93,22 +100,22 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
             //params and current module handler
             if(searchParams.get('module')===null){
                 setCurrentModule(moduleParamToSet);
-                router.replace(`./${params.courseId}?module=${moduleParamToSet}`);
+                router.replace(`./${courseId}?module=${moduleParamToSet}`);
             }else{
                 let temp = parseInt(searchParams.get('module')||'0')
                 if (temp<=moduleParamToSet && temp!==0){
                     setCurrentModule(temp)
-                    router.replace(`./${params.courseId}?module=${temp}`);
+                    router.replace(`./${courseId}?module=${temp}`);
                 }else{
                     setCurrentModule(moduleParamToSet)
-                    router.replace(`./${params.courseId}?module=${moduleParamToSet}`);
+                    router.replace(`./${courseId}?module=${moduleParamToSet}`);
                 }
             }
             await delay(1500);
             setShowLoading(false);
         }
         loading();
-    },[verified, params.courseId])
+    },[verified, courseId])
 
     //Theme Section
     const {effectiveTheme, theme, setTheme, accentColor, setAccentColor}= useColorContext();
@@ -163,7 +170,7 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
         if(num<=completedUpto.current+1){
             setCurrentModule(num);
             //changes the search query
-            router.replace(`./${params.courseId}?module=${num}`)
+            router.replace(`./${courseId}?module=${num}`)
             
             setShowSidebar(!showSidebar);
         }
@@ -213,15 +220,15 @@ export default function CourseLearn ({params}:{params:{courseId:string}}){
     //'Mark as Read' Button Handler
     const btnHandlerMarkAsRead = async()=>{
         let num = parseInt(searchParams.get('module')||'1');
-        await post(ApiLinks.courses.inc.this,{username: user?.username||undefined, courseId: params.courseId})
+        await post(ApiLinks.courses.inc.this,{username: user?.username||undefined, courseId: courseId})
         completedUpto.current = completedUpto.current+1;
         if (completedUpto.current < course.modules.length){
             setCurrentModule(num+1);
-            router.replace(`./${params.courseId}?module=${num+1}`)
+            router.replace(`./${courseId}?module=${num+1}`)
         }
         else{
             setIsCompleted(true);
-            let ack = await post(ApiLinks.courses.completeCourse.this,{username: user?.username, courseId: params.courseId})
+            let ack = await post(ApiLinks.courses.completeCourse.this,{username: user?.username, courseId: courseId})
             console.log(ack)
         }
     }

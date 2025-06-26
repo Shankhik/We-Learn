@@ -5,6 +5,14 @@ import './style.css'
 export default function Changelog (){
     const changelog = [
         <>
+            <h2>Version: 0.3.5</h2>
+            <h6>30/06/2025</h6>
+            <h3>Added</h3>
+            <ul>
+                <li>{`Contents in Dashboard, Explore, Library`}</li>
+            </ul>
+        </>,
+        <>
             <h2>Version: 0.3.4 </h2>
             <h6>20/06/2025</h6>
             <h3>Improved</h3>

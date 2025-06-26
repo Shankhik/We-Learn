@@ -1,5 +1,6 @@
 import ApiLinks from "@/lib/apiLinks";
 import { bcryptHash } from "@/lib/bcrypt";
+import { colorText, serverLog } from "@/lib/colorText";
 import { post } from "@/lib/fetchReq";
 import { header } from "@/lib/headers";
 import { signToken } from "@/lib/jwt";
@@ -64,14 +65,19 @@ export async function POST(req: NextRequest) {
                 if(process.env.NODE_ENV === 'production'){
                     await post(ApiLinks.email.signup.this, emailDetails)
                 }
-                
-                console.log(`-> User [${userDocument.username}] : Signed-up `)
+                serverLog('success','USER','signup',{
+                    username: userDocument.username,
+                })
             }
             
         }else /*User exists*/{
+            serverLog('failed','USER','signup',{
+                username: userDocument.username,
+                error: `User [${reqData.username}] already exists`
+            })
             response = {
                 status: false,
-                message: `User ${reqData.username} already exists`
+                message: `User '${reqData.username}' already exists`
             }
         }
         return NextResponse.json(response,{
@@ -79,6 +85,10 @@ export async function POST(req: NextRequest) {
             headers: header(origin)
         })
     } catch (error:any) {
+        serverLog('failed','USER','signup',{
+            username: userDocument.username,
+            error: error.message
+        })
         response = {
             status: false,
             error: `Error: ${error.message}`

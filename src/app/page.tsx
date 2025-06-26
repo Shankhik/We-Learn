@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { delCookie } from '@/lib/cookies';
 import Link from 'next/link';
+import pack from '../../package.json'
 
 export default function LandingPage (){
 
@@ -173,7 +174,7 @@ export default function LandingPage (){
                 </div>
                 <div>
                     <h3>About</h3>
-                    <div><strong>Version</strong>:<p style={{color:'rgb(176, 250, 255)'}}>0.3.4</p></div>
+                    <div><strong>Version</strong>:<p style={{color:'rgb(176, 250, 255)'}}>{pack.version}</p></div>
                     <div>
                         <p><strong>Hosted on</strong>: <a href="https://render.com" target='_blank'>Render</a></p>
                     </div>
