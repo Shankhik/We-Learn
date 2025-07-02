@@ -4,8 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node start.js --dev",
+    "dev": "next dev",
     "build": "next build",
+    "build-docker-dev": "node dockerBuild.js",
+    "docker-run": "node dockerStart.js",
     "start": "node start.js",
     "lint": "next lint"
   },

@@ -6,9 +6,6 @@
 .pnp.js
 .yarn/install-state.gz
 
-# testing
-/coverage
-
 # next.js
 /.next/
 /out/
@@ -26,9 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
-.env*.development
-.env*.production
+.env*
 
 # vercel
 .vercel
@@ -43,3 +38,7 @@ next-env.d.ts
 
 # Update/Fix commit details
 /src/patch-*.log
+
+# Docker
+/Dockerfile.dev
+/docker*.js

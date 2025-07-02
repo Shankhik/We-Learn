@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req:NextRequest):Promise<NextResponse<status>> {
     const reqData = (await req.json()) as {token:string}
     try {
+        if(!reqData.token) throw new Error("No Token Found!");
         const decoded = verifyToken(reqData.token).decoded
         if(!decoded) throw new Error('Invalid Token Signature!');
         
@@ -17,6 +18,7 @@ export async function POST(req:NextRequest):Promise<NextResponse<status>> {
             status: 200, headers: header(req.headers.get('origin'))
         })
     } catch (error:any) {
+        console.log(error.message)
         return NextResponse.json({
             status: false,
             error: error.message

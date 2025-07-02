@@ -18,7 +18,7 @@ export async function middleware (req:NextRequest){
         // If Cookie is found
         if(auth){
             // Verifying the JWT cookie
-            const res = await (await fetch(apiLink('api/jwt/verify'),{
+            const res = await (await fetch(apiLink('jwt/verify'),{
                 method:'POST',
                 body:JSON.stringify({
                     token: auth

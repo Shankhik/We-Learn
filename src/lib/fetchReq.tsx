@@ -38,9 +38,7 @@ export const apiLink = (endpoint: string|'root',port?:number) => {
 
     while (endpoint.startsWith("/") || endpoint.startsWith('api')){
         if(endpoint.startsWith("/")) endpoint = endpoint.split("/")[1];
-        else{
-            endpoint = endpoint.split('api/')[1]
-        }
+        else endpoint = endpoint.split('api/')[1];
     }
     return endpoint==='root'?`${domain}/api`:`${domain}/api/${endpoint}`
 }
