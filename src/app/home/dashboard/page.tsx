@@ -1,34 +1,26 @@
-'use client'
-import { useAuthContext } from '@/context/authContext'
-import './style.css'
-import { useEffect, useState } from 'react';
-import CourseCard from '@/components/CourseCard';
-export default function Dashboard (){
+import Dashboard from "./Dashboard"
 
-    const {user, updateAuth} = useAuthContext();
-    const notes:string[] = [
-        `Welcome ${user?.username}!`,
-        `What's Up ${user?.username}?`,
-        `How's it going ${user?.username}?`
-    ]
-    const [welcomeNote,setWelcomeNote] = useState<string>('');
-    
-    useEffect(()=>{
-        setWelcomeNote(notes[Math.floor(Math.random()*notes.length)])
-    },[user]);
-
-    return(
-        <>
-        <h1>{welcomeNote}</h1>
-        <h2>New</h2>
-        <div className='course-list'>
-            <CourseCard courseDetails={{
-                course:'java',
-                courseId:'java101',
-                skills: ['coding', 'java', 'oops'],
-            }}/>
-        </div>
-        </>
-    )
-        
+export default async function Page (){
+    return <Dashboard note={getWelcomeNote()}/>
+}
+const getWelcomeNote = ()=>{
+    const hours = new Date().getHours()
+    const greating = {
+        'morning': `Good morning`,
+        'afternoon': `Good afternoon`,
+        'evening': `Good evening`,
+        'night': `Wow! You're still up?`
+    }
+    const notes = {
+        '0': `Welcome <--Display-Name-->!`,
+        '1': `Hope you're doing well!`,
+        '2': `${hours<12? greating.morning:
+            hours<17? greating.afternoon: greating.evening
+        } <--Display-Name-->!`
+    }
+    if(hours<5)
+        return greating['night'];
+    else{
+        return notes[(Math.floor(Math.random() * 3)).toString() as '0'|'1'|'2']
+    }
 }

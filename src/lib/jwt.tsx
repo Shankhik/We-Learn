@@ -1,17 +1,21 @@
+"use server";
 
-import {JwtPayload, Secret, sign,verify} from 'jsonwebtoken'
-import { status } from '@/types/statusType'
+import {JwtPayload, sign, verify} from 'jsonwebtoken'
+import { ApiError } from './serverUtils/apiError';
+import { httpStatusCode } from './fetchReq';
+import type { AuthToken, SignupToken } from '@/types/tokenType';
+import { timingsInMinutes } from './time';
 
-export interface tokenType extends JwtPayload {
-    username?: string;
-    email?: string;
-    admin?: boolean;
-    password?: string;
-}
-const secretKey = process.env.SECRET_KEY||'';
+const secretKey = process.env.JWT_SECRET_KEY||'';
 
-export const signToken = (payload: tokenType, expireTime?:number): status =>{
-    const expT = (expireTime||60*5)*60 ;
+/**
+ * Signs a AuthToken payload
+ * @param {AuthToken} payload - Takes in an Auth-Token payload
+ * @param {number} expireTime - Token expire time in minutes
+ * @returns {Status} Return Status object with 'token' string
+ */
+export const signToken = async (payload: AuthToken|SignupToken, expireTime:number): Promise<Status> =>{
+    const expT = expireTime*60 ;
     try{
         const token = sign(payload, secretKey,{
             algorithm: 'HS256',
@@ -19,23 +23,24 @@ export const signToken = (payload: tokenType, expireTime?:number): status =>{
             issuer: 'we-learn'
         })
         
-        let status:status = {
+        let status:Status = {
             status: true,
             message: "Token Created",
             token: token
         }
         return status
     }catch(error:any){
-        let status:status = {
+        let status:Status = {
             status: false,
             error: `Error: ${error.message}`
         }
         return status
     }
 }
-export const verifyToken = (token: string) :status  =>{
+export const verifyToken = async (token: string|undefined|null): Promise<Status> =>{
     try {
-        const decoded = verify(token, secretKey, { algorithms: ['HS256'] }) as tokenType;
+        if(!token) throw new Error("Invalid Token");
+        const decoded = verify(token, secretKey, { algorithms: ['HS256'] }) as AuthToken|SignupToken;
         
         if(decoded) /* undefined = tampered */{
             return {
@@ -57,24 +62,63 @@ export const verifyToken = (token: string) :status  =>{
         }
     }
 }
+export const updateToken = async <T extends AuthToken|SignupToken> (
+    token: string, updateFields: T
+): Promise<Status & { exp?: number }> => {
+    try{
+        const decoded = (await verifyToken(token)).decoded;
+        if(!decoded) throw new Error("Signature invalid!");
 
-export const verifyAuthHeader = (req: Request):status =>{
-    try {
-        const token = req.headers.get('authorization')
-        if (!token) throw new Error('No Authorization header found');
+        const exp = decoded.exp;
+        
+        const newIat = Math.floor(Date.now() / 1000);
 
-        const decoded = verifyToken(token.split('Bearer ')[1]).decoded;
-        if(!decoded) throw new Error('Incorrect Token Signature');
+        const newTokenPayload = {
+            ...decoded,
+            ...updateFields,
+            iat: newIat,
+            ...(exp? {exp} : {})
+        }
 
+        const newToken = sign(newTokenPayload,secretKey,{
+            algorithm:'HS256',
+        })
         return {
             status: true,
-            message: 'Authorization header verified',
-            decoded
+            message: "Token updated!",
+            token: newToken,
+            exp: exp
         }
-    } catch (error:any) {
+    }catch(e: any){
         return {
             status: false,
-            error: error.message
+            error: e.message
         }
     }
+}
+
+/**
+ * 
+ * @param authHeader - Authoriztion Token
+ * @param failedMessage - Error message to show if verification fails
+ * @returns AuthToken or throws an ApiError (Error + httpCode)
+ */
+export const verifyAuthHeader = async (
+    authHeader: string|null,
+    failedMessage?: string
+) =>{
+    if(!authHeader) throw new ApiError("Authorization header not found!",{
+        httpCode: httpStatusCode['bad-request']
+    });
+    
+    // Removes "Bearer "
+    const token = authHeader.slice(7)
+
+    const decoded =  (await verifyToken(token)).decoded
+
+    if(!decoded) throw new ApiError(failedMessage||"JWT verification failed",{
+        httpCode: httpStatusCode.unauthorized
+    });
+
+    return decoded
 }

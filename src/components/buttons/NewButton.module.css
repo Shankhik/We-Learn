@@ -1,0 +1,70 @@
+.container{
+    width: fit-content;
+    height: auto;
+    padding: 0; border: 0;
+    background-color: red;
+    color: inherit; position: relative;
+}
+.button{
+    border-radius: 30px;
+    color: inherit; border: none;
+    font-size: 1rem;
+    position: relative;
+
+    &.light{
+        color: rgba(74, 77, 102, 0.79);
+        background-color: rgba(240, 241, 255, 0.7);
+        /* background-color: rgba(241, 241, 255, 0.616); */
+    }
+    &.dark{
+        color: rgba(230, 232, 255, 0.79);
+        background-color: rgba(38, 39, 53, 1);
+        /* background-color: rgb(25, 23, 41); */
+    }
+
+    transition: all 0.2s ease;
+    
+    &:hover,&:active{
+        filter: brightness(110%);
+        
+        box-shadow: 0 0 6px -3px rgba(0, 0, 0, 0.1);
+    } 
+    /* @media (hover: hover) and (pointer: fine){
+        
+    } */
+    /* @media (hover: none) and (pointer: coarse){
+        &:hover{
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.4) inset;
+        } 
+    } */
+
+    padding: 10px 15px;
+
+    @media (max-width:900px) {
+        padding: 9px 13px;
+    }
+    @media (max-width:400px) {
+        padding: 8px 10px;
+    }
+    @media (max-width:300px) {
+        padding: 6px 8px;
+    }
+}
+
+.hide{
+    transition: none;
+    color: transparent;
+    
+    *{
+        transition: all 0.2s ease;
+        color: transparent;
+        opacity: 0;
+    }
+    
+}
+.loading{
+    opacity: 1;
+    *{
+        opacity: 1;
+    }
+}

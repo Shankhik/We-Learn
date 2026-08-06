@@ -1,7 +1,6 @@
 import { header } from "@/lib/headers";
 import { updateUserDetails } from "@/mongoDB/users";
 import { User } from "@/types/databaseTypes";
-import { status } from "@/types/statusType";
 import { NextRequest, NextResponse } from "next/server";
 type ReqData = {
     username: string,
@@ -9,7 +8,7 @@ type ReqData = {
         [key in keyof User]: any
     }
 }
-export async function POST (req: NextRequest):Promise<NextResponse<status>>{
+export async function POST (req: NextRequest):Promise<NextResponse<Status>>{
     const origin = req.headers.get('origin')
     const {username, fields} = await req.json() as ReqData
     

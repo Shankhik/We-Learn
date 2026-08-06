@@ -3,7 +3,6 @@ import fs from 'fs';
 import { NextResponse } from "next/server";
 import { header } from "@/lib/headers";
 import { FileType, fileUploadPath } from "@/lib/file";
-import { status } from "@/types/statusType";
 import { Cloudinary } from '@/lib/cloudinaryConfig';
 /*
 export const config = {
@@ -12,12 +11,12 @@ export const config = {
     },
 };
 */
-export async function POST(req:Request):Promise<NextResponse<status>>{
+export async function POST(req:Request):Promise<NextResponse<Status>>{
     const origin = req.headers.get('origin')
     if (!fs.existsSync(fileUploadPath)){
        fs.mkdirSync(fileUploadPath);
     }
-    let response:status ={
+    let response:Status ={
         status: false
     }
     const {name,base64,fileFor,type} = (await req.json()) as FileType

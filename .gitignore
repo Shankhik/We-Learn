@@ -32,13 +32,19 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-#VS Code
+# IDEs
 /.vscode/
 /.idea/
+/.cursor/
 
 # Update/Fix commit details
 /src/patch-*.log
 
 # Docker
-/Dockerfile.dev
-/docker*.js
+# /Dockerfile.dev
+# /docker*.js
+
+# Course add page [dev mode]
+# /src/app/add-course/
+# Email Layout Testing
+# /src/app/email/

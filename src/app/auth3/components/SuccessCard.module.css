@@ -1,0 +1,9 @@
+.page{
+    width: 100%;
+    flex-shrink: 0;
+
+    /* Important */
+    overflow-x: hidden;
+
+    gap: 10px;
+}

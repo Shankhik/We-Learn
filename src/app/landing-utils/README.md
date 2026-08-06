@@ -1,0 +1,1 @@
+```Components.tsx``` contains html components specificly designed for landing page.

@@ -39,3 +39,30 @@ export function serverLog (
     console.log(statusColor+categoryPart+" : "+colorText(type,status==='success'?'green':'red'))
     if(options?.error && status ==='failed') console.log(" ➡️  "+colorText(options.error, 'yellow'));
 }
+
+const colors = {
+    black: 30,
+    red: 31,
+    green: 32,
+    yellow: 33,
+    blue: 34,
+    magenta: 35,
+    cyan: 36,
+    white: 37
+}
+export function ansiColor (
+    color: keyof (typeof colors),
+    text: string,
+    bold?: boolean
+){
+// ✘✔✓
+// 30 = Black
+// 31 = Red
+// 32 = Green
+// 33 = Yellow
+// 34 = Blue
+// 35 = Magenta
+// 36 = Cyan
+// 37 = White
+    return `\x1b[${bold?"1;":''}${colors[color]}m${text}\x1b[0m`
+}

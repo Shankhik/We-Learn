@@ -1,0 +1,9 @@
+.next-patch{
+    aspect-ratio: 1/1;
+    max-height: 300px;
+
+    @media (max-width:500px) {
+        align-self: center;
+        width: 70%;
+    }
+}

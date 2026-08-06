@@ -1,9 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
-:root{
+/* :root{
     --Nunito: 'Nunito Sans'
-}
+} */
 *{
     margin: 0px;
+    /* padding: 0px; */
+    /* Injected from layout.tsx */
     font-family: var(--Nunito)
 }
 ul{
@@ -18,3 +20,41 @@ a{
     background-color: rgb(238, 238, 238);
     min-height: 100dvh;
 }
+
+/* @view-transition{
+    navigation: none;
+} */
+/* ::view-transition-group(root){
+    animation: none !important;
+} */
+/*
+::view-transition-old(page-slide){
+    animation: slide-out 0.5s ease forwards;
+}
+::view-transition-new(page-slide){
+    animation: slide-in 0.5s ease forwards;
+}
+
+@keyframes slide-in {
+    0%{
+        opacity: 0; translate: 100% 0; scale: 0.8;
+    }
+    50%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1; translate: 0; scale: 1;
+    }
+}
+
+@keyframes slide-out {
+    0%{
+        opacity: 1; translate: 0; scale: 1;
+    }
+    50%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 0; translate: -100%; scale: 0.8;
+    }
+} */

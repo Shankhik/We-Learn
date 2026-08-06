@@ -1,37 +1,31 @@
-'use client';
+"use client"
 
-import './style.css'
+import SearchBar from "@/components/search-bar/searchBar";
+import { CardsCollection } from "../Cards";
+import { useAllCourses } from "../Hooks";
+import useSearch from "@/lib/hooks/searchQuery";
+import { ResultRenderer } from "@/components/search-bar/searchResult";
 
-import { get } from "@/lib/fetchReq";
-import { Course } from "@/types/databaseTypes";
-import { status } from '@/types/statusType';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from "react";
-import ApiLinks from '@/lib/apiLinks';
-import CourseCard from '@/components/CourseCard';
-
-export default function Courses (){
-    const router = useRouter()
-    const [allCourses,setAllCourses] = useState<Course[]>([]);
-    useEffect(()=>{
-        let getCourses = async ()=>{
-            let data:status = await get(ApiLinks.courses.findall.this);
-            if (data.courses){
-                setAllCourses(data.courses);
-            }
-        }
-        getCourses();
-    },[])
-    return(
-        <>
-        <h2>Explore Courses</h2>
-        <div className="course-list">
-            {allCourses.map( c => <CourseCard key={c.courseId} courseDetails={{
-                course: c.courseName,
-                courseId: c.courseId,
-                skills: c.skills
-            }}/>)}
-        </div>
-        </>
-    )
+export default function Courses () {
+    const search = useSearch();
+    const searchFn = async (query: string|undefined)=>{
+        return await search<Status>(`/api/courses/get/search?keyword=${
+            encodeURIComponent(query??"")
+        }`);
+    }
+    return <>
+    <SearchBar placeholder="🔍 Search any course by name"
+        searchFunction={searchFn}
+        Renderer={ResultRenderer}
+        containerStyle={{marginBottom:"15px"}}
+    />
+    {/* <AllCourses/> */}
+    </>
 }
+// const AllCourses = ()=>{
+//     const {data, isFetching} = useAllCourses();
+//     return <CardsCollection title="All Courses"
+//         loading={isFetching}
+//         cardList={data}
+//     />
+// }

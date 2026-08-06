@@ -1,0 +1,97 @@
+.greeting{
+    font-size: 2.3rem;
+    max-width: 40%;
+    @media (max-width:500px) {
+        max-width: 50%;
+    }
+    @media (max-width:400px) {
+        max-width: 60%;
+    }
+}
+.weather{
+    font-size: 1.5rem;
+    background-color: rgba(43, 40, 77, 0.5);
+    height: fit-content;
+    padding: 7px 15px; border-radius: 30px;
+    color: rgba(237, 239, 255, 0.664);
+    @media (max-width:400px) {
+        font-size: 1rem;
+    }
+}
+
+.stat-card{
+    margin: 5px;
+    padding: 15px;
+    flex-grow: 1;
+    border-radius: 15px;
+    box-shadow: 0 0 10px -7px rgb(39, 34, 56);
+
+    display: flex;
+    flex-direction: column;
+
+    &.light{
+        background-color: rgb(235, 237, 255);
+    }
+    &.dark{
+        background-color: rgb(27, 27, 41);
+    }
+}
+
+.stats-grid{
+    margin: 0 0 20px 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+
+    height: auto;
+
+    >:nth-child(1){
+        grid-area: 1/1/-1/2;
+        width: 35dvw;
+    }
+    
+    @media (max-width:500px) {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr;
+        
+        >:nth-child(1){
+            width: auto;
+            grid-area: 1/1/2/-1;
+        }
+    }
+}
+.stat-heading{
+    @media (max-width:400px) {
+        font-size: 1.1rem;
+    }
+}
+.circle-progress {
+    margin: 20px 0;
+    width: 80%;
+    max-width: 230px;
+    
+    /* align-self: center; */
+}
+.h-scroll{
+    margin: 10px 0;
+    padding: 0 3%;
+    
+    gap: 20px; /* Must be in px*/
+
+    /* background-color: tomato; */
+    mask-image: linear-gradient(to right,
+        transparent 1%, black 3%, black 97%, transparent 99%
+    );
+}
+
+.card{
+    flex-shrink: 0;
+    background-color: rgb(88, 102, 163);
+    border-radius: 15px;
+    width: 200px;
+    height: 300px;
+
+    @media (max-width:400px) {
+        width: 150px; height: 200px;
+    }
+}

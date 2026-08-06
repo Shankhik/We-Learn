@@ -1,0 +1,176 @@
+.floating-navbar-container{
+    height: auto;
+    width: clamp(200px, 95%, 300px);
+
+    display: flex;
+    flex-direction: column;
+
+    position: fixed;
+    bottom: 20px; left: 50%;
+    translate: -50% 0;
+}
+.module-list {
+    overflow-x: auto;
+    scrollbar-width: none;
+    height: auto;
+    max-height: 0vh;
+    border-radius: 14px;
+    margin-bottom: 0px;
+    box-shadow: 0 0 15px -9px rgba(0, 0, 0, 0.3);
+    
+    backdrop-filter: blur(10px);
+    &.light{
+        background-color: rgba(242, 244, 255, 0.6);
+    }
+    &.dark{
+        background-color: rgba(37, 41, 73, 0.5);
+    }
+    :nth-last-child(1){
+        margin-bottom: 5px;
+    }
+    &.show{
+        margin-bottom: 10px;
+        height: auto;
+        max-height: 40vh;
+    }
+    transition: all 0.2s ease-in-out,
+        margin-bottom 0.5s ease-in-out,
+        max-height 0.5s ease-in-out;
+}
+.module-title{
+    margin: 5px 5px 0px 5px;
+    padding: 8px 15px;
+    border-radius: 9px;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    
+    &.on{
+        cursor: pointer;
+    }
+    &.off{
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    .active-arrow{
+        color: rgb(40, 80, 155);
+        font-size: 1.2rem;
+    }
+
+    &.light{
+        .active-arrow{
+            color: rgb(228, 126, 43);
+        }
+        &:hover{
+            background: linear-gradient(30deg, rgb(219, 121, 41), rgba(214, 37, 37, 0.7));
+            /* background-color: rgba(0, 26, 255, 0.6); */
+            color: rgb(255, 255, 255);
+            
+            .active-arrow{
+                color: inherit;
+            }
+            
+            &.off{
+                background: transparent;
+                color: inherit;
+            }
+        }
+    }
+    &.dark{
+        .active-arrow{
+            color: rgb(60, 179, 163);
+        }
+        &:hover{
+            background: linear-gradient(45deg, rgb(29, 104, 114), rgba(16, 167, 117, 0.822));
+            /* background-color: rgba(240, 248, 255, 0.281); */
+            
+            .active-arrow{
+                color: inherit;
+            }
+
+            &.off{
+                background: transparent;
+                color: inherit;
+            }
+        }
+    }
+
+    
+}
+.floating-navbar{
+    height: 50px;
+    width: clamp(180px, 100%, 250px);
+
+    align-self: center;
+    display: flex;
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+
+    box-shadow: 0 0 15px -9px rgba(0, 0, 0, 0.3);
+
+    &.light{
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+    &.dark{
+        background-color: rgba(24, 26, 44, 0.5);
+    }
+}
+
+.chapter-button {
+    margin: 5px;
+    width: 40%;
+    border-radius: 10px;
+    border: none; outline: none;
+
+    font-size: 0.9rem; 
+    font-weight: 500;
+
+    &.light{
+        color: rgba(255, 255, 255, 0.8);
+        background-color: rgba(0, 22, 224, 0.6);
+        &:active,&:hover{
+            background-color: rgba(0, 26, 255, 0.7);
+        }
+    }
+    &.dark{
+        color: inherit;
+        background-color: rgba(0, 162, 202, 0.6);
+        &:active,&:hover{
+            background-color: rgba(0, 177, 231, 0.7);
+        }
+    }
+    transition: all 0.2s ease;
+}
+.chapter-navigate{
+    flex-grow: 1;
+    border-radius: 10px;
+    margin: 5px 5px 5px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.2s ease;
+    
+    &.light{
+        background-color: rgb(224, 133, 59);
+
+        &.off{
+            background-color: rgba(53, 63, 82, 0.096);
+        }
+        &:hover:not(.off){
+            filter: brightness(120%);
+        }
+    }
+    &.dark{
+        background-color: rgb(28, 146, 155);
+        
+        &.off{
+            background-color: rgba(214, 214, 214, 0.096);
+        }
+        &:hover:not(.off){
+            filter: brightness(120%);
+        }
+    }
+}

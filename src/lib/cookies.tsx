@@ -1,21 +1,28 @@
 'use client'
 
-import { status } from '@/types/statusType';
-import * as nookies from 'nookies';
+import { CookieMiscName, CookieNames } from '@/types/cookieType';
+//import * as nookies from 'nookies';
+import * as nextCookies from "cookies-next/client"
 
 /**
  * Sets cookies.
  * @param {string} cookieName - Cookie Name.
  * @param {string} cookieValue - Cookie Value.
  * @param {number} expireTime - Expiration time in minutes
- * @returns {status} Operation details.
+ * @returns {Status} Operation details.
  */
-export const setCookie = (cookieName:string, cookieValue:string, expireTime?: number) : status =>{
+export const setCookie = <T extends string = CookieNames|CookieMiscName>(
+    cookieName:CookieNames|CookieMiscName|T,
+    cookieValue:string,
+    expireTime?: number,
+    httpOnly?: boolean
+) : Status =>{
     const expT = (expireTime||60*5)*60 
     try {
-        nookies.setCookie(null, cookieName, cookieValue,{
-            maxAge: expT,
-            path: '/'
+        nextCookies.setCookie(cookieName,cookieValue,{
+            maxAge:expT,
+            path:"/",
+            httpOnly
         })
         return {
             status: true,
@@ -27,19 +34,18 @@ export const setCookie = (cookieName:string, cookieValue:string, expireTime?: nu
             error: `Error: ${error.message}`
         }
     }
-    
 }
-export const getCookie = (cookieName: string): status =>{
-    let cookieValue;
+export const getCookie = <T extends string = CookieNames|CookieMiscName>(
+    cookieName: CookieNames|CookieMiscName|T
+): Status =>{
     try {
-        let cookies = nookies.parseCookies(null,{});
-        cookieValue = cookies[cookieName]
-        //console.log(cookieValue);
-        if (cookieValue){
+        let cookie = nextCookies.getCookie(cookieName);
+        
+        if (cookie){
             return {
                 status: true,
                 message: `Got '${cookieName}' Cookie`,
-                cookie: cookieValue
+                cookie
             }
         }else{
             return {
@@ -49,6 +55,7 @@ export const getCookie = (cookieName: string): status =>{
         }
         
     } catch (error:any) {
+        console.log(error.message)
         return {
             status: false,
             error: `Error: ${error.message}`,
@@ -56,9 +63,12 @@ export const getCookie = (cookieName: string): status =>{
     }
     
 }
-export const  delCookie = (cookieName: string): status=>{
+export const delCookie = (
+    cookieName: CookieNames|CookieMiscName
+): Status=>{
     try{
-        nookies.destroyCookie(null,cookieName,{path: '/'});
+        nextCookies.deleteCookie(cookieName);
+        
         return ({
             status: true,
             message: `Cookie '${cookieName}' removed`}

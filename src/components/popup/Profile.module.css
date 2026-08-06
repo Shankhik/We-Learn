@@ -1,0 +1,107 @@
+.profile{
+    width: 50px;
+    flex-shrink: 0;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    line-height: 0;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.137);
+
+    &.light{
+        border: 4px solid rgb(79, 82, 255);
+    }
+    &.dark{
+        border: 4px solid rgb(90, 92, 196);
+    }
+    >.profile-pic{
+        width: 100%;
+        height: 100%;
+    }
+
+    @media (max-width:400px) {
+        width: 40px;
+    }
+}
+
+.image-container {
+    display: flex;
+    width: 30dvh; max-width: 300px;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    overflow: hidden;
+
+    .image{
+        width: 100%; height: auto;
+    }
+
+    @media (max-width:500px) {
+        width: 50dvw;
+    }
+    @media (max-width:400px) {
+        width: 160px;
+    }
+}
+.pop-up-section-one{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    
+    h1{
+        overflow: hidden;
+        text-wrap: wrap;
+        text-overflow: ellipsis;
+
+        @media (max-width:500px) {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        @media (max-width:400px) {
+            font-size: 1.7rem;
+        }
+        
+    }
+    h5{
+        font-size: 1rem;
+    }
+
+    &.light{
+        color: rgb(29, 30, 39);
+        >.image-container{
+            border: 10px solid rgb(95, 95, 247);
+        }
+    }
+    &.dark{
+        color: rgb(221, 221, 221);
+        >.image-container{
+            border: 10px solid rgb(75, 75, 182);
+        }
+    }
+
+    @media (max-width:500px) {
+        flex-direction: column;
+    }
+}
+.pop-up-section-two{
+    width: auto; margin-top: min(7dvh,50px);
+    display: flex; gap: 15px; justify-content: center;
+    
+    .button{
+        cursor: pointer;
+        width: fit-content;
+        padding: 10px 20px;
+        border-radius: 20px;
+        display: flex; align-items: center;
+        font-size: 1rem;
+        background-color: antiquewhite;
+        &:hover{
+            box-shadow: 0 0 6px 0px rgba(0, 0, 0, 0.4);
+        }
+        @media (max-width:400px) {
+            font-size: 0.93rem;
+            padding: 7px 15px;
+        }
+    }
+    @media (max-width:400px) {
+        gap: 5px;
+    }
+}

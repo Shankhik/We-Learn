@@ -1,0 +1,106 @@
+
+.navbar{
+    pointer-events: none;
+    *{pointer-events: auto;}
+
+    position: fixed;
+    top: 0; right: 0; left: 0;
+    z-index: 2;
+
+    &.light{
+        background: linear-gradient(rgb(209, 219, 255) 10%, transparent);
+    }
+    &.dark{
+        background: linear-gradient(rgb(12, 12, 19), transparent );
+    }
+
+    >.main{
+        display: flex;
+        height: 100px;
+        margin: 0 auto;
+        width: min(1500px, 90%);
+        align-items: center;
+
+        @media (max-width: 900px) {
+            height: 80px;
+        }
+        @media (max-width: 400px) {
+            width: 95%;
+            height: 70px;
+        }
+    }
+
+    .title{
+        max-width: 40%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        padding: 7px 20px;
+        border-radius: 50px;
+        backdrop-filter: blur(10px);
+        margin-left: 40px;
+
+        &.light{
+            background-color: rgba(255, 255, 255, 0.4);
+            color: rgba(50, 47, 97, 0.8);
+        }
+        &.dark{
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        @media (max-width: 900px) {
+            max-width: 30%;
+            margin-left: 2%;
+            font-size: 1.25rem;
+        }
+        @media (max-width: 400px) {
+            padding: 4px 10px;
+            max-width: 28%;
+            font-size: 1rem;
+        }
+    }
+}
+
+.page{
+    min-height: 100vh; position: relative;
+    display: flex; flex-direction: column;
+    &.light{
+        ::selection{
+            background-color: black ;
+            color: rgb(189, 204, 255);
+        }
+        background-color: rgb(209, 219, 255);
+        color: rgb(20, 20, 20);
+    }
+    &.dark{
+        ::selection{
+            background-color: rgb(255, 255, 255) ;
+            color: rgb(54, 53, 128);
+        }
+        background-color: rgb(12, 12, 19);
+        color: rgb(219, 219, 219);
+    }
+}
+
+.content{
+    margin: 150px auto 100px auto;
+    width: 75%;
+    max-width: 900px;
+
+    
+    display: flex; flex-direction: column; align-self: center;
+
+    /* overflow: auto; 
+    scrollbar-width: none; */
+    
+    @media (max-width:1000px) {
+        width: 85%;
+    }
+    @media (max-width:900px) {
+        margin-top: 120px;
+    }
+    @media (max-width:400px) {
+        margin-top: 90px;
+        width: 95%;
+    }
+}

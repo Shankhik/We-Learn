@@ -1,0 +1,132 @@
+.loading{
+    margin: 10dvh auto 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    opacity: 0;
+    animation: fadeIN 200ms ease 500ms forwards;
+
+    >h2{
+        opacity: 0;
+        animation: fadeIN 200ms ease 3500ms forwards;
+    }
+}
+.thumbnail{
+    width: 140px; height: 140px;
+    @media (max-width:400px) {
+        width: 100px; height: 100px;
+    }
+}
+.cover-image{
+    height: 30vh;
+    border-radius: 20px 20px 0 0 ;
+    margin-bottom: 5vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+
+    &.light{
+        background-image: linear-gradient(30deg, rgb(54, 138, 206),rgb(72, 69, 223));
+    }
+    &.dark{
+        background-image: linear-gradient(30deg, rgb(49, 47, 185), rgb(214, 147, 84));
+    }
+    mask-image: linear-gradient(
+        white 30%,
+        rgba(255, 255, 255, 0.9) 70%,
+        transparent 90%
+    );
+}
+
+.html-content{
+    h1{
+        margin-bottom: 1rem;
+    }
+    h2{
+        margin-bottom: 0.9rem;
+    }
+    h3, h4, h5{
+        margin-bottom: 0.8rem;
+    }
+    p{
+        margin-bottom: 1rem;
+    }
+}
+
+@keyframes fadeIN {
+    0% {
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+.details-page{
+    &.light{
+        background-color: #ffffff;
+    }
+    &.dark{
+        background-color: #121212;
+    }
+}
+
+.block{
+    display: flex;
+}
+.split{
+    @media (max-width:520px) {
+        flex-direction: column;
+    }
+}
+.description{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.skills-field{
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+
+    >h4{
+        cursor: default;
+        padding: 5px 10px;
+        /* border: 1px solid white; */
+        border-radius: 20px;
+    }
+}
+.modules{
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 240px;
+    gap: 10px;
+    
+    >div{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.281);
+        padding: 10px;
+    }
+    @media (max-width:520px) {
+        width: auto;
+    }
+}
+.rating-block {
+    width: 30%;
+    height: 40px;
+
+    @media (max-width:800px) {
+        width: 50%;
+        height: auto;
+    }
+    @media (max-width:400px) {
+        width: 70%;
+    }
+}

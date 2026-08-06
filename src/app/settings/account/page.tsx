@@ -1,21 +1,38 @@
-'use client'
-import WaitingSVG from '@/app/settings/waitingSvg';
-import {CSSProperties} from "react";
-export default function Account() {
-    const iconStyle:CSSProperties = {
-        width:'100%', height:'40dvh',
-    }
-    return(
-        <div className={'settings-content-pages'}>
-            <div style={{
-                display:'flex',alignItems:"center",flexDirection:'column',
-                marginTop: '5%'
-            }}>
-                <WaitingSVG style={iconStyle}/>
-                <h2 style={{margin:'3% 0 20px 0'}}>Under Development!</h2>
-                <h3>Please wait for the next patch.</h3>
-            </div>
+"use client";
 
-        </div>
-    )
+import { Heading } from "@/components/htmlElements/Texts";
+import { Hr, SettingsField } from "../Components";
+import { useAuthContext } from "@/context/authContext";
+import HideIf from "@/components/HideIf";
+
+type DeleteTypes = 'account'|'purchases'
+export default function PageClient () {
+    const {admin} = useAuthContext();
+    return<>
+    <title>Account</title>
+    <SettingsField label={`Delete your account`}
+    type={'button'} value="Delete" href="account/delete?delete=account"/>
+    <Hr/>
+    <SettingsField label={`Change your password`}
+    type={'button'} value="Change" href="account/update?edit=password"/>
+    
+    <HideIf
+        // Won't be available if the user isn't an admin
+        hideIf={!admin}
+    >
+        <Heading style={{fontSize:'0.9rem', margin:"10px 0 10px 10px"}}>
+            For Admin
+        </Heading>
+        <SettingsField label="Add Courses" type="button"
+        buttonStyle={{
+            textOverflow:'ellipsis',
+            overflow:'hidden',
+            whiteSpace:'nowrap'
+        }}
+            value="Make a course"
+            href="/add-course"
+        />
+    </HideIf>
+    
+    </>
 }

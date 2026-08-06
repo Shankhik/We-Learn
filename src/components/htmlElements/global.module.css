@@ -1,0 +1,50 @@
+
+.parsed-html-container{
+    h1, h2{
+        margin-bottom: 10px;
+    }
+
+    h3, h4, h5, h6{
+        margin-bottom: 7px;
+    }
+
+    p{
+        margin-bottom: 10px;
+    }
+
+    li{
+        list-style-type:circle;
+        translate: -10px 0;
+        margin-top: 3px;
+    }
+    ul{
+        margin-bottom: 10px;
+    }
+}
+
+/* .heading {
+    &.light{
+        color: rgb(73, 71, 197);
+    }
+    &.dark{
+        color: rgb(134, 132, 255);
+    }
+} */
+.horizontal-scroll {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+}
+.hr{
+    border: none;
+    border-radius: 2px;
+    height: 2px;
+    margin: 8px 0;
+    &.light{
+        background-color: rgb(73, 71, 197);
+    }
+    &.dark{
+        background-color: rgb(134, 132, 255);
+    }
+}

@@ -1,12 +1,9 @@
-
 import { TransformationOptions } from "cloudinary"
-import ApiLinks from "./apiLinks"
 import { post } from "./fetchReq"
 import {Cloudinary} from "@/lib/cloudinaryConfig";
-import {status} from "@/types/statusType";
 
 export const CloudinaryUrl = async(publicName: string, options?: TransformationOptions)=>{
-    return await post(ApiLinks.cloudinary.url.this, {
+    return await post("/api/cloudinary/url", {
         publicName: `WeLearn/${publicName}`,
         options: options
     })
@@ -29,7 +26,7 @@ export const cloudinaryUpload = async (
     uploadFolder: CloudinaryFolder,
     publicID: string,
     transformationOptions?: TransformationOptions
-): Promise<status>=>{
+): Promise<Status>=>{
 
     const transformations: TransformationOptions[] = [
         {

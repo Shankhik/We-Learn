@@ -1,0 +1,156 @@
+.cropping-container {
+    position: relative;
+    background-color: aqua;
+    display: flex;
+    max-height: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+    user-select: none;
+}
+
+.cropping-container>img{
+    object-fit: contain;
+    user-select: none;
+    &.landscape{
+        width: 100%; height: auto;
+    }
+    &.portrait{
+        height: 100%; width: auto;
+    }
+}
+
+.overlay{
+    position: absolute;
+    height: 40%; aspect-ratio: 1/1;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 50%; left: 50%;
+    display: flex;
+    border-radius: 10px;
+}
+
+.inner-circle{
+    margin: 0 auto;
+    height: 98%; width: 98%;
+    align-self: center;
+    border-radius: 50%;
+    backdrop-filter: brightness(200%);
+}
+
+/* - - - - -Full Screen Prompts - - - - - - */
+.prompt-button{
+    padding: 10px 18px;
+    border-radius: 20px; color: white;
+    cursor: pointer; user-select: none;
+    position: relative;
+    &:hover{
+        filter: brightness(110%);
+        box-shadow: 0 0 10px -3px black;
+    }
+
+    @media (max-width:900px) {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+    transition: all 0.2s ease;
+}
+
+.prompt-quote {
+    width: auto;
+    margin: 10px 0 20px 0;
+    @media (max-width:400px) {
+        width: 80dvw; height: auto;
+    }
+}
+/* - - - - - - - - - - - - - - - - - - - */
+
+/* - - - - - Settings Fields - - - - - - */
+.settings-field{
+    display: flex;
+    height: 60px;
+    background-color: rgba(62, 152, 180, 0);
+    flex-shrink: 0;
+    
+    .label{
+        align-self: center;
+        flex-grow: 1;
+        font-weight: 700;
+        overflow: hidden;
+        text-overflow: clip;
+        white-space: no-wrap;
+        flex-wrap: nowrap;
+        min-width: 0;
+
+        @media (max-width:400px) {
+            margin-left: 10px;
+            align-self: auto;
+        }
+    }
+
+    /* Setting Colors for Different components*/
+    &.light{
+        .text-action{
+            background-color: rgba(255, 255, 255, 0.3);
+            &.fixed{
+                background-color: rgba(161, 161, 161, 0.3);
+                color: rgb(73, 73, 73);
+            }
+        }
+    }
+    &.dark{
+        .text-action{
+            background-color: rgba(249, 242, 255, 0.1);
+            &.fixed{
+                background-color: rgba(66, 66, 66, 0.212);
+                color: rgb(114, 114, 114);
+            }
+        }
+    }
+
+    @media (min-width:1000px) {
+        margin: 0 16%;
+        
+    }
+    @media (max-width:400px) {
+        flex-direction: column;
+        height: auto;
+    }
+    transition: all 0.2s ease;
+}
+.tick{
+    margin-left: 8px;
+    flex-shrink: 0; flex-grow: 0;
+    background-color: rgb(79, 153, 79);
+    border-radius: 50%;
+    align-self: center;
+    padding: 7px;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    
+    &.hide{
+        margin-left: 0;
+        padding: 0;
+        width: 0px; height: auto;
+    }
+}
+.text-action{
+    position: relative;
+    margin-left: auto;
+    margin: 10px 0;
+    padding: 0 20px;
+    color:inherit;
+    width: 30%;font-size: inherit;
+    border: none; border-radius: 20px;
+    text-overflow: ellipsis;
+
+    &:focus{
+        outline: none;
+    }
+
+    @media (max-width:400px) {
+        width: auto;
+        flex-grow: 1;
+        height: 40px;
+    }
+}
+/* - - - - - - - - - - - - - - - - - - - */

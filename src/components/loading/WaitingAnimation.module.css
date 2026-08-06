@@ -1,0 +1,47 @@
+/*  "1": {rMax: 87.783, rMin: 60},
+    "2": {rMax: 60, rMin: 23.203},
+    "3": {rMax: 23.203, rMin: 87.783}
+*/
+.circle-one{
+    animation: circle1 2s ease-in-out infinite;
+}
+.circle-two{
+    animation: circle2 2s ease-in-out infinite;
+}
+.circle-three{
+    animation: circle3 2s ease-in-out infinite;
+}
+
+@keyframes circle1 {
+    0%{
+        r: 87.783
+    }
+    50%{
+        r: 60
+    }
+    100%{
+        r: 87.783
+    }
+}
+@keyframes circle2 {
+    0%{
+        r: 60
+    }
+    50%{
+        r: 23.203
+    }
+    100%{
+        r: 60
+    }
+}
+@keyframes circle3 {
+    0%{
+        r: 23.203
+    }
+    50%{
+        r: 87.783
+    }
+    100%{
+        r: 23.203
+    }
+}

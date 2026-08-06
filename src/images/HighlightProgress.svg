@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="200"
+   height="200"
+   viewBox="0 0 200 200.00001"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <rect
+     style="fill:#47ca4f;fill-opacity:1;stroke:none;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:markers fill stroke"
+     id="rect3"
+     width="136.99088"
+     height="37.941101"
+     x="23.8391"
+     y="121.57497"
+     ry="6.7471914" />
+  <rect
+     style="fill:#efd747;fill-opacity:1;stroke:none;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:markers fill stroke"
+     id="rect4"
+     width="60.195999"
+     height="37.941101"
+     x="23.8391"
+     y="75.574966"
+     ry="6.7471914" />
+  <rect
+     style="fill:#40d7a5;fill-opacity:1;stroke:none;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:markers fill stroke"
+     id="rect5"
+     width="89.9842"
+     height="37.941101"
+     x="23.8391"
+     y="29.574966"
+     ry="6.7471914" />
+  <path
+     style="fill:none;stroke:#ffffff;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:markers fill stroke"
+     d="M 24.846385,19.474194 V 159.93927 c 0,7.31972 7.720382,16 15.040101,16 H 179.96841"
+     id="path1" />
+  <path
+     id="path5"
+     style="fill:#ffffff;fill-opacity:1;stroke-width:13.2178;stroke-linecap:round;stroke-linejoin:round;paint-order:markers fill stroke"
+     d="m 137.82378,125.23939 a 14.941415,14.941415 0 0 0 -14.93546,14.94579 14.941415,14.941415 0 0 0 14.94406,14.93717 14.941415,14.941415 0 0 0 14.93891,-14.94234 v -0.009 a 14.941415,14.941415 0 0 0 -14.94751,-14.93202 z m 6.41443,7.93586 c 0.60504,0 1.20927,0.2317 1.67288,0.69531 l 0.20997,0.20998 c 0.92723,0.92722 0.92723,2.42024 0,3.34748 l -9.51924,9.51925 c -0.89854,0.89855 -2.32658,0.92383 -3.25799,0.0809 -0.28317,-0.13902 -0.54431,-0.3357 -0.76243,-0.59205 l -3.16334,-3.71924 c -0.84975,-0.9987 -0.7302,-2.48568 0.26849,-3.33544 l 0.22546,-0.19276 c 0.9987,-0.84976 2.4874,-0.72848 3.33716,0.27021 l 1.71247,2.01366 7.60197,-7.60198 c 0.46361,-0.46361 1.06957,-0.69531 1.6746,-0.69531 z" />
+</svg>

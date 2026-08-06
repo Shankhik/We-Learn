@@ -1,0 +1,17 @@
+.loading-button{
+    height: 40px;
+
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 12px;
+    border-radius: 10px;
+    transition: all 0.1s ease;
+    user-select: none;
+
+    /* &:active{
+        border-radius: 20px;
+    } */
+}

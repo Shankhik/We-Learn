@@ -1,0 +1,326 @@
+
+.landing-page{
+    flex-grow: 0;
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100dvh;
+    /* width: 100vw; */
+    
+    /* background-color is already managed in the page */
+    &.light{
+        color: rgb(17, 17, 19);
+        background-color: rgb(194, 200, 255);
+    }
+
+    &.dark{
+        color: rgb(226, 230, 255);
+        background-color: rgb(30, 31, 34);
+    }
+}
+
+.hero-section-container{
+    display: flex;
+    flex-direction: column;
+    height: 165vh;
+
+    position: relative;
+}
+.hero-section{
+    /* "relative" required for Hero Section background */
+    position: sticky;
+    top: 0px;
+    flex-grow: 0;
+
+    /* width: 100%; */
+    display: flex;
+
+    height: 110vh;
+    overflow: hidden;
+    /* overflow-x: auto; */
+
+    background-size: cover;
+    background-position: center;
+    mask-image: linear-gradient(white 80%, transparent);
+
+    transition: all 0.2s ease; 
+}
+
+.hero-logo{
+    /* background-color: rgba(116, 141, 211, 0.24); */
+    border-radius: 20px;
+    filter: drop-shadow(2px 0 5px rgb(40, 0, 73));
+    
+    width: clamp(170px, 40vw, 700px);
+    height: auto;
+    padding: 20px 0;
+
+    transition: all 0.2s ease;
+
+    @media (max-width: 700px) {
+        width: clamp(170px, 75vw, 1000px);
+    }
+}
+.hero-section>.pages-container {
+    width: fit-content;
+    height: fit-content;
+
+    margin: auto 0;
+    translate: 0 100vh;
+    display: flex;
+
+    transition:
+        all 0.2s ease,
+        translate 0.6s ease;
+}
+.hero-page{
+    flex-shrink: 0;
+    flex-grow: 0;
+
+    margin: auto 0;
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+    
+    height: fit-content;
+    width: 100vw;
+
+    overflow: hidden;
+}
+
+.hero-content {
+    width: clamp(150px, 85%, 1300px);
+    height: auto;
+
+    display: flex;
+
+    background-color: rgba(255, 255, 255, 0);
+    border-radius: 20px;
+
+    h1{
+        font-size: 5.5rem;
+        line-height: 1.1;
+        
+        background: linear-gradient(45deg,rgba(118, 155, 255, 0.8), rgb(255, 255, 255));
+        background-clip: text;
+        color: transparent;
+        
+        transition: all 0.2s ease;
+    }
+    p{
+        margin: 5% 0 0 auto;
+        max-width: 50%;
+        font-size: 2rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    
+    @media (max-width:1000px) {
+        flex-direction: column;
+        p{
+            font-size: 1.5rem;
+            max-width: 100%;
+            margin: 8% auto 0 auto;
+        }
+    }
+    @media (max-width:700px) {
+        flex-direction: column;
+        h1{
+            font-size: 4.6rem;
+            padding-bottom: 2px;
+        }
+        p{
+            max-width: 100%;
+            font-size: 1.3rem;
+            /* margin: 10% auto 0 auto; */
+        }
+    }
+    @media (max-width:450px) {
+        width: 93%;
+        h1{
+            font-size: 4rem;
+            line-height: 1;
+        }
+        p{
+            font-size: 1.3rem;
+        }
+    }
+}
+
+.scroll-highlight{
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    /* flex-grow: 1; */
+    width: 60%;
+    margin-right: 30px;
+
+    /* Hightlights */
+    >div{
+        background-color: rgba(141, 115, 255, 0);
+        min-height: 80vh;
+        /* margin-bottom: 16vh; */
+        
+        margin: 0 3% 16vh 3%;
+        opacity: 0;
+
+        h1{
+            font-size: 4rem;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            translate: 0 100px;
+            font-weight: 800;
+            transition: all 0.3s ease;
+        }
+        p{
+            margin-top: 20px;
+            font-size: 1.7rem;
+            translate: 0 100px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        &.on{
+            opacity: 1;
+            h1{
+                translate: 0 0;
+            }
+            p{
+                translate: 0 0;
+            }
+            translate: 0px 0px;
+        }
+
+        transition: all 0.3s ease;
+        
+    }
+
+    /* First Highlight */
+    >:nth-child(1){
+        margin-top: 20vh;
+    }
+
+    @media (max-width: 600px) {
+        margin: 0 0;
+        width: auto;
+
+        /* Highlights */
+        >div{
+            /* Needs to be in px (or non-dynamic)*/
+            margin-bottom: 100px;
+
+            min-height: 55vh;
+
+            h1{
+                font-size: 2.6rem;
+            }
+            p{
+                font-size: 1.3rem;
+            }
+        }
+
+        >:nth-last-child(1){
+            margin-bottom: 0px;
+        }
+    }
+}
+.scroll-highlight-image{
+    position: sticky;
+    
+    /* Makes it always visible in container*/
+    top: 0px;
+    bottom: 0px;
+    /* margin-left: auto; */
+
+    height: 100vh;
+    flex-grow: 1;
+    /* width: 40%; */
+
+    display: flex;
+    opacity: 1;
+
+    /* Fader */
+    >:nth-child(1){
+        display: none !important;
+    };
+
+    backdrop-filter: blur(0px);
+
+    transition: all 0.5s ease;
+
+    @media (max-width:600px) {
+        mask-image: linear-gradient(transparent, white 20%);
+
+        margin-top: auto;
+        width: 100%;
+        height: 40vh;
+
+        backdrop-filter: blur(20px);
+
+        /* Fader */
+        >:nth-child(1){
+            display: block !important;
+        };
+
+        &.hide{
+            opacity: 0;
+            translate: 0 -100%;
+            height: 0;
+        }
+    }
+}
+.section {
+    min-height: 100vh;
+    display: flex;
+
+    transition:all 0.5s ease;
+    position: relative;
+    
+    >.main{
+        margin: 0 auto;
+        position: relative;
+
+        display: flex;
+        flex-direction: row;
+        width: clamp(100px, 100%, 1300px);
+        
+        
+        @media (max-width:600px) {
+            &.column{
+                flex-direction: column;
+            }
+        }
+    }
+}
+.heading {
+    font-size: 3rem;
+    margin: 0 min(2%, 10px);
+    @media (max-width:600px) {
+        font-size: 2.6rem;
+    }
+}
+.paragraph {
+    font-size: 1.3rem;
+    margin: 0 min(2%, 10px);
+    @media (max-width:600px) {
+        font-size: 1.1rem;
+    }
+}
+.footer {
+    display: flex;
+    min-height: 60vh;
+
+    &.light{
+        background: linear-gradient(
+            transparent,
+            rgb(79, 112, 255)
+        );
+    }
+    &.dark{
+        background: linear-gradient(
+            transparent,
+            rgb(0, 0, 0)
+        );
+    }
+}

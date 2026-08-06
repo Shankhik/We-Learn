@@ -1,0 +1,16 @@
+.button{
+    position: relative;
+    width: fit-content;
+    padding: 5px 10px;
+    border-radius: 15px;
+    background-color: rgb(48, 94, 134);
+    color: white;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+.main{
+    display: flex;
+
+    &.hide{
+        opacity: 0;
+    }
+}

@@ -1,16 +1,15 @@
 import {header} from "@/lib/headers";
 import {NextResponse} from "next/server";
-import {status} from "@/types/statusType";
 import {updateUserDetails} from "@/mongoDB/users";
 import {Cloudinary} from "@/lib/cloudinaryConfig";
 import { colorText, serverLog } from "@/lib/colorText";
 
-export async function GET (req: Request): Promise<NextResponse<status>> {
-    let userDetailsHeader: status['decoded']|string = req.headers.get('x-user-details');
-    let userDetails: status['decoded'];
+export async function GET (req: Request): Promise<NextResponse<Status>> {
+    let userDetailsHeader: Status['decoded']|string = req.headers.get('x-user-details');
+    let userDetails: Status['decoded'];
     try {
         if(!userDetailsHeader) throw new Error('User Details Not Found!');
-        userDetails = JSON.parse(userDetailsHeader) as status['decoded'];
+        userDetails = JSON.parse(userDetailsHeader) as Status['decoded'];
         // Deleting media from CDN
         const folder = 'WeLearn/profile-picture/'
         let cldRes = await Cloudinary.uploader.destroy(folder+userDetails?.username,{

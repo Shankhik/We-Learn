@@ -1,0 +1,21 @@
+.page{
+    min-height: 100vh; position: relative;
+    display: flex; flex-direction: column;
+    transition: all 0.2s ease;
+    &.light{
+        ::selection{
+            background-color: black ;
+            color: rgb(189, 204, 255);
+        }
+        background-color: rgb(209, 219, 255);
+        color: rgb(20, 20, 20);
+    }
+    &.dark{
+        ::selection{
+            background-color: rgb(255, 255, 255) ;
+            color: rgb(54, 53, 128);
+        }
+        background-color: rgb(12, 12, 19);
+        color: rgb(219, 219, 219);
+    }
+}

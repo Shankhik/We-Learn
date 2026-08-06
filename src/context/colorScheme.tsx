@@ -1,7 +1,7 @@
 'use client'
 
 import { getCookie, setCookie } from "@/lib/cookies"
-import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react"
+import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useEffect, useEffectEvent, useRef, useState } from "react"
 
 export const colorScheme = {
     navbar: {
@@ -136,96 +136,114 @@ export const colorScheme = {
 
 export type AccentColors = 'red'|'green'|'blue'
 
-type colorContextType = {
+type ColorContextType = {
     effectiveTheme: 'light'|'dark';
     theme: 'light'|'default'|'dark';
     accentColor: 'red'|'green'|'blue';
     setEffectiveTheme: Dispatch<SetStateAction<"light" | "dark">>;
     setTheme: Dispatch<SetStateAction<"light" | "dark" | "default">>;
     setAccentColor: Dispatch<SetStateAction<AccentColors>>;
+    returnOnTheme: <T extends unknown = string>(arg1: T, arg2: T) => T;
 }
 
-const colorContext = createContext<colorContextType>({
+const colorContext = createContext<ColorContextType>({
     effectiveTheme: 'dark',
     theme: 'dark',
     accentColor: 'blue',
-    setEffectiveTheme: function (value: SetStateAction<"light" | "dark">): void {},
-    setTheme: function (value: SetStateAction<"light" | "dark" | "default">): void {},
-    setAccentColor: function (value: SetStateAction<AccentColors>): void {}
+    setEffectiveTheme: function (value): void {},
+    setTheme: function (value): void {},
+    setAccentColor: function (value): void {},
+    returnOnTheme: <T extends unknown = string>(arg1: T, arg2: T) => {return arg1}
 });
 
-export const ColorContextProvider= ({children}:{children:ReactNode})=>{
 
-    const [effectiveTheme, setEffectiveTheme] = useState<'light'|'dark'>('light');
-    const [theme, setTheme] = useState<'dark'|'light'|'default'>('light');
+export const ColorContextProvider= ({children, initial}:{
+    children:ReactNode,
+    initial: {
+        theme: ColorContextType['theme'],
+        effectiveTheme: ColorContextType["effectiveTheme"]
+    }
+})=>{
+
+    const [theme, setTheme] = useState<'dark'|'light'|'default'>(()=>{
+        if (initial.theme==="dark"||initial.theme==="light"||initial.theme==="default")
+            return initial.theme;
+        // Fall back to "default"
+        return "default";
+    });
+    
+    const [effectiveTheme, setEffectiveTheme] = useState<'light'|'dark'>(()=>{
+        if (theme === "dark"||theme === "light") return theme;
+        // Fallback to "light"
+        else if (
+            initial.effectiveTheme!=="dark" &&
+            initial.effectiveTheme!=="light"
+        ) return "light";
+        
+        return initial.effectiveTheme;
+    });
+
     const [accentColor, setAccentColor] = useState<AccentColors>('blue');
 
-    //Checks Theme cookie on 1st render
-    useEffect(()=>{
-        let cookie = getCookie('ColorScheme').cookie
-        let cookie_theme, cookie_accentColor
 
-        if(cookie){
-            cookie_theme = cookie.split('; ')[0].split(': ')[1] as 'light'|'dark'|'default'
-            cookie_accentColor = cookie.split('; ')[1].split(': ')[1] as AccentColors
-        }
-        if(cookie_theme && cookie_accentColor){
-            setTheme(cookie_theme)
-            setAccentColor(cookie_accentColor)
-        }else setCookie('ColorScheme',`Theme: ${theme}; AccentColor: ${accentColor}`)
-
-    },[])
-    //Checks for Theme changes
+    // Handles Theme Change
     useEffect(()=>{
-        let cookie = getCookie('ColorScheme').cookie
-        let cookie_theme, cookie_accentColor
-        if(cookie){
-            cookie_theme = cookie.split('; ')[0].split(': ')[1] as 'light'|'dark'|'default'
-            cookie_accentColor = cookie.split('; ')[1].split(': ')[1] as AccentColors
-        }
-        if (cookie_theme!== theme || cookie_accentColor!== accentColor)
-            setCookie('ColorScheme', `Theme: ${theme}; AccentColor: ${accentColor}`)
-    },[theme,accentColor])
+        // Browser Media Query
+        const mediaQuery = window.matchMedia(
+            '(prefers-color-scheme: dark)'
+        );
 
-    useEffect(()=>{
-        const browserThemeChecker = (event:any)=>{
-            if (theme === 'default') {
-                if (event.matches){
-                    setEffectiveTheme('dark')
-                }
-                else{
-                    setEffectiveTheme('light')
-                }
-            }
-            else {
-                setEffectiveTheme(theme=== 'light'? 'light':'dark')
+        // Checks Browser theme -> set cookie + effective theme
+        const handleDefaultTheme = (e:MediaQueryList)=>{
+            if (e.matches){
+                setCookie("THEME","default-dark",60*24*30);
+                setEffectiveTheme('dark');
+            }else{
+                setCookie("THEME","default-light",60*24*30);
+                setEffectiveTheme('light');
             }
         }
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
 
-        //initial Run
-        browserThemeChecker(window.matchMedia('(prefers-color-scheme: dark)'))
-        
-        mediaQuery.addEventListener('change',browserThemeChecker)
+        if (theme==='dark'||theme==="light"){
+            setEffectiveTheme(theme);
+            setCookie("THEME",theme,60*24*30);
+        }
+        else if (theme==='default'){
+            handleDefaultTheme(mediaQuery);
+        }
+
+        // Browser Theme Change Listener
+        const onChangeListener = (e:MediaQueryListEvent)=>{
+            if (theme==="default"){
+                handleDefaultTheme(mediaQuery);
+            }
+        }
+
+        // Adds Event lister on browser theme change
+        mediaQuery.addEventListener('change',onChangeListener)
         return ()=> {
-            mediaQuery.removeEventListener('change',browserThemeChecker)
+            // Removes Event lister on browser theme change [technically not needed]
+            mediaQuery.removeEventListener('change',onChangeListener)
         }
-
     },[theme])
 
-    
-    const value:colorContextType = {
+    const returnOnTheme = useCallback(<T extends unknown = string>(arg1: T, arg2: T)=>{
+        return effectiveTheme==='light'? arg1: arg2
+    },[effectiveTheme]);
+
+    const value:ColorContextType = {
         effectiveTheme: effectiveTheme,
         theme: theme,
         accentColor: accentColor,
         setEffectiveTheme: setEffectiveTheme,
         setTheme: setTheme,
-        setAccentColor: setAccentColor
+        setAccentColor: setAccentColor,
+        returnOnTheme
     }
     return <colorContext.Provider value={value}>{children}</colorContext.Provider>
 }
 
 export const useColorContext = ()=>{
-    const {effectiveTheme, setEffectiveTheme, theme, setTheme, accentColor, setAccentColor} = useContext(colorContext);
-    return { effectiveTheme, theme, setTheme, accentColor, setAccentColor }
+    const {effectiveTheme, setEffectiveTheme, theme, setTheme, accentColor, setAccentColor, returnOnTheme} = useContext(colorContext);
+    return { effectiveTheme, theme, setTheme, returnOnTheme }
 }

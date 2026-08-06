@@ -1,0 +1,119 @@
+/* For Profile */
+
+.picture-actions{
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    pointer-events: none; gap: 10px;
+    position: absolute; backdrop-filter: blur(10px);
+    top: 0; bottom: 0; right: 0; left: 0;
+    background-color: rgba(18, 10, 56, 0.7);
+    opacity: 0; border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.picture-container{
+    position: relative;
+    user-select: none;
+    margin: 0 auto;
+    width: clamp(200px, 20dvw, 400px); height: auto; aspect-ratio: 1/1;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.1);
+    clip-path: inset(0 0 0 0);
+    justify-self: center; align-self: center;
+
+    >.picture{
+        user-select: none;
+        width: 100%; height: 100%;
+        /* border-radius: 50%; */
+    }
+}
+
+.actions{
+    display: flex; flex-direction: column;
+    position: absolute;
+    right: 0px; bottom: 50%;
+    translate: 0 50%;
+    padding-right: 4px;
+    gap: 10px;
+    
+    @media (max-width:550px) {
+        align-self: center;
+        margin-top: 20px;
+        right: 0; bottom: 0;
+        translate: none; flex-direction: row;
+        position: relative;
+    }
+}
+
+.profile.section-one{
+    position: relative;
+    display: flex;
+    margin-bottom: 50px;
+    &.light{
+        >.picture-container{
+            border: 10px solid rgb(85, 68, 245);
+        }
+    }
+    &.dark{
+        >.picture-container{
+            border: 10px solid rgb(84, 86, 230);
+        }
+    }
+    @media (max-width:550px) {
+        flex-direction: column;
+        margin-bottom: 50px;
+    }
+}
+
+/* For Image Selection preview*/
+.image-container{
+    margin: 20px 0;
+    width: 35dvw;
+    height: 50dvh;
+    max-width: 600px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    
+    @media (max-width:600px) {
+        width: 70dvw;
+        height: 300px;
+    }
+    @media (max-width:400px) {
+        width: 80dvw;
+        height: 300px;
+    }
+}
+
+.actions .button{
+    border-radius: 18px;
+    display: flex; align-items: center;
+    padding: 6px; padding-right: 10px;
+    cursor: pointer;
+    color: inherit;
+
+    &:hover{
+        box-shadow: 0 0 10px -5px black;
+    }
+    >:nth-child(2) {
+        gap:10px;
+    }
+
+    &.light{
+        background-color: rgb(241, 241, 255);
+    }
+    &.dark{
+        background-color: rgba(89, 69, 180, 0.1);
+    }
+
+    @media (max-width:900px) {
+        font-size: 0.9rem;
+        >:nth-child(2) {
+            gap:5px;
+        }
+    }
+}
+
+.new-button{
+    height: 100px;
+}

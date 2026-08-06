@@ -1,0 +1,104 @@
+.page {
+    display: flex;
+    
+    height: 100dvh;
+    
+    &.light{
+        background-color: rgb(182, 166, 241);
+        color: balck;
+    }
+    &.dark{
+        background-color: rgb(42, 41, 71);
+        color: white;
+    }
+}
+
+.children{
+    margin: 2%; flex-grow: 1;
+    border-radius: 10px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.section{
+    padding: 10px;
+    width: 40%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    
+    input{
+        padding: 0 10px;
+        border-radius: 10px;
+        height: 30px;
+        outline: none; border: none;
+    }
+    input[type='file']{
+        padding: 0 10px;
+        border-radius: 0px;
+        width: clamp(100px,40%, 150px);
+        height: 30px;
+        outline: none; border: none;
+    }
+    
+    &.light{
+        background-color: rgb(144, 126, 209);
+        textarea, input{
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    }
+    &.dark{
+        background-color: rgb(61, 54, 99);
+        textarea, input{
+            color: rgb(255, 255, 255);
+            background-color: rgba(255, 255, 255, 0.301);
+        }
+    }
+}
+
+.module-section{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    
+    textarea{
+        overflow: hidden;
+        border-radius: 10px;
+        resize: none;
+        outline: none;
+        padding: 10px;
+    }
+}
+
+.types{
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+.output{
+    display: flex; flex-direction: column;
+    flex-grow: 1;
+    background-color: rgba(59, 42, 20, 0.26);
+    
+    /* >h1,h2{
+        margin-top: 20px;
+    } */
+    
+}
+.output>h1{
+    margin: 0 0 10px 0;
+}
+.output>p{
+    white-space: normal;
+    overflow-wrap: break-word;
+
+    margin-bottom: 15px;
+}
+.output>ul{
+    list-style: circle;
+    padding-left: 30px;
+}

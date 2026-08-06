@@ -1,0 +1,116 @@
+.search-bar-section{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    flex-direction: row-reverse;
+    background-color: rgba(255, 255, 255, 0);
+    align-self: center;
+
+    &.center{
+        width: 50%;
+    }
+    @media (max-width: 700px) {
+        &.center{
+            width: 80%;
+        }
+    }
+    @media (max-width: 400px) {
+        &.center{
+            width: 100%;
+        }
+    }
+
+    transition: all 0.3s ease;
+}
+.search-bar{
+    position: relative;
+    flex: 1 1 0px;
+    /* flex-grow: 1; flex-shrink: 1;
+    flex-basis: 10px; */
+    min-width: 0;
+    display: flex;
+    height: 40px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    box-shadow: 0 0 8px -5px rgba(0, 0, 0, 0.5);
+    
+    &.hide{
+        width: 0px;
+        padding: 0;
+        flex-grow: 0;
+    }
+    input[type = text] {
+        flex: 1 1;
+        color: inherit;
+        padding: 0;
+        min-width: 0px;
+        outline: none;
+        background-color: transparent;
+        border: none;
+        font-size: 0.9rem;
+    }
+
+    transition: all 0.3s ease;
+}
+
+.search-bar >.suggestions {
+    position: absolute;
+    right: 0; left: 0; top: calc(100% + 10px);
+
+    display: flex; flex-direction: column;
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+    overflow: hidden;
+    
+    >.suggestion-item{
+        overflow: hidden;
+        border-radius: 10px;
+        box-sizing: border-box;
+        padding: 10px 20px;
+        cursor: pointer;
+        /* height: 40px; */
+    }
+
+    transition: all 0.3s ease;
+}
+.filters {
+    /* padding: 0 5%;
+    mask-image: linear-gradient(90deg, transparent , white 5%, white 95%, transparent); */
+    flex-grow: 1;
+    width: 100%;
+    /* min-width: 90%; */
+    display: flex;
+    opacity: 1;
+    
+    flex-wrap: wrap;
+    /* max-height: 50px; */
+    align-items: center;
+    box-sizing: border-box;
+
+    /* overflow-y: auto; */
+    overflow-x: hidden;
+
+    min-height: 0;
+    margin-bottom: 10px;
+    /* height: 40px; */
+    gap: 7px;
+    &.hide{
+        height: 0px; opacity: 0;
+    }
+    transition: all 0.3s ease, opacity 0.17s ease 0.2s;
+}
+
+.content-container{
+    
+    display: flex; flex-direction: column;
+    min-height: 300px;
+    background-color: rgba(220, 221, 252, 0.075);
+    margin-top: 16px;
+    &.hide{
+        min-height: 0px;
+        height: 0; 
+    }
+    overflow-y: auto;
+    transition: all 0.3s ease; 
+}

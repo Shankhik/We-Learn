@@ -1,0 +1,11 @@
+.anchor{
+    &:hover{
+        
+        &.light{
+            color: rgb(82, 65, 230);
+        }
+        &.dark{
+            color: rgb(168, 170, 255);
+        }
+    }
+}

@@ -1,16 +1,19 @@
-import { header } from "@/lib/headers";
-import { findUsers } from "@/mongoDB/users";
-import { status } from "@/types/statusType";
+import { serverLog } from "@/lib/colorText2";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest): Promise<NextResponse<status>>{
-    const origin = req.headers.get('origin');
-    //const host = req.headers.get('host');
-    const status = await findUsers();
-    //console.log('origin: '+ origin);
-    //console.log('host: '+ host);
-    return NextResponse.json(status,{
-        status: 200,
-        headers: header(origin)
-    })
+export async function GET(req: NextRequest): Promise<NextResponse<Status>>{
+    // console.log("Request cookies:",req.cookies)
+    //const e = req.headers.entries().map((v)=>)
+    serverLog("message","check",{symbolColor: undefined},`Server is running fine`)
+    const response = NextResponse.json({
+        status: true,
+        message: "We-Learn Api is running",
+        data: {
+            cookies: req.cookies.toString() ?? null,
+            auth: req.headers.get("authorization")
+        }
+    },{
+        status: 200
+    });
+    return response;
 }

@@ -14,7 +14,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -24,7 +24,10 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ]
+      ],
+      // "@emails/*": [
+      //   "./emails/*"
+      // ]
     },
     "target": "ES2017"
   },
@@ -33,6 +36,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

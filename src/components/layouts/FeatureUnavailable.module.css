@@ -1,0 +1,39 @@
+.page{
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+
+    &.light{
+        background: linear-gradient(30deg, rgb(174, 175, 255), rgb(138, 212, 181));
+    }
+    &.dark{
+        background: linear-gradient(30deg, rgb(36, 24, 87), rgb(33, 126, 90));
+    }
+}
+
+.waiting-animation{
+    width: 20%;
+    margin: 20vh auto 30px auto;
+    @media (max-width: 800px) {
+        width: 30vh;
+    }
+}
+
+.unavailable-text{
+    font-size: 2.3rem;
+    text-align: center;
+    &.light{
+        color: #3a3f77;
+    }
+    &.dark{
+        color: #c2ecff;
+    }
+
+    @media (max-width: 600px) {
+        margin: 0 15%;
+        font-size: 1.7rem;
+    }
+    @media (max-width: 400px) {
+        font-size: 1.5rem;
+    }
+}

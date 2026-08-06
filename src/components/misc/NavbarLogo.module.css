@@ -1,0 +1,22 @@
+.logo{
+    width: 100px; height: fit-content;
+    padding: 9px 14px 9px 6px;
+    backdrop-filter: blur(8px);
+    border-radius: 50px;
+    &.light{
+        /* background: linear-gradient(120deg, rgba(255, 255, 255, 0.1), rgb(243, 238, 255)); */
+        background-color: rgba(219, 216, 236, 0.5);
+    }
+    &.dark{
+        /* background: linear-gradient(120deg, rgba(88, 88, 88, 0.205), rgb(36, 39, 78)); */
+        background-color: rgba(13, 12, 19, 0.5);
+    }
+
+    transition: all 0.2s ease;
+    @media (max-width: 900px) {
+        width: 80px;
+    }
+    @media (max-width: 400px) {
+        width: 70px;
+    }
+}

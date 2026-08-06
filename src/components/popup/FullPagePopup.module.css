@@ -1,0 +1,61 @@
+.pop-up{
+    position: fixed;
+    opacity: 0;
+    /* place-items: center; */
+    top: 0; left: 0; right: 0; bottom: 0;
+
+    backdrop-filter: blur(20px);
+    transition: all 0.2s ease;
+
+    &.show{
+        display: grid;
+        animation: fade-in 0.2s ease forwards;
+    }
+    &.hide{
+        opacity: 0;
+        display: none;
+        /* animation: fade-out 0.2s ease forwards; */
+    }
+
+    &.light{
+        background-color: rgba(240, 248, 255, 0.2);
+    }
+    &.dark{
+        background-color: rgba(21, 34, 37, 0.2);
+    }
+}
+.main{
+    margin: auto auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 40px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    
+    @media (max-width:600px) {
+        padding: 20px;
+    }
+}
+@keyframes fade-in {
+    0%{
+        display: flex;
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@keyframes fade-out {
+    0%{
+        transition: all 0s ease;
+        opacity: 1;
+    }
+    2%{
+
+    }
+    100%{
+        opacity: 0;
+        display: none;
+    }
+}

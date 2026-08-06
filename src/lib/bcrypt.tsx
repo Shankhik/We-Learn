@@ -1,9 +1,8 @@
 import { compare, hash } from "bcrypt-ts";
-import { status } from "@/types/statusType";
 
 const saltRound = 11;
 
-export const bcryptHash = async ( text : string ) : Promise<status> => {
+export const bcryptHash = async ( text : string ) : Promise<Status> => {
     try {
         const hashed = await hash (text, saltRound);
         return {
@@ -20,7 +19,7 @@ export const bcryptHash = async ( text : string ) : Promise<status> => {
     
     
 }
-export const bcryptCompare = async (text: string, hashed: string ) : Promise<status> =>{
+export const bcryptCompare = async (text: string, hashed: string ) : Promise<Status> =>{
     try{
         const check = await compare (text, hashed);
         if (check){

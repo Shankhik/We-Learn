@@ -1,9 +1,14 @@
-import { status } from "@/types/statusType";
 import { existsSync, writeFileSync } from "fs";
 
-export interface ParseResponse extends status{
+type TypeOfBuffer = {
+    [key : string]: string | {
+        filename: string;
+        buffer: Buffer;
+    }
+}
+export interface ParseResponse extends Status{
     fileName?: string|null;
-    formData?: object;
+    formData?: TypeOfBuffer;
     filePath?: string|null;
 }
 export const getFormData = async (req: Request):Promise<ParseResponse>=>{

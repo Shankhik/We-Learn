@@ -1,0 +1,28 @@
+.details-block{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    width: clamp(280px, 90%, 400px);
+    border: 1px solid rgba(83, 83, 83, 0.404);
+    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.11);
+    
+}
+
+.details-block>svg{
+    opacity: 0;
+    animation: fade-in 3s forwards ease;
+}
+
+@keyframes fade-in {
+    0%{
+        opacity: 0;
+    }
+    50%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}

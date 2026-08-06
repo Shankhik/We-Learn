@@ -1,0 +1,30 @@
+.module-name {
+    min-width: 30%;
+    width: clamp(200px, auto, 500px);
+
+    margin-bottom: 16px;
+    padding: 10px 25px;
+    border-radius: 20px;
+
+    align-self: center;
+    text-align: center;
+
+    
+    color: rgba(255, 255, 255, 0.8);
+    
+    &.light{
+        background: linear-gradient(45deg, rgb(185, 94, 52), rgb(216, 184, 5));
+    }
+    &.dark{
+        
+        background: linear-gradient(45deg, rgb(24, 89, 94), rgb(39, 184, 112));
+    }
+
+    transition: all 0.2s ease;
+    
+    @media (max-width: 400px) {
+        padding: 8px 16px;
+        width: 87%;
+    }
+    
+}

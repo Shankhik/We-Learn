@@ -1,0 +1,29 @@
+.list{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.list .email-name{
+    cursor: pointer;
+    user-select: none;
+    padding: 5px 15px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+
+}
+
+.preview-container{
+    height: min(70vh, 600px);
+}
+
+.hide-scrollbar{
+    overflow: auto;
+    scrollbar-width: none;
+    /* ::-webkit-scrollbar{
+        display: none;
+    } */
+}
+.hide-scrollbar::-webkit-scrollbar{
+    display: none;
+}

@@ -1,30 +1,32 @@
-import { header } from "@/lib/headers";
-import { signToken, tokenType } from "@/lib/jwt";
-import { status } from "@/types/statusType";
+import { signToken } from "@/lib/jwt";
+import { ApiError } from "@/lib/serverUtils/apiError";
 import { NextRequest, NextResponse } from "next/server";
 
-export const POST = async (req: NextRequest):Promise<NextResponse<status>> => {
+import { AuthToken } from "@/types/tokenType";
+
+export const POST = async (req: NextRequest):Promise<NextResponse<Status>> => {
     const reqData = (await req.json()) as {
-        payload: tokenType|object;
+        payload: AuthToken;
         expireTime: number
     }
-    const token = signToken(reqData.payload).token
+    const token = (await signToken(reqData.payload, reqData.expireTime)).token
 
-    if(!token) throw new Error ("Couldn't sign the payload!");
+    if(!token) throw new ApiError ("Couldn't sign the payload!",{
+        httpCode: 500
+    });
 
     try {
         return NextResponse.json({
             status: true,
             message: 'Signed the Payload',
             token: token
-        },{
-            status: 200, headers: header(req.headers.get('origin'))
         })
     } catch (error:any) {
         return NextResponse.json({
             status: false, error: error.message
         },{
-            status: 500, headers: header(req.headers.get('origin'))
+            status: error.httpCode || 500,
+            // headers: header(req.headers.get('origin'))
         })
     }
 }

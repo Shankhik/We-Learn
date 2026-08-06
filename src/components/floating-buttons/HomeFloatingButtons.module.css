@@ -1,0 +1,91 @@
+.floating{
+
+    display: flex;
+    gap: 5px;
+
+    padding: 5px;
+    box-sizing: border-box;
+
+    margin: auto auto;
+    position: sticky;
+
+    /* These 2 must be the same */
+    margin-bottom: 3vh; bottom: 3vh;
+    
+    width: 75%;
+    max-width: 200px;
+
+    backdrop-filter: blur(20px);
+    border-radius: 15px;
+
+    /* view-transition-name: home-floating-buttons; */
+    @media (max-width: 1000px) {
+        width: 85%;
+        margin-bottom: 2vh;
+        bottom: 2vh;
+    }
+    @media (max-width: 400px) {
+        width: 92%;
+        max-width: 400px;
+    }
+}
+
+.floating .tab{
+    flex: 1 1 70px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center; justify-content: center;
+
+    /* background: radial-gradient(circle, rgba(38, 0, 255, 0.445) 10%, rgba(255, 255, 255, 0) 50%); */
+    user-select: none;
+    border-radius: 10px;
+
+    position: relative;
+    >.title{
+        font-weight: 500;
+        font-size: 0.8rem;
+    }
+    >.hint{
+        opacity: 0;
+        pointer-events: none;
+
+        width: auto;
+        /* max-width: 100%; */
+        height: auto;
+        padding: 4px 10px;
+        box-sizing: border-box;
+        font-size: 0.85rem;
+
+        position: absolute;
+        bottom: 120%; left: 50%;
+        translate: -50% 50%;
+        scale: 0.6;
+
+        text-align: center;
+        border-radius: 10px;
+
+        transition: all 0.3s ease;
+    }
+
+    @media (hover: hover) {
+        padding: 10px;
+        >.title{
+            display: none;
+        }
+        &:hover {
+            >.hint{
+                opacity: 1;
+                translate: -50% 0%;
+                scale: 1;
+            }
+        }
+    }
+    @media (hover: none) {
+        padding: 7px 3px 3px 3px;
+        >.title{
+            display: block;
+        }
+        
+    }
+}

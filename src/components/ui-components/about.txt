@@ -1,0 +1,4 @@
+This folder is for small UI components to be used by other
+full fledged components.
+
+* Add only small components

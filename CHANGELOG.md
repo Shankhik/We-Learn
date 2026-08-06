@@ -1,4 +1,17 @@
 # Change Log
+<!-- Add New Version above -->
+## Version: 1.0.0 [March 31st, 2025]
+### User Interface
+Has done a total rework on the user interface giving a fresh and modern look. Here are some major changes made in this update:
+- Removed ***Accent-Color*** customization.
+- Replaced ***sidebars*** with floating button.
+- Added new UI components and improved some.
+- Significantly reduced ***UI lags & flickers***.
+- Significantly improved ***UI component's*** dimension consistencies and loading latencies.
+
+### Security
+- Added and improved some frontend routes security.
+- Improved API routes security.
 
 <!-- Add New Version above -->
 ## Version: 0.3.5 [June 30th, 2025]

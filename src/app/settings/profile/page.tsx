@@ -1,839 +1,486 @@
-'use client';
+"use client";
 
-import './style.css'
-import { colorScheme, useColorContext } from "@/context/colorScheme";
-import { useUserDetailsContext } from "@/context/userDetailsContext";
-import ApiLinks from "@/lib/apiLinks";
-import { post } from "@/lib/fetchReq";
-import React, {
-    ChangeEvent,CSSProperties,Dispatch,JSX,
-    SetStateAction,useEffect,useRef,useState
-} from "react";
-import Image from "next/image";
-import {getCookie} from "@/lib/cookies";
-import {status} from "@/types/statusType";
+import { ProfileActionsIcon, UserIcon } from "@/components/icons/Icons";
+import globalStyle from "../global.module.css"
+import { useColorContext } from "@/context/colorScheme";
+import ModuleClassname from "@/lib/cssUtil";
+import NextImage from "next/image";
 
-export default function Profile() {
-    const {username, displayName, email, profilePicture, updateUserDetails} = useUserDetailsContext()
-    const {accentColor, effectiveTheme} = useColorContext();
-    const [pageWidth,setPageWidth] = useState<number>(0);
+import { useAuthContext } from "@/context/authContext";
+import HideIf from "@/components/HideIf";
+import FullPagePopUp from "@/components/popup/FullPagePopup";
+import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
+import { CroppingContainer } from "./ProfileComponents";
+import { FullPagePrompt, Hr, PromptHeading, PromptParagraph, SettingsField } from '../Components'
+import { appfetch } from "@/lib/fetchReq";
+import { ReqDataType } from "@/lib/apiReqDataType";
+import Button from "@/components/buttons/NewButton";
+import UserProfilePicture from "@/components/misc/UserProfilePicture";
 
-    const [pageDisplayName, setPageDisplayName] = useState(displayName)
-    const [showPicActions, setShowPicActions] = useState<boolean>(false);
-    const [showFileSelector, setShowFileSelector] = useState<boolean>(false);
+/* Types */
 
-    const picLink = `https://res.cloudinary.com/${ process.env.NEXT_PUBLIC_CLD_NAME }/image/upload/c_fill,ar_1:1/v${profilePicture}/WeLearn/profile-picture/${username}`
-    // Update the display name if not rendered at first
-    useEffect(()=>{setPageDisplayName(displayName)},[displayName])
+// Image Details [ for selected image/file ]
+type ImageDetails = {
+    width: null|number;
+    height: null|number;
+    file: null|File;
+    url: null|string;
+}
 
-    // Screen Width event-list.
-    useEffect(()=>{
-        const updateWidth = ()=>{
-            setPageWidth(window.innerWidth)
-        }
-
-        updateWidth();
-
-        window.addEventListener("resize", updateWidth);
-        return () => {
-            window.removeEventListener("resize", updateWidth);
-        }
-    },[])
-
-    //Page Elements
-    const elements = {
-        displayName : useRef<HTMLInputElement|null>(null),
-        file: useRef<HTMLInputElement|null>(null)
+// File Selection Popup/Prompt Props
+type FileSelectPopupProps= {
+    show: boolean, toggleShow: Dispatch<SetStateAction<boolean>>,
+    // For Image Details
+    imageDetails: ImageDetails, setImageDetails: Dispatch<SetStateAction<ImageDetails>>,
+    // Upload Image function
+    addImageOnClick: ()=> Promise<any>
+    // References
+    ref: {
+        imageContainerRef : RefObject<HTMLDivElement|null>;
+        cropBoxRef : RefObject<HTMLDivElement|null>;
     }
+}
+
+// For getting element's colors
+const getColor = (index: number, effectiveTheme: 'light'|'dark')=>{
+    const colors = [
+        // For User Icon
+        {light: 'rgba(238, 236, 255, 1)', dark: 'rgba(197, 198, 255, 1)'},
+        // For File Select
+        {light: 'rgba(205, 210, 255, 0.7)', dark: 'rgba(35, 35, 59, 0.7)'},
+    ]
+    if(index>=colors.length) return;
+    return colors[index][effectiveTheme]
+}
+
+// Main Component [ Page ]
+export default function PageClient () {
+    const {updateAuth, username, displayName, email} = useAuthContext();
+
+    // -> Popup toggles
+    const [showFileSelect, setShowFileSelect] = useState<boolean>(false);
+    const [showDeletePrompt, setShowDeletePrompt] = useState<boolean>(false);
     
-    const colors = {
-        red: ['rgb(255, 202, 202)','rgb(236, 148, 148)','rgb(241, 132, 132)'],
-        green: ['rgb(177, 235, 171)','rgb(131, 194, 124)','rgb(115, 180, 108)'],
-        blue: ['rgb(183, 217, 248)','rgb(125, 172, 216)', 'rgb(108, 157, 202)']
-    }
+    // -> File Upload Pop-up > Crop Overlay Refs
+    const imageContainerRef = useRef<HTMLDivElement>(null);
+    const cropBoxRef = useRef<HTMLDivElement>(null);
 
-    //For fields blur and hover effect
-    const fieldsHandler = {
-        onFocus: (e: React.FocusEvent)=>{
-            const element = e.target as HTMLInputElement
-            let color = effectiveTheme==='light'?colors[accentColor][1]:'rgba(255, 255, 255, 0.41)'
-            element.style.boxShadow = `0px 0px 0px 2px ${color}`
-        },
-        onBlur: (e: React.FocusEvent)=>{
-            const element = e.target as HTMLInputElement
-            element.style.boxShadow = `none`
-        },
-    }
+    // -> File Upload Pop-up > Image Details [null => no image selected]
+    const [imageDetails, setImageDetails] = useState<ImageDetails>({
+        file: null, width: null, height: null, url: null
+    })
 
-    // Button actions
-    const onClick = {
-        displayName:{
-            saveChanges: async ()=>{
-                const name = elements.displayName.current
-            
-                if(!name) return
-
-                const res = await post(ApiLinks.updateUserDetails.this,{
-                    username: username,
-                    fields: {
-                        displayName: pageDisplayName
-                    }
-                })
-
-                if(!res.status) return
-                updateUserDetails();
-            }
+    // Upload image onClick
+    const addImageOnClick = async() =>{
+        // -> Return if No file is found
+        if(!imageDetails.file || !imageDetails.width || !imageDetails.height) {
+            alert("Couldn't handle the file!"); return;
         }
-    }
-
-    // Field styles
-    const styles:{ [keys in any]: CSSProperties} ={
-        editableField :{
-            backgroundColor: effectiveTheme==='light'? colors[accentColor][0]:'rgba(255, 255, 255, 0.14)',
-            color: effectiveTheme==='light'? 'rgba(0, 0, 0, 0.7)':'rgb(255, 255, 255)'
-        },
-        disabledFields: {
-            backgroundColor: effectiveTheme==='light'?'rgba(0, 0, 0, 0.1)': 'rgba(255, 255, 255, 0.14)',
-            color: effectiveTheme==='light'? 'rgba(0, 0, 0, 0.4)':'rgba(255, 255, 255, 0.4)'
-        }
-    }
-
-    const removeOnClick = async ()=>{
-        let res: Response|status;
         
-        try{
-            res = await fetch("/api/upload/del-profile-picture",{
-                method: "GET",
-            })
-            res = (await res.json()) as status;
-        }catch(e:any){
-            console.error(e);
-            return;
-        }
-
-        if(res.status){
-            updateUserDetails();
-        }
-    }
-    return(
-        <>
-            <FileChoseOption show={showFileSelector} setShow={setShowFileSelector} />
-            <div className="settings-content-pages">
-
-                <div className="display-picture"
-                     style={{
-                         backgroundColor: effectiveTheme==='light'? colors[accentColor][0]:'rgba(255, 255, 255, 0.2)',
-                         border:`${pageWidth<=400?10:20}px solid ${effectiveTheme==='light'?colors[accentColor][2]:colors[accentColor][1]}`
-                     }}
-                     onMouseEnter={()=>{setShowPicActions(true)}}
-                     onMouseLeave={()=>{setShowPicActions(false)}}
-                >
-                    <svg width={700} height={700} viewBox="0 0 700 700">
-                        <g
-                            style={{
-                                display: "inline",
-                                fill: "#fff",
-                                fillOpacity: 1,
-                            }}
-                            transform="matrix(1.37944 0 0 1.37944 -132.88 -138.959)"
-                        >
-                            <path
-                                d="M144.877 485.9A246.916 246.916 0 0 0 350 596.916a246.916 246.916 0 0 0 205.639-111.754A245.967 264.01 0 0 0 350 365.99 245.967 264.01 0 0 0 144.877 485.9Z"
-                                style={{
-                                    fill: "#fff",
-                                    fillOpacity: 0.998148,
-                                    strokeWidth: 0,
-                                    strokeLinecap: "round",
-                                    strokeLinejoin: "round",
-                                    paintOrder: "markers fill stroke",
-                                }}
-                            />
-                            <circle
-                                cx={350}
-                                cy={238}
-                                r={93.068}
-                                style={{
-                                    fill: "#fff",
-                                    fillOpacity: 0.998148,
-                                    stroke: "none",
-                                    strokeWidth: 0,
-                                    strokeLinecap: "round",
-                                    strokeLinejoin: "round",
-                                    strokeDasharray: "none",
-                                    strokeOpacity: 1,
-                                    paintOrder: "markers fill stroke",
-                                }}
-                            />
-                        </g>
-                    </svg>
-                    {
-                    !profilePicture? null :
-                    <Image src={picLink} alt={'profile-picture'}
-                        width={400} height={400}
-                        style={{
-                            width: '107%',
-                            height:'auto'
-                        }}
-                    />
-                    }
-                    
-                    
-                    <ActionsOverlay
-                        show={showPicActions}
-                        pictureAvailable={!!profilePicture}
-                        setShowSelector={setShowFileSelector}
-                        removeOnCLick={removeOnClick}
-                    />
-                </div>
-
-                <div className="field">
-
-                    <label>Display Name</label>
-                    <div>
-                        <input type="text" value={pageDisplayName||''}
-                               ref={elements.displayName}
-                               style={styles.editableField}
-                               onFocus={fieldsHandler.onFocus}
-                               onBlur={fieldsHandler.onBlur}
-                               onChange={(e:ChangeEvent<HTMLInputElement>)=>{
-                                   setPageDisplayName(e.target.value)
-                               }}
-                        />
-                        <button hidden={pageDisplayName===displayName}
-                                style={{
-                                    backgroundColor: colorScheme.sidebar[accentColor].active[effectiveTheme]
-                                }}
-                                onClick={onClick.displayName.saveChanges}
-                        >Save Changes</button>
-                    </div>
-
-                </div>
-                <div className="field">
-                    <label>Username</label>
-                    <div>
-                        <input type="text" value={username||''} disabled style={styles.disabledFields}/>
-                    </div>
-                </div>
-                <div className="field">
-                    <label>Email</label>
-                    <div>
-                        <input type="text" value={email||''} disabled style={styles.disabledFields}/>
-                    </div>
-                </div>
-            </div>
-        </>
-
-    )
-}
-const delay =(time:number)=> new Promise(resolve => setTimeout(resolve, time))
-
-const  ActionsOverlay = ({show ,pictureAvailable, setShowSelector, removeOnCLick}:{
-    show: boolean;
-    pictureAvailable: boolean;
-    setShowSelector: Dispatch<SetStateAction<boolean>>;
-    removeOnCLick: ()=> void
-})=>{
-    const mainElement = useRef<HTMLDivElement>(null)
-
-    //For handling the hover on/off effect
-    useEffect(() => {
-        const handle = async ()=>{
-            const main = mainElement.current
-            if(!main) return;
-
-            if(show){
-                main.style.display="flex";
-                await delay(20)
-                main.style.opacity='1';
-            }else{
-                main.style.opacity='0';
-                await delay(200);
-                main.style.display="none";
-            }
-        }
-        handle().then(r => null).catch(e=> null)
-    }, [show]);
-
-    return(
-        <div ref={mainElement} style={{
-            position:'absolute', left:'50%',top:'50%', borderRadius:'50%',
-            width:'100%',height:'100%', translate:'-50% -50%',
-            display:'flex', opacity:0, justifyContent:'center',
-            alignItems:'center', gap:'5px', transition: 'opacity 0.2s ease',
-            backdropFilter:'blur(20px)', background:'rgba(0,0,0,0.4)'
-        }} className='actions'/* Picture Controls */>
-            <ActionBtn type={"Add"} pictureAvailable={pictureAvailable} onCLick={()=> setShowSelector(true)}/>
-            <ActionBtn type={'Update'} pictureAvailable={pictureAvailable} onCLick={()=> setShowSelector(true)}/>
-            <ActionBtn type={'Remove'} pictureAvailable={pictureAvailable} onCLick={removeOnCLick}/>
-        </div>
-    )
-}
-const ActionBtn = ({width,type,pictureAvailable,onCLick}:{
-    width?: number,
-    type:'Add'|'Remove'|'Update',
-    pictureAvailable: boolean,
-    onCLick: ()=>void
-}) =>{
-    const mainElement = useRef<HTMLDivElement>(null)
-    const hoverEffect = (mode: 'on'|'off') => {
-        const main = mainElement.current
-        if(!main) return;
-
-        if(mode === 'on'){
-            main.style.backgroundColor='rgba(255,255,255,0.1)';
-        }else{
-            main.style.backgroundColor='';
-        }
-    }
-    const variableIcon = {
-        add: (
-            <path
-                d="M35.66 25H14.34M25 14.34v21.32M44.943 25A19.943 19.943 0 0 1 25 44.943 19.943 19.943 0 0 1 5.057 25 19.943 19.943 0 0 1 25 5.057 19.943 19.943 0 0 1 44.943 25Z"
-                style={{
-                    display: "inline",
-                    fill: "none",
-                    fillOpacity: 1,
-                    strokeWidth: 6,
-                    strokeLinecap: "round",
-                    strokeLinejoin: "round",
-                    strokeDasharray: "none",
-                    paintOrder: "markers fill stroke",
-                }}
-            />
-        ),
-        remove: (
-            <path
-                d="M32.538 32.538 17.462 17.462m15.076 0L17.462 32.538M44.943 25A19.943 19.943 0 0 1 25 44.943 19.943 19.943 0 0 1 5.057 25 19.943 19.943 0 0 1 25 5.057 19.943 19.943 0 0 1 44.943 25Z"
-                style={{
-                    display: "inline",
-                    fill: "none",
-                    fillOpacity: 1,
-                    strokeWidth: 6,
-                    strokeLinecap: "round",
-                    strokeLinejoin: "round",
-                    strokeDasharray: "none",
-                    paintOrder: "markers fill stroke",
-                }}
-            />
-        ),
-        update: (
-            <path
-                d="M18.2 32.13s4.85-4.34 5.677-4.591c.754-.23 1.534-.297 2.365 0 .83.296 5.557 4.592 5.557 4.592M13.5 25s6.293-5.632 8.585-6.594c2.29-.961 3.391-1.002 5.712 0C30.117 19.41 36.5 25 36.5 25m8.443 0A19.943 19.943 0 0 1 25 44.943 19.943 19.943 0 0 1 5.057 25 19.943 19.943 0 0 1 25 5.057 19.943 19.943 0 0 1 44.943 25Z"
-                style={{
-                    fill: "none",
-                    fillOpacity: 1,
-                    strokeWidth: 5,
-                    strokeLinecap: "round",
-                    strokeLinejoin: "round",
-                    strokeDasharray: "none",
-                    paintOrder: "markers fill stroke",
-                }}
-            />
-        )
-    }
-
-    const main = (
-        <div style={{
-            width: window.innerWidth<=710? '35%':'25%',
-            padding:'10px 0px',
-            display: 'flex',flexDirection: 'column',
-            borderRadius:'15px',
-            cursor:'default',
-        }}  onMouseEnter={()=>{hoverEffect('on')}}
-            onMouseLeave={()=>{hoverEffect('off')}}
-            onClick={onCLick}
-            ref={mainElement}
-        >
-            <svg width={width||30} height={width||30} viewBox='0 0 50 50'
-                 style={{
-                     width:`${width||30}px`,
-                     stroke: type==='Add'?'#86e071':type==='Update'? '#71b2e8':'#e77474',
-                 }}
-            >
-                <g
-                    style={{
-                        display: "block",
-                    }}
-                >
-                    {variableIcon[type.charAt(0).toLowerCase()+ type.slice(1) as 'add'|'remove'|'update']}
-                </g>
-            </svg>
-            <h5 style={{color:'rgb(255,255,255)',marginTop:'7px',textAlign:'center'}}>{type}</h5>
-        </div>
-    )
-    return pictureAvailable? type==='Add'? null:main : type==='Add'? main:null
-}
-
-type CropDimensions = {
-    top: number; left: number; width: number; height: number;
-}
-const FileChoseOption = ({show,setShow}:{
-    show:boolean,
-    setShow: Dispatch<SetStateAction<boolean>>,
-}):JSX.Element|null=>{
-    const {updateUserDetails} = useUserDetailsContext()
-    const {effectiveTheme} = useColorContext();
-    const [isWorking, setIsWorking] = useState<boolean>(false);
-    const [popupText, setPopupText] = useState<'Updating ...'|"Couldn't Upload"|"Changes Saved">("Updating ...");
-    const main = useRef<HTMLDivElement>(null)
-    const dialog = useRef<HTMLDivElement>(null)
-    const hiddenFileSelector = useRef<HTMLInputElement>(null);
-    const [cropDimensions, setCropDimensions] = useState<CropDimensions|null>(null);
-
-    const [img, setImg] = useState<{
-        image: File, url: string, style: 'square'|'portrait'|'landscape',
-        width: number, height: number
-    }|null>(null);
-
-    // Uploading Function
-    const setImage = async ()=>{
-        //const authCookie = getCookie('authToken').cookie;
-        if(img === null || cropDimensions === null) return;
+        const dimensions = updateCropDimension(imageDetails, imageContainerRef, cropBoxRef);
+        if(!dimensions) { alert("Couldn't crop the image!"); return;}
 
         const data = new FormData();
-        data.append('file',img.image)
-        data.append('top', cropDimensions.top.toString()||'0')
-        data.append('left', cropDimensions.left.toString()||'0')
-        data.append('width', cropDimensions.width.toString()|| img.width.toString())
-        data.append('height', cropDimensions.height.toString()|| img.height.toString())
+        data.append('file',imageDetails.file);
+        data.append('top', dimensions.top.toString()||'0')
+        data.append('left', dimensions.left.toString()||'0')
+        data.append('width', dimensions.width.toString()|| imageDetails.width.toString())
+        data.append('height', dimensions.height.toString()|| imageDetails.height.toString())
 
         try{
-            setPopupText('Updating ...')
-            setIsWorking(true);
-            let response:Response|status = await fetch('/api/upload/add-profile-picture',{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-                body: data,
-            })
-            response = (await response.json()) as status;
-            
+            let response = await appfetch<
+                Status,
+                ReqDataType['upload']['add-profile-picture']
+            >('/api/upload/add-profile-picture',data)
 
-            if(response.status){
-                updateUserDetails();
-                setPopupText("Changes Saved");
-                await delay(1000);
-                setIsWorking(false);
-                setShow(false);
-                setImg(null);
-            }else{
-                setPopupText("Couldn't Upload");
-                await delay(1000);
-                setIsWorking(false);
+            if(!response || !response.status){
+                alert("Couldn't upload file!")
+                return;
             }
+            
+            // Updates Auth + cache
+            updateAuth({force: true});
+            // Closes File Sectect Pop-up
+            setShowFileSelect(false);
+            // Resets Image Details to {null, null, null, null}
+            resetImageDetails(imageDetails, setImageDetails);
         } catch (e:any) {
             console.log(e.message)
         }
     }
 
-    const handleFileChange = () => {
-        const file = hiddenFileSelector.current
-
-        const reader = new FileReader();
-        if(!file) return; if(file.files===null) return;
-        reader.onload= (event) => {
-            const image = new window.Image()
-            let imageStyle : 'square'|'portrait'|'landscape'|null = null;
-            let imageWidth : number|null = null;
-            let imageHeight : number|null = null;
-
-            image.src = event.target?.result as string;
-
-            image.onload = () => {
-                imageStyle = (
-                    image.width>image.height? 'landscape':
-                        image.width === image.height? 'square':'portrait'
-                )
-                imageWidth = image.width; imageHeight = image.height;
-
-                if(file.files === null) return;
-                setImg({
-                    image: file.files[0],
-                    url: URL.createObjectURL(file.files[0]),
-                    style: imageStyle ||'square',
-                    width: imageWidth, height: imageHeight
-                })
-            }
-
-        }
-        if(file.files[0]){
-            reader.readAsDataURL(file.files[0])
-        }
-
-    }
-
-    // Outside click handler
-    useEffect(()=>{
-        const handleOutsideClick = (e:globalThis.MouseEvent)=>{
-            if(show && !dialog.current?.contains(e.target as Node)) {
-                setShow(false); setImg(null);
-            }
-        }
-        document.addEventListener('click',handleOutsideClick);
-        return ()=>{
-            document.removeEventListener('click',handleOutsideClick);
-        }
-    },[show, setShow])
-
-    const styleImage:CSSProperties ={
-        height:img?.style==='landscape'?'auto':'100%',
-        width:img?.style==='landscape'?'100%':'auto',
-        maxWidth: window.innerWidth<=400 && (img?.style!=='landscape')?'80dvw':'',
-        borderRadius:'20px', objectFit:'contain'
-    }
-    const styleImageMobile:CSSProperties = {
-        height:img?.style==='landscape'?'auto':'100%',
-        width:img?.style==='landscape'?'100%':'auto',
-        maxWidth:'80dvw',
-        borderRadius:'20px', objectFit:'contain'
-    }
-    const styleImageContainer:CSSProperties = {
-        display:"flex",backgroundColor:'rgba(138, 208, 115, 0.0)',
-        height:'auto',width:'auto',
-        maxHeight:'100%',position:'relative',overflow:'hidden',
-    }
-
-    const styleSelectImage:CSSProperties = {
-        border: 'none', padding:'5px 15px', borderRadius:'15px',
-        backgroundColor:'rgb(104,123,231)', color:'white'
-    }
-
-
-    return !show? null:
-        <div className={'file-chose'} ref={main} /*Full Page Alert*/>
-            <div className='dialog' ref={dialog} style={{
-                backgroundColor: effectiveTheme==='dark'? 'rgb(54,54,54)':'',
-                color:effectiveTheme==='dark'?'rgb(232,232,232)':"",
-            }}
-            >
-                <input // Hidden input field
-                    type={"file"} style={{display:'none'}}
-                    ref={hiddenFileSelector} onChange={handleFileChange}
-                />
-                <h3>Chose File</h3>
-                <div style={{margin:'15px 0px', position:'relative'}}>
-                    {!img?null:
-                        <div style={styleImageContainer}>
-                            <Image
-                                src={img.url} alt={'selected'}
-                                width={200} height={200}
-                                style={styleImage}
-                                className={'profile-image'}
-                            />
-                            <CropOverlay img={{
-                                style: img.style,
-                                width: img.width,
-                                height: img.height,
-                            }} setCropDimensions={setCropDimensions}/>
-                            <h2 style={{
-                                position:'absolute', borderRadius:'15px',
-                                bottom:'10%', left:'50%', fontSize:'1rem',
-                                padding:'10px 15px', backgroundColor:'rgb(104,123,231)',
-                                color:'white', display: isWorking?'block':'none',
-                                transform: 'translateX(-50%)',boxShadow:'1px 1px 10px rgb(0,0,0)',
-                                width:'fit-content'
-                            }}>
-                                {popupText}
-                            </h2>
-                        </div>
-                    }
-                    <button
-                        hidden={img!==null}
-                        onClick={()=> {
-                            if (hiddenFileSelector.current) {
-                                hiddenFileSelector.current.click()
-                            }
-                        }} style={styleSelectImage}
-                    >Select File</button>
-                </div>
-                <div>
-                    <button
-                        onClick={setImage}
-                    >Set</button>
-                    <button onClick={()=>{setImg(null)}}>Remove</button>
-                    <button onClick={()=> {
-                        setImg(null); setShow(false)
-                    }} >Cancel</button>
-                </div>
-            </div>
-
-        </div>
-}
-
-type CropOverlayType = {
-    img: { style: 'landscape' | 'square' | 'portrait', width: number, height: number },
-    setCropDimensions: Dispatch<SetStateAction<CropDimensions|null>>
-}
-const CropOverlay = ({img, setCropDimensions}: CropOverlayType)=>{
-
-    const [size,setSize] = useState(0);
-    const [boxCoordinates,setBoxCoordinates] = useState<number[]>([0,0]);
-
-    const elementMain = useRef<HTMLDivElement>(null);
-    const elementInnerCircle = useRef<HTMLDivElement>(null);
-    const elementReset = useRef<HTMLDivElement>(null);
-
-    // Better "getBoundingClientRect"
-    const getRect = (rect:HTMLDivElement)=>{
-        let box = rect.getBoundingClientRect();
-        return {
-            left: box.left, top: box.top, right: box.right, bottom:box.bottom,
-            width: box.width, height: box.height,
-            centerX: box.x+box.width/2, centerY: box.y+box.height/2
-        }
-    }
-    
-    const getDragDirection = (
-        x:number, startX:number, y:number, startY:number
-    )=>{
-        if (x - startX <= 0 && y - startY <= 0){
-            return 'topLeft'
-        }
-        else if (x - startX >= 0 && y - startY <= 0){
-            return 'topRight'
-        }
-        else if (x - startX >= 0 && y - startY >= 0){
-            return 'bottomRight'
-        }
-        else{
-            return 'bottomLeft'
-        }
-
-    }
-
-    const updateCropDimensions = ()=> {
-        if(elementMain.current){
-            const main = getRect(elementMain.current)
-            const parent = getRect(elementMain.current.parentElement as HTMLDivElement)
-
-            let ratioX = img.width/parent.width
-            let ratioY = img.height/parent.height
-
-            ratioX = Number(ratioX.toFixed(6));
-            ratioY = Number(ratioY.toFixed(6));
-
-            let top = (main.top - parent.top)*ratioY || 0;
-            let left = (main.left - parent.left)*ratioX || 0;
-            let width = main.width * ratioX;
-            let height = main.height * ratioY;
+    // Delete image onClick
+    const deleteImageOnClick = async() =>{
+        let res:Status|undefined;
+                
+        try{
+            // Deleting Cloudinary Image
+            res = await appfetch("/api/upload/del-profile-picture");
             
-            
-            // getting the proper int pixel values
-            top = Math.max(0, Math.round(top))
-            left = Math.max(0, Math.round(left))
-            width = Math.min(img.width, Math.round(width))
-            height = Math.min(img.height, Math.round(height))
-
-            // if the any of the numbers are NaN
-            if(
-                Number.isNaN(top)||Number.isNaN(left)||
-                Number.isNaN(width)||Number.isNaN(height)
-            ){
-                requestAnimationFrame(updateCropDimensions)
+            // if Deletion failed
+            if(!res || !res.status) {
+                alert("Couldnt delete your picture");
                 return;
             }
-            setCropDimensions({top, left, width, height})
-        }
+
+            // Updating Token
+            // let tokenRes = await appfetch<status,ReqDataType['jwt']['update']>("/api/jwt/update",{
+            //     cookieName: 'AUTH_TOKEN',
+            //     token: undefined,
+            //     updateFields: {
+            //         profilePicture: null
+            //     }
+            // })
+            // if(!tokenRes.status) {
+            //     alert("Couldnt modify the token");
+            //     return;
+            // }
+            
+            // Updates Cache
+            updateAuth({force:true});
+            setShowDeletePrompt(false);
+
+        }catch(e:any){
+            console.error(e);
+            return;
+        }        
     }
 
-    // Update the crop dimensions on 1st render
-    useEffect(() => {
-        const main = elementMain.current
-        if(!main) return;
-        
-        updateCropDimensions()
-    },[]);
+    return <>
+    <title>Profile</title>
+    
+    <ProfilePicture
+        toggleFileSelectPopup={setShowFileSelect}
+        toggleDeletePopup={setShowDeletePrompt}
+    />
+    
+    <SettingsField // For Display Name
+        label={"Display name"} type={"text"} showEditButton
+        value={displayName||''} href="profile/update?edit=display-name"
+    />
+    <Hr/>
+    <SettingsField // For Username
+        label={"Username"} type={"text"}
+        value={username||''}
+    />
+    <Hr/>
+    <SettingsField // For Email
+        label={"Email"} type={"email"} showEditButton
+        value={email||''} href="profile/update?edit=email"
+    />
 
-    const resize = (e:React.MouseEvent | React.TouchEvent)=>{
-        if(!('touches' in e)) {
-            e.preventDefault()
-        }
-        if( !elementReset.current || !elementMain.current || !elementInnerCircle.current) return;
+    <FileSelectPopup
+        // show + toggle
+        show={showFileSelect} toggleShow={setShowFileSelect}
+        // upload image onclick
+        addImageOnClick = {addImageOnClick}
+        // image details
+        imageDetails={imageDetails} setImageDetails={setImageDetails}
+        // ref for crop overlay
+        ref={{imageContainerRef, cropBoxRef}}
+    />
+    <DeletePrompt
+        // show + toggle
+        show={showDeletePrompt} toggleShow={setShowDeletePrompt}
+        // delete image onclick
+        onClick={deleteImageOnClick}
+    />
+    </>
+}
 
-        const isTouch = 'touches' in e
-
-        // Gets the rect properties
-        const mainBox = getRect(elementMain.current);
-        const parentBox = getRect(elementMain.current.parentElement as HTMLDivElement);
-
-        // wont resize if u r dragging inner circle
-        if(
-            elementInnerCircle.current.contains(e.target as Node) ||
-            elementReset.current.contains(e.target as Node)
-        ) return;
-
-        const startX = isTouch?e.touches[0].clientX:e.clientX;
-        const startY = isTouch?e.touches[0].clientY:e.clientY;
-        const startSize = size;
-
-        // finds the closest edge distance
-        let maxDelta = Math.min(
-            mainBox.centerX - parentBox.left - mainBox.width/2,
-            mainBox.centerY - parentBox.top - mainBox.height/2,
-            parentBox.bottom - mainBox.centerY - mainBox.height/2,
-            parentBox.right - mainBox.centerX - mainBox.height/2
-        )
-
-        const onMouseMove = (e:MouseEvent|TouchEvent) => {
-            const isTouch = 'touches' in e
-
-            const clientX = isTouch? e.touches[0].clientX: e.clientX
-            const clientY = isTouch? e.touches[0].clientY: e.clientY
-            let delta = 0;
-            //console.log(mainProps?.top)
-            const direction = getDragDirection(
-               clientX, startX, clientY, startY
-            )
-            // left half
-            if (startX < mainBox.centerX){
-                // top-left Quadrant
-                if (startY < mainBox.centerY) {
-                    if (direction === 'bottomRight'){
-                        delta = - Math.abs(Math.max(clientX-startX, clientY-startY));
-                    }else {
-                        delta = Math.abs(Math.max(clientX-startX, clientY-startY));
-                    }
-                }
-                // bottom-left Quadrant
-                else {
-                    if (direction === 'topRight'){
-                        delta = - Math.abs(Math.max(clientX-startX, clientY-startY));
-                    }else {
-                        delta = Math.abs(Math.max(clientX-startX, clientY-startY));
-                    }
-                }
-            }
-            // right half
-            else{
-                // top-right Quadrant
-                if (startY < mainBox.centerY) {
-                    if (direction === 'bottomLeft'){
-                        delta = - Math.abs(Math.max(clientX-startX, clientY-startY));
-                    }else {
-                        delta = Math.abs(Math.max(clientX-startX, clientY-startY));
-                    }
-                }
-                // bottom-right Quadrant
-                else {
-                    if (direction === 'topLeft'){
-                        delta = - Math.abs(Math.max(clientX-startX, clientY-startY));
-                    }else {
-                        delta = Math.abs(Math.max(clientX-startX, clientY-startY));
-                    }
-                }
-            }
-
-            if(delta>=0){
-                delta = Math.min(delta,maxDelta);
-            }
-            delta*=2;
-            setSize(Math.min(0, (startSize + delta)));
-        };
-
-        const onMouseUp = () => {
-            updateCropDimensions();
-            window.removeEventListener('touchmove',onMouseMove);
-            window.removeEventListener('mousemove', onMouseMove);
-            window.removeEventListener('touchend', onMouseUp);
-            window.removeEventListener('mouseup', onMouseUp);
-        };
-
-        window.addEventListener('touchmove',onMouseMove);
-        window.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('touchend', onMouseUp);
-        window.addEventListener('mouseup', onMouseUp);
-        
+// Profile Picture Deletion Prompt
+const DeletePrompt = ({show, toggleShow, onClick}:{
+    show: boolean, toggleShow: Dispatch<SetStateAction<boolean>>,
+    onClick: ()=> Promise<any>
+})=>{
+    const {effectiveTheme} = useColorContext();
+    const buttonStyle = {
+        width:'40%', margin:'15px auto 0 auto',
+        backgroundColor:'rgba(196, 74, 74, 1)', color:"white"
     }
-    const move = (e: React.MouseEvent|React.TouchEvent)=>{
-        if(!('touches' in e)) {
-            e.preventDefault()
-        }
-        const isTouch = 'touches' in e
+    return <>
+    <FullPagePrompt show={show} toggleShow={toggleShow}
+        backgroundColor={getColor(1, effectiveTheme)}
+    >   
+        <PromptHeading style={{alignSelf:'center'}}>
+            Delete?
+        </PromptHeading>
+        <PromptParagraph style={{margin:'10px 0'}}>
+            Do you want to remove your Profile picture?<br/>
+            This action can&apos;t be <span style={{fontWeight:800}}>UNDONE</span> !
+        </PromptParagraph>
+        <Button style={buttonStyle} onClick={onClick} showLoading
+            loadingStyle={{backgroundColor:'rgba(145, 55, 55, 1)'}}
+        >Delete</Button>
         
-        if(!elementMain.current || !elementReset.current) return;
+    </FullPagePrompt>
+    </> 
+}
 
-        // won't move if drag reset button
-        if(elementReset.current.contains(e.target as Node)) return;
+/* Profile Picture Change Section */
+const ProfilePicture = ({toggleFileSelectPopup, toggleDeletePopup}:{
+    toggleFileSelectPopup: Dispatch<SetStateAction<boolean>>,
+    toggleDeletePopup: Dispatch<SetStateAction<boolean>>,
+})=>{
+    const css = new ModuleClassname(globalStyle);
+    const {effectiveTheme} = useColorContext();
+    const { profilePicture, username, displayName, verified } = useAuthContext();
 
-        const mainBox = getRect(elementMain.current);
-        const parentBox = getRect(elementMain.current.parentElement as HTMLDivElement);
-
-        // Mouse Down Coordinate
-        const start = [
-            isTouch? e.touches[0].clientX: e.clientX,
-            isTouch? e.touches[0].clientY: e.clientY
-        ];
-
-        // Max Value of Coordinate (wrt. the size of crop box)
-        let maxX = (parentBox.width/2) - (mainBox.width/2);
-        let maxY = (parentBox.height/2) - (mainBox.height/2);
-
-        const onMouseMove = (e:MouseEvent|TouchEvent)=>{
-            if(!('touches' in e)) {
-                e.preventDefault()
-            }
-            const isTouch = 'touches' in e
-            let delta = [
-                isTouch?e.touches[0].clientX-start[0]:e.clientX-start[0],
-                isTouch?e.touches[0].clientY-start[1]:e.clientY-start[1]
-            ];
-
-            let x = boxCoordinates[0]+delta[0];
-            x = Math.abs(x)>maxX ? (x<0 ? -maxX : maxX): x
-            let y = boxCoordinates[1]+delta[1];
-            y = Math.abs(y)>maxY ? (y<0 ? -maxY : maxY): y
-
-            setBoxCoordinates([x,y]);
-        }
-
-        const onMouseUp = ()=>{
-            updateCropDimensions();
-            window.removeEventListener('touchmove', onMouseMove);
-            window.removeEventListener('mousemove',onMouseMove);
-            window.removeEventListener('touchend', onMouseUp);
-            window.removeEventListener('mouseup',onMouseUp);
-        }
-        window.addEventListener('touchmove', onMouseMove);
-        window.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('touchend', onMouseUp);
-        window.addEventListener('mouseup', onMouseUp);
-    }
-
-    return <div
-        style={{
-            height:img.style==='landscape'?`calc(100% + ${size}px)`:'auto',
-            width:img.style==='landscape'?'auto':`calc(100% + ${size}px)`,
-            aspectRatio:'1/1',display:'flex',
-            position: 'absolute',
-            top: '50%',left:'50%', borderRadius:'20px',
-            translate:`calc(-50% + ${boxCoordinates[0]}px) calc(-50% + ${boxCoordinates[1]}px)`,
-            background:'rgba(0,0,0,0.5)',
-        }}
-        onMouseDown={resize} onTouchStart={resize} ref={elementMain}
-    >
-        <div
-            ref={elementInnerCircle}
-            style={{
-                aspectRatio:"1/1",flex:'1 1',
-                borderRadius:'50%',maxWidth:'96%',height:'auto',
-                backdropFilter:'brightness(200%)',alignSelf:"center",
-                margin:'0 auto',border:`2px solid white`
-            }} onMouseDown={move} onTouchStart={move}
-        ></div>
-        <div style={{
-            position:'absolute', bottom: '15%', left: '15%',
-            width:'30px', height:"auto", aspectRatio:'1/1',
-            display:"flex", alignItems:'center',justifyContent:'center',
-            borderRadius:'50%', backgroundColor:'rgba(0,0,0,0.5)',
-            scale: size< -170 ? 0.8: 1
-        }} onClick= {()=>{
-            setSize(0); setBoxCoordinates([0,0]); updateCropDimensions();
-        }} ref={elementReset}
-        >
-            <svg height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                <path d="M120-120v-240h80v104l124-124 56 56-124 124h104v80H120Zm480 0v-80h104L580-324l56-56 124 124v-104h80v240H600ZM324-580 200-704v104h-80v-240h240v80H256l124 124-56 56Zm312 0-56-56 124-124H600v-80h240v240h-80v-104L636-580Z"/>
-            </svg>
+    return <>
+    <div className={css.names(`profile section-one ${effectiveTheme}`)}>
+        <div className={globalStyle['picture-container']}>
+            <UserIcon fill={getColor(0,effectiveTheme)} hidden={ !!profilePicture }/>
+            <HideIf hideIf={ !profilePicture || !verified }>
+            
+            <UserProfilePicture width={500} height={500}
+            alt={displayName||'UNKNOWN'} className={globalStyle['picture']}
+            username={username} profilePicture={profilePicture}
+            draggable={false}
+            />
+            </HideIf>
+        </div>
+        <div className={css.names(`actions`)}>
+            <ActionButtons mode={!profilePicture?'add':'update'}
+                effectiveTheme={effectiveTheme}
+                onClick={()=> toggleFileSelectPopup(prev => !prev)}
+            />
+            <ActionButtons mode={"delete"} effectiveTheme={effectiveTheme}
+                onClick={()=> toggleDeletePopup(prev => !prev)}
+                // Hides if there is no profile picture to delete
+                hidden={!profilePicture}
+            />
         </div>
     </div>
+    </>
 }
+
+// Profile Picture Action buttons
+const ActionButtons = ({mode, hidden, effectiveTheme, onClick}:{
+    mode: 'add'|'delete'|'update',
+    effectiveTheme: 'light'|'dark',
+    hidden?: boolean,
+    onClick?: ()=> Promise<any>|any
+})=>{
+    const css = new ModuleClassname(globalStyle);
+    const colors = {
+        add: { light: 'rgba(21, 136, 82, 1)', dark: 'rgba(109, 197, 163, 1)' },
+        delete: { light: 'rgba(185, 62, 62, 1)', dark: 'rgba(241, 128, 128, 1)' },
+        update: { light: 'rgba(62, 79, 175, 1)', dark: 'rgba(110, 142, 231, 1)' },
+    }
+    return hidden? null :
+    <Button style={{display:'flex', alignItems:'center', gap:'5px'}}
+    onClick={async () => {
+        if (onClick) await onClick();
+    }}>
+        <ProfileActionsIcon mode={mode} fill={colors[mode][effectiveTheme]}/>
+        <h4>{mode.charAt(0).toUpperCase()+mode.slice(1)}</h4>
+    </Button>
+}
+
+
+/* Profile Picture File Select Overlay */
+const FileSelectPopup = ({
+    show, toggleShow,
+    imageDetails, setImageDetails,
+    addImageOnClick,
+    ref
+}:FileSelectPopupProps)=>{
+    const {profilePicture} = useAuthContext();
+    const {effectiveTheme} = useColorContext();
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // -> Container(Image Preview + Crop box) Reference
+    const imageContainerRef = ref.imageContainerRef;
+    // -> Crop Box Reference
+    const cropBoxRef = ref.cropBoxRef;
+
+    const [imageKey, setImageKey] = useState<number>(Date.now());
+
+    // -> Select File button onClick
+    const selectFile = ()=>{
+        if(!fileInputRef.current) return;
+        fileInputRef.current.click();
+    }
+
+    // Prevents Scrolling when Popup is ON
+    // Really usefull for mobile devices
+    useEffect(()=>{
+        //const prev = document.body.style.overflow;
+        const scrollbarWidth =
+            window.innerWidth - document.documentElement.clientWidth;
+
+        if (show) {
+            document.body.style.overflow = "hidden";
+            //document.body.style.paddingRight = `${scrollbarWidth}px`;
+        }
+        else {
+            document.body.style.overflow = "";
+            //document.body.style.paddingRight = "";
+        }
+        return ()=>{
+            document.body.style.overflow = "";
+            //document.body.style.paddingRight = "";
+        }
+    },[show])
+
+    // -> When File Loads
+    const onFileChange = ()=>{
+        if(!fileInputRef.current || !fileInputRef.current.files) return;
+        const file = fileInputRef.current.files[0];
+        
+        if (
+            !file.type.startsWith("image/")|| !file
+        ){
+            alert(" Please Select an Image!");
+            resetImageDetails(imageDetails, setImageDetails);
+            return;
+        }
+
+        const url = URL.createObjectURL(file)
+        const img = new Image();
+        img.src = url;
+
+        img.onload = ()=>{
+            setImageDetails({
+                width: img.width, height: img.height,
+                file: file, url: url
+            })
+        }
+        img.onerror = ()=>{
+            alert("Couldn't load image!");
+            resetImageDetails(imageDetails, setImageDetails);
+        }
+        setImageKey(Date.now()) // it resets the selected file
+    }
+
+    return <FullPagePopUp show={show} toggleShow={toggleShow}
+        hideFromDom // Removes from DOM when its not shown   
+        // Cleanup before closing
+        cleanUp={()=> resetImageDetails(imageDetails, setImageDetails)}
+        // Main box style
+        boxStyle={{ backgroundColor: getColor(1,effectiveTheme),
+            boxShadow:"0 0 20px -4px rgba(0, 0, 0, 0.5)",
+        }}>
+        
+        <input onChange={onFileChange} // Hidden File Select
+            type='file' key={imageKey} hidden ref={fileInputRef}
+            accept=".png,.jpg,.jpeg"
+        />
+
+        <h1 style={{fontSize: '1.5rem'}}>Select File</h1>
+        <div className={globalStyle['image-container']}>
+            
+            <PopUpButtons onClick={selectFile} hidden={!!imageDetails.url}
+                backgroundColor="rgba(91, 90, 170, 1)"
+            >Select image</PopUpButtons>
+
+            <CroppingContainer // Cropping Element
+                // image url
+                imageUrl={imageDetails.url}
+                // Div references [imp]
+                containerRef={imageContainerRef} cropBoxRef={cropBoxRef}
+                // Dimensions of the image/file
+                width={imageDetails.width} height={imageDetails.height}
+            />
+
+        </div>
+        <div style={{marginLeft:'auto', display:'flex', gap:"5px"}}>
+            
+            <PopUpButtons onClick={addImageOnClick} hidden={!imageDetails.url}
+                showLoading backgroundColor="rgba(52, 145, 83, 1)"          
+            >{!profilePicture?"Add":"Update"}</PopUpButtons>
+
+            <PopUpButtons onClick={()=>{
+                resetImageDetails(imageDetails, setImageDetails);
+                selectFile();
+            }} backgroundColor="rgba(59, 130, 163, 1)" hidden={!imageDetails.url}        
+            >Repick</PopUpButtons>
+
+            <PopUpButtons onClick={()=>{
+                resetImageDetails(imageDetails, setImageDetails);
+                toggleShow(false);
+            }} backgroundColor="rgba(194, 102, 60, 1)"       
+            >Cancel</PopUpButtons>
+        </div>
+    </FullPagePopUp>
+}
+
+const PopUpButtons = ({onClick,children, showLoading,backgroundColor, hidden}:{
+    children: React.ReactNode,
+    backgroundColor?: string,
+    hidden?: boolean, showLoading?:boolean,
+    onClick: ()=> Promise<any>|any
+})=>{
+    return <Button style={{
+        backgroundColor: backgroundColor||'',
+        fontSize:'0.9rem', color:'rgba(255, 255, 255, 0.75)'
+    }}
+        hidden={hidden||false}
+        onClick={onClick} showLoading={showLoading||false}
+    >
+        {children}
+    </Button>
+}
+/* Utils */
+
+// -> For getting crop details
+const updateCropDimension = (
+    imageDetails: ImageDetails,
+    imageContainerRef: RefObject<HTMLDivElement|null>,
+    cropBoxRef: RefObject<HTMLDivElement|null>,
+)=> {
+    if(
+        !cropBoxRef.current ||      // -> cropBoxRef: child
+        !imageContainerRef.current  // -> imageContainerRef: parent
+    ) return;
+
+    const mainRect = getRect(cropBoxRef.current)
+    const parentRect = getRect(imageContainerRef.current)
+
+    if(!imageDetails.width || !imageDetails.height) return;
+    let ratioX = imageDetails.width/parentRect.width;
+    let ratioY = imageDetails.height/parentRect.height;
+
+    ratioX = Number(ratioX.toFixed(6));
+    ratioY = Number(ratioY.toFixed(6));
+
+    let top = (mainRect.top - parentRect.top)*ratioY || 0;
+    let left = (mainRect.left - parentRect.left)*ratioX || 0;
+    let width = mainRect.width * ratioX;
+    let height = mainRect.height * ratioY;
+    
+    // getting the proper int pixel values
+    top = Math.max(0, Math.round(top))
+    left = Math.max(0, Math.round(left))
+    width = Math.min(imageDetails.width, Math.round(width))
+    height = Math.min(imageDetails.height, Math.round(height))
+
+    // if the any of the numbers are NaN
+    if(
+        Number.isNaN(top)||Number.isNaN(left)||
+        Number.isNaN(width)||Number.isNaN(height)
+    ) return;
+    
+    return {top, left, width, height}
+}
+
+// -> for getting Client div Box details
+const getRect = (rect:HTMLDivElement)=>{
+    let box = rect.getBoundingClientRect();
+    return {
+        left: box.left, top: box.top, right: box.right, bottom:box.bottom,
+        width: box.width, height: box.height,
+        centerX: box.x+box.width/2, centerY: box.y+box.height/2
+    }
+}
+
+// -> For resetting ImageDetails
+const resetImageDetails = (
+    imageDetails: ImageDetails,
+    setImageDetails: Dispatch<SetStateAction<ImageDetails>>
+)=>{
+    if (imageDetails.url) URL.revokeObjectURL(imageDetails.url);
+    setImageDetails({ file: null, width: null, height: null, url: null});
+}
+
+const delay = (time: number)=> new Promise(res => setTimeout(res, time))

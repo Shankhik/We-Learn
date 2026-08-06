@@ -1,0 +1,20 @@
+.content{
+    margin: 150px auto 100px auto;
+    width: 75%;
+    max-width: 900px;
+
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    
+    @media (max-width:1000px) {
+        width: 85%;
+    }
+    @media (max-width:900px) {
+        margin-top: 120px;
+    }
+    @media (max-width:400px) {
+        margin-top: 90px;
+        width: 95%;
+    }
+}
